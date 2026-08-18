@@ -142,7 +142,7 @@
   /* transform-box is deliberately left alone here: GSAP drives these
      transforms itself in the SVG user space, and fill-box offsets them. */
   .inv-stage{
-    --pad:clamp(.5rem,2vw,1.25rem);
+    --pad:clamp(.3rem,1.2vw,.7rem);
     min-height:100vh; min-height:100svh;
     display:flex; align-items:center; justify-content:center;
     padding:var(--pad); position:relative;
@@ -194,7 +194,11 @@
   .dust{ opacity:0; }
 
   #gate .gate-inner{ max-height:100svh; overflow:auto; }
-  #vesselSvg{ width:min(58vw, 260px, 43svh); height:auto; }
+  /* The box is 330 wide for a 240-wide pot and 420 tall, so the width carries a
+     1.375 margin factor and the pot still reads at 58vw / 260px. The third term
+     is the height cap: roughly 140px goes to the two lines of copy and the
+     gutter, and the rest divided by the box aspect is what the width may be. */
+  #vesselSvg{ width:min(80vw, 358px, calc((100svh - 140px) * 0.78)); height:auto; }
 
   /* ── music toggle ── */
   #music{
@@ -351,8 +355,8 @@
     <p class="track text-[.56rem] sm:text-[.58rem] uppercase text-ink/40 mb-8" id="gateLine">Broken, gathered, made whole</p>
 
     <button id="vessel-btn" aria-label="Open the invitation" class="mx-auto block">
-      <svg id="vesselSvg" viewBox="0 0 240 330" fill="none" aria-hidden="true"
-           class="mx-auto w-[58vw] max-w-[260px] h-auto">
+      <svg id="vesselSvg" viewBox="-45 -35 330 420" fill="none" aria-hidden="true"
+           class="mx-auto block">
         <defs>
           <linearGradient id="clayBody" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%"  stop-color="#FCF8F1"/>
@@ -403,6 +407,24 @@
           <path class="shard" d="M170 152 L120 196 L180 244 Q198 200 190 174 Q184 160 170 152 z"/>
           <path class="shard" d="M180 244 L120 196 L120 268 L142 280 Q168 268 180 244 z"/>
           <path class="shard" d="M98 280 h44 l6 20 h-56 z"/>
+        </g>
+
+        <!-- the fracture, an instant before the pieces let go -->
+        <circle id="shock" cx="120" cy="190" r="46" fill="none"
+                stroke="#B2704A" stroke-width="1.6" opacity="0"/>
+
+        <g id="cracks" stroke="#6B4426" stroke-width="2.1" stroke-linecap="round"
+           stroke-linejoin="round" fill="none" opacity="0">
+          <path class="crack-path" d="M88 46 h64"/>
+          <path class="crack-path" d="M99 66 h42"/>
+          <path class="crack-path" d="M104 108 h32"/>
+          <path class="crack-path" d="M104 108 L120 142 L120 268"/>
+          <path class="crack-path" d="M136 108 L120 142"/>
+          <path class="crack-path" d="M120 196 L70 152"/>
+          <path class="crack-path" d="M120 196 L170 152"/>
+          <path class="crack-path" d="M120 196 L60 244"/>
+          <path class="crack-path" d="M120 196 L180 244"/>
+          <path class="crack-path" d="M98 280 h44"/>
         </g>
 
         <g id="rings" stroke="#B98F44" stroke-width=".9" fill="none" opacity="0">
@@ -877,10 +899,12 @@ const gateHint = $('gateHint');
 // whole and bare, and neither the gold nor the arrangement exists yet
 if (hasGSAP){
   // the stroke-drawing lengths, measured rather than guessed
-  gsap.utils.toArray('.seam-path, .ring-path').forEach(p => {
+  gsap.utils.toArray('.seam-path, .ring-path, .crack-path').forEach(p => {
     const len = Math.ceil(p.getTotalLength()) + 1;
     gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
   });
+  gsap.set('#cracks', { opacity:0 });
+  gsap.set('#shock', { opacity:0, scale:.2, transformOrigin:'50% 50%' });
   gsap.set('.shard', { x:0, y:0, rotation:0, scale:1, transformOrigin:'50% 50%' });
   gsap.set('#rings', { opacity:.5 });
   gsap.set('#bouquet', { opacity:0 });
@@ -899,6 +923,7 @@ function openInvite(){
   if (reduced){
     gateHint.textContent = '';
     gsap.set('.seam-path, .ring-path', { strokeDashoffset:0 });
+    gsap.set('#cracks, #shock', { opacity:0 });
     gsap.set('#bouquet', { opacity:1 });
     gsap.set('#bouquet .stem, #bouquet .leaf', { scaleY:1 });
     gsap.set('#bouquet .bloom', { opacity:1, scale:1 });
@@ -910,64 +935,114 @@ function openInvite(){
 
   gateHint.textContent = 'Tap to skip';
 
-  // each piece flies outward from the centre of the pot, by its own geometry
+  // Each piece leaves along its own line out of the centre of the pot, but not
+  // all pieces are alike: a small chip carries less clay than the belly of the
+  // vessel, so it is thrown further, spins harder and settles sooner.
   const CX = 120, CY = 190;
-  shards.forEach(sh => {
+  // the viewBox, less a margin, is the furthest any piece may travel: the SVG
+  // clips, and a fragment that leaves the frame reads as one that vanished
+  const BOX = { x0:-45, y0:-35, x1:285, y1:385 };
+  const rayLimit = (p, u, lo, hi) =>
+    Math.abs(u) < 1e-4 ? Infinity : (u > 0 ? (hi - p) / u : (lo - p) / u);
+
+  shards.forEach((sh, i) => {
     const b = sh.getBBox();
     const px = b.x + b.width/2, py = b.y + b.height/2;
-    let dx = px - CX, dy = py - CY;
+    const dx = px - CX, dy = py - CY;
     const d = Math.hypot(dx, dy) || 1;
-    const push = 46 + d * 0.55;
-    sh._fx = (dx/d) * push;
-    sh._fy = (dy/d) * push - 10;
-    sh._fr = (dx >= 0 ? 1 : -1) * (10 + Math.random()*20);
-    sh._d  = d;
+    let ux = dx/d, uy = dy/d;
+
+    // the lip, the neck and the foot all sit on the pot's axis, so a purely
+    // radial throw sends them up the same line and they pile on top of one
+    // another. Fan the near-vertical pieces apart, alternating side to side.
+    const onAxis = 1 - Math.abs(ux);
+    if (onAxis > .2){
+      const a = (i % 2 ? 1 : -1) * onAxis * (.30 + Math.random() * .18);
+      const ca = Math.cos(a), sa = Math.sin(a);
+      const rx = ux * ca - uy * sa, ry = ux * sa + uy * ca;
+      ux = rx; uy = ry;
+    }
+
+    // a chip off the lip carries less clay than the belly of the pot, so it is
+    // thrown a little further and tumbles harder — but only a little
+    const mass = Math.min(Math.max((b.width * b.height) / 2600, .5), 1.35);
+    const spread = 1.18 - mass * .22;
+
+    const hx = b.width/2 + 8, hy = b.height/2 + 8;   // room for the tumble
+    const sag = 14 + (1 / mass) * 14;
+    const cap = Math.max(0, Math.min(
+      rayLimit(px, ux, BOX.x0 + hx, BOX.x1 - hx),
+      rayLimit(py, uy, BOX.y0 + hy, BOX.y1 - hy - sag)
+    ));
+
+    const push = Math.min((58 + d * 0.72) * spread, cap);
+    sh._fx  = ux * push;
+    sh._fy  = uy * push - 12;
+    sh._fr  = (Math.random() < .5 ? -1 : 1) * (12 + Math.random() * 26) * spread;
+    sh._dur = .5 + mass * .22;
+    sh._sag = sag;
+    sh._d   = d;
   });
   const ordered = [...shards].sort((p, q) => p._d - q._d);
 
   const tl = gsap.timeline({ onComplete: () => { clearTimeout(watchdog); revealPage(); } });
 
-  /* the strike */
-  tl.to('#vesselSvg', { scale:1.045, duration:.1, ease:'power4.out' })
-    .to('#vesselSvg', { scale:1, duration:.36, ease:'elastic.out(1,.45)' }, '>-.02');
+  /* the wind-up, then the strike */
+  tl.to('#vesselSvg', { scale:.985, duration:.12, ease:'power2.in' })
+    .to('#vesselSvg', { scale:1.05, duration:.08, ease:'power4.out' }, .12)
+    .to('#vesselSvg', { scale:1, duration:.3, ease:'elastic.out(1,.5)' }, .2);
+
+  /* it cracks before it comes apart: the fracture runs through the clay first */
+  tl.to('#cracks', { opacity:1, duration:.06 }, .18)
+    .to('.crack-path', { strokeDashoffset:0, duration:.12, stagger:.008, ease:'power2.out' }, .2)
+    .to('#cracks', { opacity:0, duration:.22, ease:'power1.in' }, .4);
+
+  /* the blow itself, spending outward through the air */
+  tl.fromTo('#shock', { opacity:.5, scale:.2 },
+                      { opacity:0, scale:1.9, duration:.55, ease:'power2.out' }, .38);
 
   /* broken and scattered */
   ordered.forEach((sh, i) => {
-    tl.to(sh, { x: sh._fx, y: sh._fy, rotation: sh._fr, scale:.97,
-                duration:.70, ease:'power3.out' }, .16 + i * 0.026);
+    const at = .42 + i * .022;
+    tl.to(sh, { x: sh._fx, y: sh._fy, rotation: sh._fr, scale:.96,
+                duration: sh._dur, ease:'power3.out' }, at);
+    // the throw spends itself and the piece begins to fall: sequenced after the
+    // burst, never overlapping it, so the two never fight over y
+    tl.to(sh, { y: sh._fy + sh._sag, rotation: sh._fr * 1.1,
+                duration:.45, ease:'sine.in' }, at + sh._dur);
   });
 
   // the dust lifts, then settles — two clean phases rather than two tweens
   // fighting over the same opacity at the same time
-  tl.to('.dust', { opacity:.5, y:-26, x:'random(-12,12)', duration:.9,
-                   stagger:.045, ease:'power1.out' }, .24)
-    .to('.dust', { opacity:0, y:'-=14', duration:.6, stagger:.045, ease:'power1.in' }, 1.45);
+  tl.to('.dust', { opacity:.5, y:-26, x:'random(-14,14)', duration:.85,
+                   stagger:.04, ease:'power1.out' }, .44)
+    .to('.dust', { opacity:0, y:'-=14', duration:.55, stagger:.04, ease:'power1.in' }, 1.6);
 
-  tl.to(gateLine, { opacity:0, duration:.26 }, .45)
-    .call(() => { gateLine.textContent = 'Broken and scattered'; }, null, .72)
-    .to(gateLine, { opacity:1, duration:.4 }, .74);
+  tl.to(gateLine, { opacity:0, duration:.26 }, .6)
+    .call(() => { gateLine.textContent = 'Broken and scattered'; }, null, .87)
+    .to(gateLine, { opacity:1, duration:.4 }, .89);
 
-  /* gathered */
+  /* gathered — begins once the last piece has finished falling (1.88s) */
   ordered.forEach((sh, i) => {
-    tl.to(sh, { x:0, y:0, rotation:0, scale:1, duration:.95, ease:'power2.inOut' }, 1.35 + i * 0.03);
+    tl.to(sh, { x:0, y:0, rotation:0, scale:1, duration:.8, ease:'power2.inOut' }, 1.92 + i * .025);
   });
 
-  tl.to(gateLine, { opacity:0, duration:.26 }, 2.15)
-    .call(() => { gateLine.textContent = 'Gathered and made whole'; }, null, 2.42)
-    .to(gateLine, { opacity:1, duration:.4 }, 2.44);
+  tl.to(gateLine, { opacity:0, duration:.26 }, 2.55)
+    .call(() => { gateLine.textContent = 'Gathered and made whole'; }, null, 2.82)
+    .to(gateLine, { opacity:1, duration:.4 }, 2.84);
 
-  /* the gold runs into the joins only once every piece is home (2.57s) */
-  tl.to('.seam-path', { strokeDashoffset:0, duration:.75, stagger:.045, ease:'power2.inOut' }, 2.60)
-    .to('.ring-path', { strokeDashoffset:0, duration:.8, stagger:.10, ease:'power2.out' }, 3.00);
+  /* the gold runs into the joins only once every piece is home (2.95s) */
+  tl.to('.seam-path', { strokeDashoffset:0, duration:.7, stagger:.04, ease:'power2.inOut' }, 3.00)
+    .to('.ring-path', { strokeDashoffset:0, duration:.75, stagger:.09, ease:'power2.out' }, 3.35);
 
   /* and the arrangement stands up in the mended vessel */
-  tl.to('#bouquet', { opacity:1, duration:.3 }, 3.45)
-    .to('#bouquet .stem, #bouquet .leaf', { scaleY:1, duration:.85, stagger:.06, ease:'power2.out' }, 3.45)
-    .to('#bouquet .bloom', { opacity:1, scale:1, duration:.7, stagger:.075, ease:'back.out(1.6)' }, 3.95);
+  tl.to('#bouquet', { opacity:1, duration:.3 }, 3.85)
+    .to('#bouquet .stem, #bouquet .leaf', { scaleY:1, duration:.8, stagger:.055, ease:'power2.out' }, 3.85)
+    .to('#bouquet .bloom', { opacity:1, scale:1, duration:.65, stagger:.07, ease:'back.out(1.6)' }, 4.30);
 
-  tl.to('#vesselSvg', { scale:1.025, duration:.45, ease:'sine.inOut' }, 4.95)
-    .to('#vesselSvg', { scale:1, duration:.4, ease:'sine.inOut' }, 5.40)
-    .to(gate, { opacity:0, duration:.7, ease:'power2.inOut' }, 5.55);
+  tl.to('#vesselSvg', { scale:1.025, duration:.4, ease:'sine.inOut' }, 5.25)
+    .to('#vesselSvg', { scale:1, duration:.35, ease:'sine.inOut' }, 5.65)
+    .to(gate, { opacity:0, duration:.65, ease:'power2.inOut' }, 5.85);
 
   // a second touch anywhere carries the guest through
   const skip = () => {
