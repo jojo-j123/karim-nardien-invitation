@@ -9,7 +9,7 @@
   ],
   "headers": [
     {
-      "source": "/admin.html",
+      "source": "/admin(\\.html)?",
       "headers": [
         {
           "key": "X-Robots-Tag",
