@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Karim &amp; Nardien | 19 September 2026</title>
+<meta name="description" content="The wedding of Karim Raef and Nardien Raafat. Heliopolis Evangelical Church, 19 September 2026." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Pinyon+Script&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+tailwind.config = { theme: { extend: {
+  colors: {
+    beige:'#F3EDE2', sand:'#E7DBC9', clay:'#B2704A', terra:'#8E4E32',
+    sage:'#8A9A7B', rose:'#C69A8E', ink:'#3A2B22', gold:'#B98F44',
+  },
+  fontFamily: {
+    script: ['"Pinyon Script"','cursive'],
+    serif:  ['"Cormorant Garamond"','serif'],
+    sans:   ['Jost','system-ui','sans-serif'],
+  },
+}}}
+</script>
+
+<style>
+  :root{
+    --beige:#F3EDE2; --sand:#E7DBC9; --clay:#B2704A; --terra:#8E4E32;
+    --sage:#8A9A7B; --rose:#C69A8E; --ink:#3A2B22; --gold:#B98F44;
+  }
+  html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+  body{
+    background:var(--beige); color:var(--ink);
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+    overscroll-behavior-y:none;
+  }
+  body.is-locked{ overflow:hidden; position:fixed; width:100%; height:100%; }
+
+  .wash{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(50% 40% at 18% 12%, rgba(198,154,142,.16), transparent 70%),
+      radial-gradient(45% 40% at 85% 78%, rgba(138,154,123,.14), transparent 70%),
+      radial-gradient(40% 35% at 60% 45%, rgba(178,112,74,.07), transparent 70%);
+  }
+  .speckle{
+    position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.13;
+    background-image:
+      radial-gradient(rgba(58,43,34,.45) .5px, transparent .6px),
+      radial-gradient(rgba(178,112,74,.4) .5px, transparent .6px);
+    background-size:8px 8px, 12px 12px; background-position:0 0, 3px 5px;
+  }
+
+  .seam{ height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+  .hair{ border:1px solid rgba(58,43,34,.15); }
+  .track{ letter-spacing:.3em; }
+  .track-sm{ letter-spacing:.2em; }
+
+  .gold-ink{
+    background:linear-gradient(100deg,#8E6A2A 0%, #B98F44 28%, #E4C88C 50%, #B98F44 72%, #8E6A2A 100%);
+    background-size:250% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:shimmer 9s linear infinite;
+  }
+  @keyframes shimmer{ to{ background-position:250% 0; } }
+
+  .field{
+    width:100%; background:transparent; border:0; border-bottom:1px solid rgba(58,43,34,.22);
+    padding:.9rem .2rem; color:var(--ink); font-family:Jost,sans-serif; font-weight:300;
+    font-size:16px; letter-spacing:.03em; outline:none; border-radius:0;
+    -webkit-appearance:none; appearance:none;
+    transition:border-color .35s ease, background .35s ease;
+  }
+  .field:focus{ border-color:var(--gold); background:rgba(185,143,68,.07); }
+  .field::placeholder{ color:rgba(58,43,34,.3); }
+
+  .chip{
+    border:1px solid rgba(58,43,34,.2); padding:1.05rem .9rem; cursor:pointer; background:transparent;
+    font-family:Jost,sans-serif; font-weight:300; font-size:.78rem; letter-spacing:.14em;
+    text-transform:uppercase; color:rgba(58,43,34,.7); text-align:center;
+    border-radius:2px 16px 2px 16px; min-height:56px;
+    transition:all .35s cubic-bezier(.22,1,.36,1);
+    -webkit-tap-highlight-color:transparent;
+  }
+  .chip:active{ transform:scale(.97); }
+  .chip[aria-pressed="true"]{ background:rgba(185,143,68,.16); border-color:var(--gold); color:#7A5A1E; }
+
+  .btn{
+    position:relative; z-index:0; overflow:hidden; border:1px solid rgba(58,43,34,.35);
+    padding:1.05rem 2.2rem; font-family:Jost,sans-serif; font-size:.72rem; font-weight:400;
+    letter-spacing:.24em; text-transform:uppercase; color:var(--ink); background:transparent;
+    cursor:pointer; min-height:54px; transition:color .4s ease, border-color .4s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .btn::after{
+    content:''; position:absolute; inset:0; z-index:-1; background:var(--terra);
+    transform:scaleX(0); transform-origin:right; transition:transform .5s cubic-bezier(.22,1,.36,1);
+  }
+  @media (hover:hover){
+    .btn:hover{ color:var(--beige); border-color:var(--terra); }
+    .btn:hover::after{ transform:scaleX(1); transform-origin:left; }
+    .chip:hover{ color:var(--ink); border-color:rgba(185,143,68,.75); }
+  }
+  .btn:active{ transform:scale(.98); }
+  .btn:disabled{ opacity:.4; }
+
+  :focus-visible{ outline:2px solid var(--gold); outline-offset:3px; }
+
+  .card{ transition:transform .6s cubic-bezier(.22,1,.36,1), box-shadow .6s ease; }
+  @media (hover:hover){ .card:hover{ transform:translateY(-6px); box-shadow:0 26px 55px -32px rgba(58,43,34,.5); } }
+
+  .motif{ position:absolute; pointer-events:none; z-index:0; color:var(--clay); opacity:.2; }
+  .motif svg{ display:block; width:100%; height:auto; }
+  .motif.sage{ color:var(--sage); opacity:.24; }
+  .motif.rose{ color:var(--rose); opacity:.26; }
+  @media (max-width:640px){ .motif{ opacity:.12; } .motif.hide-sm{ display:none; } }
+
+  /* ── opening sequence ── */
+
+
+  /* ── the invitation: one fixed portrait sheet, always fully visible ── */
+  #gate{
+    position:fixed; inset:0; z-index:60; background:var(--beige);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+  }
+  #vessel-btn{ cursor:pointer; background:none; border:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  .shard{ transform-box:fill-box; transform-origin:center; }
+  .inv-stage{
+    min-height:100svh; display:flex; align-items:center; justify-content:center;
+    padding:clamp(.5rem,2vw,2rem); position:relative;
+  }
+  .inv-t{
+    position:absolute; left:50%; transform:translate(-50%,-50%);
+    margin:0; width:72%; text-align:center;
+    font-family:"Cormorant Garamond", serif; font-weight:400;
+    color:#3A2B22; line-height:1.25;
+  }
+  .inv-t.caps{
+    font-family:Jost, sans-serif; font-weight:300;
+    letter-spacing:.3em; text-transform:uppercase; color:rgba(58,43,34,.55);
+  }
+  .inv-t.clay{ color:#B2704A; }
+  .inv-t.script{ font-family:"Pinyon Script", cursive; line-height:1.1; }
+  .inv-t.amp{ font-family:"Cormorant Garamond", serif; font-style:italic; color:#B2704A; }
+  .inv-t.body{ color:rgba(58,43,34,.72); }
+  .inv-line{
+    position:absolute; left:50%; transform:translateX(-50%);
+    height:1px; background:linear-gradient(90deg,transparent,#B98F44,transparent);
+  }
+  .inv-sheet{
+    position:relative;
+    aspect-ratio:994/1583;
+    height:min(calc(100svh - 1.6rem), calc((100vw - 1.6rem) * 1583 / 994));
+    width:auto; max-width:calc(100vw - 1.6rem);
+    container-type:size;
+    background-color:#F2EDE7; background-image:url("https://ukgllbcigjesjhnsoirz.supabase.co/storage/v1/object/public/music/invitation-plate.webp"); background-size:100% 100%; background-position:center; background-repeat:no-repeat;
+    box-shadow:0 24px 60px -40px rgba(58,43,34,.5);
+  }
+  .thm-sheet{
+    position:relative;
+    aspect-ratio:1060/1484;
+    height:min(calc(100svh - 1.6rem), calc((100vw - 1.6rem) * 1484 / 1060));
+    width:auto; max-width:calc(100vw - 1.6rem);
+    container-type:size;
+    background-color:#FAF6F1; background-image:url("https://ukgllbcigjesjhnsoirz.supabase.co/storage/v1/object/public/music/theme-plate.webp"); background-size:100% 100%; background-position:center; background-repeat:no-repeat;
+    box-shadow:0 24px 60px -40px rgba(58,43,34,.5);
+  }
+
+
+
+  .dust{ opacity:0; }
+
+  /* ── music toggle ── */
+  #music{
+    position:fixed; z-index:50;
+    right:calc(14px + env(safe-area-inset-right));
+    bottom:calc(16px + env(safe-area-inset-bottom));
+    display:none; align-items:center; gap:.5rem;
+    padding:.55rem .95rem .55rem .8rem;
+    border:1px solid rgba(178,112,74,.4);
+    border-radius:2px 14px 2px 14px;        /* the thrown lip, as on the RSVP chips */
+    background:rgba(243,237,226,.93);
+    backdrop-filter:blur(7px);
+    color:var(--clay); cursor:pointer;
+    box-shadow:0 10px 26px -16px rgba(58,43,34,.55);
+    -webkit-tap-highlight-color:transparent;
+    transition:border-color .4s ease, color .4s ease, transform .3s ease;
+  }
+  #music:active{ transform:scale(.96); }
+  #music .music-mark{ position:relative; display:flex; align-items:center; justify-content:center; width:15px; height:22px; }
+  #music .music-mark svg{ width:100%; height:100%; display:block; transition:opacity .45s ease; }
+  #music .music-word{
+    font-family:Jost,sans-serif; font-weight:300; font-size:.52rem;
+    letter-spacing:.26em; text-transform:uppercase; color:rgba(58,43,34,.6);
+    transition:color .4s ease;
+  }
+
+  /* playing: the sprig gives way to a quiet gold pulse */
+  #music.on{ border-color:rgba(185,143,68,.75); color:var(--gold); }
+  #music.on .music-word{ color:var(--clay); }
+  #music.on .music-mark svg{ opacity:0; }
+  .eq{
+    position:absolute; inset:0; display:none;
+    align-items:flex-end; justify-content:center; gap:2px; padding-bottom:3px;
+  }
+  #music.on .eq{ display:flex; }
+  .eq i{ width:2px; background:currentColor; height:4px; border-radius:1px; }
+  #music.on .eq i{ animation:bounce 1.5s ease-in-out infinite; }
+  #music.on .eq i:nth-child(2){ animation-delay:.25s }
+  #music.on .eq i:nth-child(3){ animation-delay:.5s }
+  @keyframes bounce{ 0%,100%{ height:4px } 50%{ height:14px } }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+
+<body class="is-locked font-sans">
+
+
+<!-- lily line-art library: drawn once, reused throughout the page -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- open lily bloom, six petals with stamens -->
+    <symbol id="lilyBloom" viewBox="0 0 200 200">
+      <g fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <g id="lilyPetals">
+          <path d="M100 100 C84 74 82 42 100 14 C118 42 116 74 100 100 Z"/>
+          <path d="M100 94 L100 26" stroke-width="1"/>
+          <path d="M96 60 C92 48 92 38 96 30" stroke-width=".8"/>
+          <path d="M104 60 C108 48 108 38 104 30" stroke-width=".8"/>
+        </g>
+        <use href="#lilyPetals" transform="rotate(60 100 100)"/>
+        <use href="#lilyPetals" transform="rotate(120 100 100)"/>
+        <use href="#lilyPetals" transform="rotate(180 100 100)"/>
+        <use href="#lilyPetals" transform="rotate(240 100 100)"/>
+        <use href="#lilyPetals" transform="rotate(300 100 100)"/>
+        <g stroke-width="1.2">
+          <g id="lilyStamen">
+            <path d="M100 100 L100 52"/>
+            <ellipse cx="100" cy="47" rx="5" ry="2.8"/>
+          </g>
+          <use href="#lilyStamen" transform="rotate(-32 100 100)"/>
+          <use href="#lilyStamen" transform="rotate(-16 100 100)"/>
+          <use href="#lilyStamen" transform="rotate(16 100 100)"/>
+          <use href="#lilyStamen" transform="rotate(32 100 100)"/>
+        </g>
+      </g>
+    </symbol>
+
+    <!-- tall lily stem with leaves, a bud and a nodding bloom -->
+    <symbol id="lilyStem" viewBox="0 0 140 300">
+      <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M74 298 C74 220 70 140 64 44"/>
+        <path d="M70 250 C44 242 28 218 26 192 C52 196 66 218 70 242"/>
+        <path d="M70 250 C70 226 70 210 70 196" stroke-width=".8"/>
+        <path d="M68 202 C94 194 110 170 112 144 C86 148 70 170 68 194"/>
+        <path d="M68 202 C68 180 68 164 68 152" stroke-width=".8"/>
+        <path d="M66 154 C40 146 24 122 22 96 C48 100 62 122 66 146"/>
+        <path d="M64 44 C50 34 46 14 60 2 C76 12 78 34 64 44 Z"/>
+        <path d="M60 38 C56 26 58 16 64 8" stroke-width=".8"/>
+        <path d="M64 92 C82 84 96 88 104 100"/>
+        <path d="M104 100 C120 92 132 96 136 108 C124 116 110 114 104 100 Z"/>
+        <path d="M104 100 C100 114 90 122 78 122 C80 108 90 100 104 100 Z"/>
+        <path d="M104 100 L124 118" stroke-width="1"/>
+        <ellipse cx="126" cy="121" rx="3.4" ry="2" stroke-width="1"/>
+      </g>
+    </symbol>
+
+    <!-- single lily bud on a stem -->
+    <symbol id="lilyBud" viewBox="0 0 90 220">
+      <g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M45 216 C45 160 45 110 45 76"/>
+        <path d="M45 76 C24 62 20 26 45 4 C70 26 66 62 45 76 Z"/>
+        <path d="M45 70 C36 52 36 30 45 12" stroke-width=".8"/>
+        <path d="M45 70 C54 52 54 30 45 12" stroke-width=".8"/>
+        <path d="M45 150 C24 144 12 126 10 106 C32 110 43 126 45 146"/>
+        <path d="M45 120 C66 114 78 96 80 76 C58 80 47 96 45 116"/>
+      </g>
+    </symbol>
+
+    <!-- nodding turk's cap lily, petals swept back -->
+    <symbol id="lilyNod" viewBox="0 0 180 180">
+      <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 12 C48 14 74 34 86 62"/>
+        <path d="M86 62 C64 52 44 58 34 74 C54 86 76 80 86 62 Z"/>
+        <path d="M86 62 C104 44 128 42 144 54 C130 74 106 78 86 62 Z"/>
+        <path d="M86 62 C96 84 92 108 76 120 C62 104 66 78 86 62 Z"/>
+        <path d="M86 62 C110 68 126 88 126 110 C104 106 88 88 86 62 Z"/>
+        <g stroke-width="1.1">
+          <path d="M86 62 L104 112"/><ellipse cx="106" cy="116" rx="4" ry="2.4"/>
+          <path d="M86 62 L86 116"/><ellipse cx="86" cy="120" rx="4" ry="2.4"/>
+          <path d="M86 62 L66 108"/><ellipse cx="64" cy="112" rx="4" ry="2.4"/>
+        </g>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+
+
+<div class="wash"></div>
+<div class="speckle"></div>
+
+<!-- ════ THE GATE : the vessel breaks, then mends ════ -->
+<div id="gate">
+  <div class="px-6 w-full">
+    <p class="track text-[.56rem] sm:text-[.58rem] uppercase text-ink/40 mb-8" id="gateLine">Broken, gathered, made whole</p>
+
+    <button id="vessel-btn" aria-label="Open the invitation" class="mx-auto block">
+      <svg id="vesselSvg" viewBox="0 0 240 330" fill="none" aria-hidden="true"
+           class="mx-auto w-[58vw] max-w-[260px] h-auto">
+        <defs>
+          <linearGradient id="clayBody" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"  stop-color="#FCF8F1"/>
+            <stop offset="55%" stop-color="#F5EADA"/>
+            <stop offset="100%" stop-color="#EBD9BE"/>
+          </linearGradient>
+        </defs>
+
+        <!-- the arrangement standing in the vessel -->
+        <g id="bouquet" stroke="#B98F44" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <g stroke-width="1.15">
+            <path class="stem" d="M120 100 C120 78 118 56 114 34"/>
+            <path class="stem" d="M120 100 C126 80 138 62 154 48"/>
+            <path class="stem" d="M120 100 C114 82 102 66 86 54"/>
+            <path class="stem" d="M120 100 C122 84 128 72 138 62"/>
+            <path class="stem" d="M120 100 C118 84 112 74 102 66"/>
+            <path class="leaf" d="M118 74 C104 70 96 60 94 48 C108 52 116 62 118 72"/>
+            <path class="leaf" d="M124 82 C138 76 146 66 148 54 C134 58 126 68 124 80"/>
+            <path class="leaf" d="M117 58 C106 54 100 46 98 37 C108 40 115 48 117 56"/>
+          </g>
+          <g class="bloom" transform="translate(114 30) scale(.16) translate(-100 -100)" color="#B98F44">
+            <use href="#lilyBloom"/>
+          </g>
+          <g class="bloom" transform="translate(156 44) scale(.13) translate(-100 -100)" color="#B98F44">
+            <use href="#lilyBloom"/>
+          </g>
+          <g class="bloom" transform="translate(84 50) scale(.125) translate(-100 -100)" color="#B98F44">
+            <use href="#lilyBloom"/>
+          </g>
+          <g class="bloom" stroke-width="1.1">
+            <path d="M138 62 C130 54 129 40 138 30 C147 40 146 54 138 62 z"/>
+            <path d="M138 58 C134 48 134 38 138 32" stroke-width=".7"/>
+          </g>
+          <g class="bloom" stroke-width="1.1">
+            <path d="M102 66 C95 58 94 46 102 37 C110 46 109 58 102 66 z"/>
+            <path d="M102 62 C99 53 99 44 102 39" stroke-width=".7"/>
+          </g>
+        </g>
+
+        <g id="vessel" stroke="#B98F44" stroke-width="1.6" stroke-linejoin="round" fill="url(#clayBody)">
+          <path class="shard" d="M88 46 h64 l-11 20 h-42 z"/>
+          <path class="shard" d="M99 66 h42 l-5 42 h-32 z"/>
+          <path class="shard" d="M104 108 h32 l-16 34 z"/>
+          <path class="shard" d="M104 108 L120 142 L120 196 L70 152 Q78 124 104 108 z"/>
+          <path class="shard" d="M70 152 L120 196 L60 244 Q42 200 50 174 Q56 160 70 152 z"/>
+          <path class="shard" d="M60 244 L120 196 L120 268 L98 280 Q72 268 60 244 z"/>
+          <path class="shard" d="M136 108 L120 142 L120 196 L170 152 Q162 124 136 108 z"/>
+          <path class="shard" d="M170 152 L120 196 L180 244 Q198 200 190 174 Q184 160 170 152 z"/>
+          <path class="shard" d="M180 244 L120 196 L120 268 L142 280 Q168 268 180 244 z"/>
+          <path class="shard" d="M98 280 h44 l6 20 h-56 z"/>
+        </g>
+
+        <g id="rings" stroke="#B98F44" stroke-width=".9" fill="none" opacity="0">
+          <path class="ring-path" d="M62 170 q28 -12 58 2 q30 14 58 -4"/>
+          <path class="ring-path" d="M54 204 q32 -12 66 2 q32 16 62 -4"/>
+          <path class="ring-path" d="M64 240 q28 -10 56 2 q28 14 56 -4"/>
+        </g>
+
+        <g id="seams" stroke="#B98F44" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path class="seam-path" d="M88 46 h64"/>
+          <path class="seam-path" d="M99 66 h42"/>
+          <path class="seam-path" d="M104 108 h32"/>
+          <path class="seam-path" d="M104 108 L120 142 L120 268"/>
+          <path class="seam-path" d="M136 108 L120 142"/>
+          <path class="seam-path" d="M120 196 L70 152"/>
+          <path class="seam-path" d="M120 196 L170 152"/>
+          <path class="seam-path" d="M120 196 L60 244"/>
+          <path class="seam-path" d="M120 196 L180 244"/>
+          <path class="seam-path" d="M98 280 h44"/>
+        </g>
+
+        <g id="dustGroup" fill="#B98F44">
+          <circle class="dust" cx="84"  cy="196" r="2"/>
+          <circle class="dust" cx="160" cy="176" r="1.6"/>
+          <circle class="dust" cx="110" cy="248" r="2.2"/>
+          <circle class="dust" cx="144" cy="140" r="1.4"/>
+          <circle class="dust" cx="70"  cy="238" r="1.8"/>
+          <circle class="dust" cx="172" cy="232" r="2"/>
+        </g>
+      </svg>
+    </button>
+
+    <p class="track text-[.55rem] uppercase text-ink/35 mt-7" id="gateHint">Touch to open</p>
+  </div>
+</div>
+
+<!-- music toggle -->
+<button id="music" aria-label="Play the music" title="Music">
+  <span class="music-mark" aria-hidden="true">
+    <svg viewBox="0 0 24 34" fill="none" stroke="currentColor" stroke-width="1.3"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 33 V13"/>
+      <path d="M12 13 C6 9 5 3 12 1 C19 3 18 9 12 13 z"/>
+      <path d="M12 24 C7 23 4 20 3 16 C8 17 11 20 12 23"/>
+      <path d="M12 20 C17 19 20 16 21 12 C16 13 13 16 12 19"/>
+    </svg>
+    <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+  </span>
+  <span class="music-word" id="musicWord">Music</span>
+</button>
+<audio id="track" loop preload="none" playsinline></audio>
+
+<main id="page" class="relative z-10 opacity-0">
+
+<!-- ════ HERO ════ -->
+<section class="relative min-h-[100svh] flex flex-col items-center justify-center px-6 py-16 text-center overflow-hidden">
+
+  <div class="motif sage hide-sm" style="top:6%; left:3%; width:120px;" data-float="1"><svg viewBox="0 0 140 300" fill="none"><use href="#lilyStem"/></svg></div>
+
+  <div class="motif hide-sm" style="top:12%; right:4%; width:104px;" data-float="-1"><svg viewBox="0 0 90 220" fill="none"><use href="#lilyBud"/></svg></div>
+
+  <div class="motif rose hide-sm" style="bottom:6%; right:9%; width:86px;" data-float="1"><svg viewBox="0 0 200 200" fill="none"><use href="#lilyBloom"/></svg></div>
+
+  <div class="relative max-w-2xl w-full">
+    <p class="hero-el track text-[.56rem] uppercase text-clay mb-7">Heliopolis &middot; Cairo</p>
+
+    <h1 class="hero-el leading-none">
+      <span class="block font-script text-[3.2rem] sm:text-8xl text-ink">Karim</span>
+      <span class="block font-serif italic text-2xl sm:text-3xl my-2 text-clay/80">&amp;</span>
+      <span class="block font-script text-[3.2rem] sm:text-8xl text-ink">Nardien</span>
+    </h1>
+
+    <div class="hero-el seam w-40 sm:w-64 mx-auto my-8"></div>
+
+    <p class="hero-el font-serif text-lg sm:text-2xl text-ink/85 track-sm">Saturday, 19 September 2026</p>
+    <p class="hero-el font-serif text-lg sm:text-xl text-ink/65 track-sm mt-3">1:30 PM</p>
+    <p class="hero-el track text-[.54rem] uppercase text-ink/45 mt-5 leading-relaxed">Heliopolis Evangelical Church</p>
+
+    <p class="hero-el font-serif italic text-base sm:text-lg text-ink/60 mt-9 leading-relaxed max-w-sm mx-auto">
+      &ldquo;We are the clay, and you our potter; we are all the work of your hand.&rdquo;
+    </p>
+    <p class="hero-el track text-[.5rem] uppercase text-clay mt-3">Isaiah 64:8</p>
+
+    <div class="hero-el mt-10 flex justify-center gap-4 sm:gap-12">
+      <div><p class="font-serif text-2xl sm:text-4xl gold-ink" data-cd="d">00</p><p class="track text-[.44rem] sm:text-[.48rem] uppercase text-ink/40 mt-2">Days</p></div>
+      <div><p class="font-serif text-2xl sm:text-4xl gold-ink" data-cd="h">00</p><p class="track text-[.44rem] sm:text-[.48rem] uppercase text-ink/40 mt-2">Hours</p></div>
+      <div><p class="font-serif text-2xl sm:text-4xl gold-ink" data-cd="m">00</p><p class="track text-[.44rem] sm:text-[.48rem] uppercase text-ink/40 mt-2">Mins</p></div>
+      <div><p class="font-serif text-2xl sm:text-4xl gold-ink" data-cd="s">00</p><p class="track text-[.44rem] sm:text-[.48rem] uppercase text-ink/40 mt-2">Secs</p></div>
+    </div>
+  </div>
+
+  <a href="#invitation" class="hero-el mt-14 flex flex-col items-center gap-3 group">
+    <span class="track text-[.5rem] uppercase text-ink/35">Scroll</span>
+    <span class="w-px h-12" style="background:linear-gradient(180deg,rgba(185,143,68,.85),transparent)"></span>
+  </a>
+</section>
+
+<!-- ════ THEME ════ -->
+<section id="invitation" class="inv-stage">
+  <div class="inv-sheet" role="img" aria-label="Wedding invitation: Karim Raef and Nardien Raafat, Saturday 19 September 2026, 1:30 PM">
+    <p class="inv-t" style="top:15.9%; font-size:1.95cqh">Raef El-Gamal &amp; Mayada Mounir</p>
+    <p class="inv-t caps" style="top:19.9%; font-size:.86cqh">Together with</p>
+    <p class="inv-t" style="top:23.9%; font-size:1.95cqh">Raafat Sedky &amp; Amaney Sabry</p>
+
+    <p class="inv-t caps" style="top:29.6%; font-size:.88cqh; width:56%; line-height:2.1">
+      Request the honour of your presence at the marriage of
+    </p>
+
+    <p class="inv-t script" style="top:39.6%; font-size:5cqh">Karim Raef</p>
+    <p class="inv-t amp" style="top:45.2%; font-size:2.1cqh">&amp;</p>
+    <p class="inv-t script" style="top:50.8%; font-size:5cqh">Nardien Raafat</p>
+
+    <span class="inv-line" style="top:58%; width:18%"></span>
+
+    <p class="inv-t body" style="top:67.2%; font-size:1.95cqh; width:52%; line-height:1.75">
+      Come witness their marriage, and celebrate what God's grace and mercy has put back together.
+    </p>
+
+    <p class="inv-t caps clay" style="top:77.6%; font-size:.86cqh">Date</p>
+    <p class="inv-t" style="top:81.4%; font-size:1.95cqh">Saturday, 19 September 2026</p>
+
+    <span class="inv-line" style="top:85.6%; width:14%"></span>
+
+    <p class="inv-t caps clay" style="top:89.2%; font-size:.86cqh">Hour</p>
+    <p class="inv-t" style="top:92.9%; font-size:1.95cqh">1:30 PM</p>
+  </div>
+</section>
+
+<section id="theme" class="inv-stage">
+  <div class="thm-sheet">
+    <p class="inv-t caps clay" style="top:31.1%; font-size:1cqh">The theme</p>
+    <p class="inv-t script" style="top:37.6%; font-size:3.7cqh">Mended in Grace</p>
+
+    <p class="inv-t body" style="top:56.3%; font-size:1.85cqh; width:62%; line-height:2.05">
+      All of these pieces, broken and scattered,<br>
+      gathered in mercy, mended, and made whole.<br>
+      God shapes us like pottery,<br>
+      and he makes all things new.
+    </p>
+
+    <p class="inv-t clay" style="top:70.1%; font-size:1.7cqh; font-style:italic">Amazing grace, how sweet the sound.</p>
+  </div>
+</section>
+
+<!-- ════ INVITATION ════ -->
+
+
+<!-- ════ PROGRAM ════ -->
+<section class="relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
+  <div class="motif hide-sm" style="top:10%; right:3%; width:110px;" data-float="1"><svg viewBox="0 0 140 300" fill="none"><use href="#lilyStem"/></svg></div>
+
+  <div class="max-w-3xl mx-auto relative">
+    <div class="text-center">
+      <p class="track text-[.54rem] uppercase text-clay reveal">The day</p>
+      <h2 class="font-script text-4xl sm:text-6xl mt-4 text-ink reveal">Program</h2>
+      <div class="seam w-24 mx-auto mt-6 reveal"></div>
+    </div>
+
+    <ol class="mt-10">
+      <li class="reveal grid grid-cols-[80px_1fr] sm:grid-cols-[150px_1fr] gap-4 sm:gap-5 py-6" style="border-bottom:1px solid rgba(58,43,34,.13)">
+        <p class="font-serif text-base sm:text-lg text-clay pt-1">1:00 PM</p>
+        <div>
+          <h3 class="font-serif text-xl sm:text-2xl text-ink">Doors open</h3>
+          <p class="text-sm font-light text-ink/55 mt-2 leading-relaxed">Please be seated by 1:20. Cairo traffic on a Saturday is its own event.</p>
+        </div>
+      </li>
+      <li class="reveal grid grid-cols-[80px_1fr] sm:grid-cols-[150px_1fr] gap-4 sm:gap-5 py-6" style="border-bottom:1px solid rgba(58,43,34,.13)">
+        <p class="font-serif text-base sm:text-lg text-clay pt-1">1:30 PM</p>
+        <div>
+          <h3 class="font-serif text-xl sm:text-2xl text-ink">Ceremony</h3>
+          <p class="text-sm font-light text-ink/55 mt-2 leading-relaxed">Rings and vows at Heliopolis Evangelical Church.</p>
+        </div>
+      </li>
+      <li class="reveal grid grid-cols-[80px_1fr] sm:grid-cols-[150px_1fr] gap-4 sm:gap-5 py-6" style="border-bottom:1px solid rgba(58,43,34,.13)">
+        <p class="font-serif text-base sm:text-lg text-clay pt-1">3:30 PM</p>
+        <div>
+          <h3 class="font-serif text-xl sm:text-2xl text-ink">Photographs</h3>
+          <p class="text-sm font-light text-ink/55 mt-2 leading-relaxed">Stay for the pictures. We want you in them.</p>
+        </div>
+      </li>
+    </ol>
+
+    <p class="reveal text-center font-serif italic text-lg text-ink/65 mt-9">Children are very welcome.</p>
+
+    <div class="reveal flex justify-center mt-9">
+      <a class="btn text-center" id="gcal" href="#" target="_blank" rel="noopener">Add to Google Calendar</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════ VENUE ════ -->
+<section class="relative overflow-hidden py-16 sm:py-28 px-5 sm:px-6">
+  <div class="motif sage hide-sm" style="top:6%; left:3%; width:120px;" data-float="1"><svg viewBox="0 0 140 300" fill="none"><use href="#lilyStem"/></svg></div>
+  <div class="max-w-3xl mx-auto relative">
+    <div class="text-center">
+      <p class="track text-[.54rem] uppercase text-clay reveal">Where</p>
+      <h2 class="font-script text-4xl sm:text-6xl mt-4 text-ink reveal">The Church</h2>
+      <div class="seam w-24 mx-auto mt-6 reveal"></div>
+    </div>
+
+    <div class="card hair relative mt-10 overflow-hidden reveal" style="background:rgba(243,237,226,.82)">
+      <div class="absolute inset-2 pointer-events-none" style="border:1px solid rgba(185,143,68,.28)"></div>
+
+      <div class="relative grid sm:grid-cols-[190px_1fr] items-center gap-6 p-8 sm:p-11">
+
+        <!-- line-drawn church -->
+        <svg viewBox="0 0 160 170" class="w-28 sm:w-full mx-auto" fill="none"
+             stroke="#B2704A" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
+          <path d="M80 10 v22"/><path d="M70 20 h20"/>
+          <path d="M80 32 L58 62 v70 h44 V62 z"/>
+          <path d="M58 132 H26 V88 l32 -22"/>
+          <path d="M102 132 h32 V88 l-32 -22"/>
+          <path d="M80 132 v-30 a10 10 0 0 1 20 0" transform="translate(-10,0)"/>
+          <path d="M72 82 a8 8 0 0 1 16 0 v14 H72 z"/>
+          <path d="M38 106 a6 6 0 0 1 12 0 v12 H38 z"/>
+          <path d="M110 106 a6 6 0 0 1 12 0 v12 H110 z"/>
+          <path d="M16 132 h128"/>
+          <path d="M80 62 v14" opacity=".6"/>
+        </svg>
+
+        <div class="text-center sm:text-left">
+          <p class="track text-[.5rem] uppercase text-clay mb-3">Ceremony</p>
+          <h3 class="font-serif text-2xl sm:text-3xl leading-tight text-ink">Heliopolis Evangelical Church</h3>
+          <p class="text-sm font-light text-ink/55 mt-3">Heliopolis, Cairo</p>
+          <div class="seam w-20 my-6 mx-auto sm:mx-0"></div>
+          <a href="https://maps.google.com/?q=Heliopolis+Evangelical+Church+Cairo" target="_blank" rel="noopener"
+             class="inline-block track text-[.53rem] uppercase text-clay pb-1"
+             style="border-bottom:1px solid rgba(178,112,74,.45)">Open in maps</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ RSVP ════ -->
+<section id="rsvp" class="relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
+  <div class="motif hide-sm" style="top:12%; right:4%; width:104px;" data-float="-1"><svg viewBox="0 0 90 220" fill="none"><use href="#lilyBud"/></svg></div>
+  <div class="motif rose hide-sm" style="bottom:6%; right:9%; width:86px;" data-float="1"><svg viewBox="0 0 200 200" fill="none"><use href="#lilyBloom"/></svg></div>
+  <div class="max-w-lg mx-auto relative">
+    <div class="text-center">
+      <p class="track text-[.54rem] uppercase text-clay reveal">Kindly reply</p>
+      <h2 class="font-script text-4xl sm:text-6xl mt-4 text-ink reveal">Take Your Place</h2>
+      <p class="text-sm font-light text-ink/50 mt-4 reveal">By 15 August 2026</p>
+      <div class="seam w-24 mx-auto mt-6 reveal"></div>
+    </div>
+
+    <div class="card hair mt-9 p-6 sm:p-10 reveal" style="background:rgba(231,219,201,.45)">
+      <form id="rsvpForm" novalidate>
+        <label class="block track-sm text-[.56rem] uppercase text-ink/45 mb-1" for="name">Full name</label>
+        <input class="field" id="name" name="name" type="text" placeholder="As it appears on your invitation" autocomplete="name" enterkeyhint="done" />
+        <p id="errName" class="text-[.75rem] text-terra mt-2 hidden font-light">Please enter your full name.</p>
+
+        <p class="track-sm text-[.56rem] uppercase text-ink/45 mb-3 mt-9">Will you be there?</p>
+        <div class="grid grid-cols-2 gap-3" id="attendGroup">
+          <button type="button" class="chip" data-val="yes" aria-pressed="false">Joyfully yes</button>
+          <button type="button" class="chip" data-val="no" aria-pressed="false">Sadly can't</button>
+        </div>
+        <p id="errAttend" class="text-[.75rem] text-terra mt-3 hidden font-light">Please choose one.</p>
+
+        <div class="mt-9">
+          <button type="submit" class="btn w-full" id="submitBtn">Send reply</button>
+        </div>
+      </form>
+
+      <div id="success" class="hidden text-center py-6">
+        <svg width="66" height="86" viewBox="0 0 220 300" class="mx-auto" fill="none" aria-hidden="true">
+          <path d="M74 34 h72 l-10 18 q-26 15 -52 0 z" fill="#F2E5D0" stroke="#B98F44" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M84 62 h52 l-7 46 -19 26 -19 -26 z" fill="#F2E5D0" stroke="#B98F44" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M110 138 C64 138 36 168 36 208 C36 246 68 268 110 268 C156 268 184 246 184 208 C184 168 156 138 110 138 z"
+                fill="#F2E5D0" stroke="#B98F44" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M86 268 h48 l-8 20 h-32 z" fill="#F2E5D0" stroke="#B98F44" stroke-width="2.4" stroke-linejoin="round"/>
+          <g stroke="#B98F44" stroke-width="3.4" stroke-linecap="round" fill="none">
+            <path d="M110 134 L110 268"/>
+          </g>
+        </svg>
+        <h3 class="font-script text-3xl sm:text-4xl text-ink mt-6" id="successTitle">Your place is set</h3>
+        <p class="text-sm font-light text-ink/55 mt-4 leading-relaxed" id="successBody">We have your reply. We will see you at the church.</p>
+        <div class="seam w-20 mx-auto my-7"></div>
+        <p class="track text-[.5rem] uppercase text-clay">19 September 2026 &middot; Heliopolis</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="py-14 text-center px-6">
+  <div class="w-16 mx-auto mb-6 reveal" style="color:var(--clay); opacity:.55">
+    <svg viewBox="0 0 200 200" fill="none" aria-hidden="true"><use href="#lilyBloom"/></svg>
+  </div>
+  <div class="seam w-32 mx-auto mb-8"></div>
+  <p class="font-serif italic text-lg text-ink/70">He makes all things new.</p>
+  <p class="track text-[.48rem] uppercase text-ink/30 mt-4 leading-loose">Karim &amp; Nardien &middot; Nineteen September &middot; Twenty Twenty Six</p>
+</footer>
+
+</main>
+
+<script>
+/* ─── CONFIG ─── */
+const EVENT = {
+  title: "Karim & Nardien Wedding",
+  start: new Date("2026-09-19T13:30:00+03:00"),
+  end:   new Date("2026-09-19T16:00:00+03:00"),
+  location: "Heliopolis Evangelical Church, Heliopolis, Cairo, Egypt",
+  details: "Doors open 1:00 PM. Ceremony 1:30 PM. Photographs from 3:30 PM. Children are welcome."
+};
+
+const SUPABASE_URL = "https://ukgllbcigjesjhnsoirz.supabase.co";
+const SUPABASE_KEY = "sb_publishable_XZMhkrrrEF2XUhkfWKSySQ_ZZO3RE8W";
+// the track: tries the tidy path first, then the folder it was uploaded into
+const MUSIC_PATHS = [
+  "/storage/v1/object/public/music/music.mp3",
+  "/storage/v1/object/public/music/Untitled%20folder/music.mp3"
+];
+
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ─── MUSIC : muted by default, guest opts in ─── */
+const track = document.getElementById('track');
+const musicBtn = document.getElementById('music');
+let musicReady = false;
+
+(async () => {
+  for (const path of MUSIC_PATHS){
+    try {
+      const r = await fetch(SUPABASE_URL + path, { method:'HEAD' });
+      if (r.ok){
+        musicReady = true;
+        track.src = SUPABASE_URL + path;
+        musicBtn.style.display = 'flex';
+        // it arrives quietly, a moment after the page does
+        gsap.fromTo(musicBtn,
+          { opacity:0, y:10 },
+          { opacity:1, y:0, duration:1.1, delay:1.2, ease:'power2.out' });
+        return;
+      }
+    } catch(e){}
+  }
+})();
+
+const MUSIC_START = 10;   // the first ten seconds are intro; start past them
+
+// on loop, come back to the start point rather than to 0
+track.addEventListener('timeupdate', () => {
+  if (track.currentTime < MUSIC_START - .5 && track.currentTime > .05 && !track.seeking){
+    try { track.currentTime = MUSIC_START; } catch(e){}
+  }
+});
+
+function seekToStart(){
+  try {
+    if (track.readyState >= 1) { track.currentTime = MUSIC_START; return; }
+    track.addEventListener('loadedmetadata', () => {
+      try { track.currentTime = MUSIC_START; } catch(e){}
+    }, { once:true });
+  } catch(e){}
+}
+
+musicBtn.addEventListener('click', async () => {
+  if (!musicReady) return;
+  if (track.paused){
+    try {
+      track.volume = 0;
+      seekToStart();
+      await track.play();
+      seekToStart();
+      musicBtn.classList.add('on');
+      musicBtn.setAttribute('aria-label','Mute the music');
+      document.getElementById('musicWord').textContent = 'Playing';
+      gsap.to(track, { volume:.45, duration:1.6, ease:'power2.out' });
+    } catch(e){}
+  } else {
+    gsap.to(track, { volume:0, duration:.5, onComplete:() => track.pause() });
+    musicBtn.classList.remove('on');
+    musicBtn.setAttribute('aria-label','Play the music');
+    document.getElementById('musicWord').textContent = 'Music';
+  }
+});
+
+/* ─── THE GATE : break, settle, mend, enter ─── */
+const gate = document.getElementById('gate');
+const shards = gsap.utils.toArray('.shard');
+
+gsap.set('.seam-path', { strokeDasharray:260, strokeDashoffset:260 });
+gsap.set('.ring-path', { strokeDasharray:200, strokeDashoffset:200 });
+gsap.set('.shard', { x:0, y:0, rotation:0, scale:1, transformOrigin:'50% 50%' });
+// the arrangement and the throwing rings only exist once the pot is whole again
+gsap.set('#bouquet', { opacity:0 });
+gsap.set('#bouquet .stem, #bouquet .leaf', { scaleY:0, transformOrigin:'50% 100%' });
+gsap.set('#bouquet .bloom', { opacity:0, scale:.4, transformOrigin:'50% 50%' });
+gsap.set('#rings', { opacity:1 });
+
+function unlockScroll(){ document.body.classList.remove('is-locked'); }
+
+function openInvite(){
+  if (gate.dataset.done) return;
+  gate.dataset.done = "1";
+  document.getElementById('gateHint').textContent = '';
+
+  if (reduced){
+    gsap.set('.seam-path, .ring-path', { strokeDashoffset:0 });
+    gsap.set('#rings', { opacity:.5 });
+    gsap.set('#bouquet', { opacity:1 });
+    gsap.set('#bouquet .stem, #bouquet .leaf', { scaleY:1 });
+    gsap.set('#bouquet .bloom', { opacity:1, scale:1 });
+    gsap.to('#gate', { opacity:0, duration:.4, onComplete:()=>{ gate.remove(); enterPage(); } });
+    return;
+  }
+
+  // each piece flies outward from the centre of the pot, by its own geometry
+  const CX = 120, CY = 190;
+  shards.forEach(sh => {
+    const b = sh.getBBox();
+    const px = b.x + b.width/2, py = b.y + b.height/2;
+    let dx = px - CX, dy = py - CY;
+    const d = Math.hypot(dx, dy) || 1;
+    const push = 46 + d * 0.55;
+    sh._fx = (dx/d) * push;
+    sh._fy = (dy/d) * push - 10;
+    sh._fr = (dx >= 0 ? 1 : -1) * (10 + Math.random()*20);
+    sh._d  = d;
+  });
+  const ordered = [...shards].sort((p, q) => p._d - q._d);
+
+  const tl = gsap.timeline({ onComplete: enterPage });
+
+  tl.to('#vesselSvg', { scale:1.045, duration:.1, ease:'power4.out' })
+    .to('#vesselSvg', { scale:1, duration:.36, ease:'elastic.out(1,.45)' }, '>-.02');
+
+  ordered.forEach((sh, i) => {
+    tl.to(sh, { x: sh._fx, y: sh._fy, rotation: sh._fr, scale:.97,
+                duration:.8, ease:'power3.out' }, .18 + i * 0.028);
+  });
+
+  tl.to('.dust', { opacity:.55, y:-24, x:'random(-12,12)', duration:1.3, stagger:.05, ease:'power1.out' }, .26)
+    .to('.dust', { opacity:0, duration:.6 }, 1.35);
+
+  tl.to('#gateLine', { opacity:0, duration:.28 }, .5)
+    .call(() => { document.getElementById('gateLine').textContent = 'Broken and scattered'; }, null, .78)
+    .to('#gateLine', { opacity:1, duration:.4 }, .8);
+
+  ordered.forEach((sh, i) => {
+    tl.to(sh, { x:0, y:0, rotation:0, scale:1, duration:1.15, ease:'power2.inOut' }, 1.55 + i * 0.035);
+  });
+
+  tl.to('#gateLine', { opacity:0, duration:.28 }, 2.25)
+    .call(() => { document.getElementById('gateLine').textContent = 'Gathered and made whole'; }, null, 2.53)
+    .to('#gateLine', { opacity:1, duration:.4 }, 2.55);
+
+  tl.to('.seam-path', { strokeDashoffset:0, duration:.85, stagger:.05, ease:'power2.inOut' }, 2.5)
+    .to('#rings', { opacity:.5, duration:.5 }, 2.95)
+    .to('.ring-path', { strokeDashoffset:0, duration:.9, stagger:.12, ease:'power2.out' }, 2.95)
+    .to('#bouquet', { opacity:1, duration:.3 }, 3.15)
+    .to('#bouquet .stem, #bouquet .leaf', { scaleY:1, duration:1, stagger:.07, ease:'power2.out' }, 3.15)
+    .to('#bouquet .bloom', { opacity:1, scale:1, duration:.85, stagger:.09, ease:'back.out(1.6)' }, 3.55);
+
+  tl.to('#vesselSvg', { scale:1.025, duration:.5, ease:'sine.inOut' }, 4.3)
+    .to('#vesselSvg', { scale:1, duration:.45, ease:'sine.inOut' }, 4.8)
+    .to('#gate', { opacity:0, duration:.7, ease:'power2.inOut', onComplete:()=>gate.remove() }, 5.0);
+
+  gate.addEventListener('click', () => {
+    if (tl.progress() > .05 && tl.progress() < 1) tl.timeScale(6);
+  });
+}
+
+function enterPage(){
+  unlockScroll();
+  gsap.to('#page', { opacity:1, duration:.6 });
+  gsap.from('.hero-el', { y:38, opacity:0, filter:'blur(6px)', duration:1.4, stagger:.11, ease:'power2.out' });
+}
+
+document.getElementById('vessel-btn').addEventListener('click', openInvite);
+
+const cd = {};
+['d','h','m','s'].forEach(k => cd[k] = document.querySelector('[data-cd="'+k+'"]'));
+function tick(){
+  const diff = EVENT.start - new Date();
+  const p = n => String(n).padStart(2,'0');
+  if (diff <= 0){ Object.values(cd).forEach(el => el.textContent = '00'); return; }
+  const s = Math.floor(diff/1000);
+  cd.d.textContent = p(Math.floor(s/86400));
+  cd.h.textContent = p(Math.floor(s%86400/3600));
+  cd.m.textContent = p(Math.floor(s%3600/60));
+  cd.s.textContent = p(s%60);
+}
+tick(); setInterval(tick, 1000);
+
+/* ─── GOOGLE CALENDAR ─── */
+const z = d => d.toISOString().replace(/[-:]|\.\d{3}/g,'');
+document.getElementById('gcal').href =
+  'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+  '&text=' + encodeURIComponent(EVENT.title) +
+  '&dates=' + z(EVENT.start) + '/' + z(EVENT.end) +
+  '&details=' + encodeURIComponent(EVENT.details) +
+  '&location=' + encodeURIComponent(EVENT.location) +
+  '&ctz=Africa/Cairo';
+
+/* ─── SCROLL ─── */
+gsap.registerPlugin(ScrollTrigger);
+if (!reduced){
+  // text and small elements: drift up out of a soft blur
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.fromTo(el,
+      { y:42, opacity:0, filter:'blur(7px)' },
+      { y:0, opacity:1, filter:'blur(0px)', duration:1.5, ease:'power2.out',
+        scrollTrigger:{ trigger:el, start:'top 90%' } });
+  });
+
+  // cards settle in rather than snap
+  gsap.utils.toArray('.card').forEach(el => {
+    gsap.fromTo(el,
+      { scale:.965, opacity:0, y:30 },
+      { scale:1, opacity:1, y:0, duration:1.8, ease:'expo.out',
+        scrollTrigger:{ trigger:el, start:'top 88%' } });
+  });
+
+  // program lines arrive one after another
+  gsap.utils.toArray('ol li').forEach((el, i) => {
+    gsap.fromTo(el,
+      { x:-18, opacity:0 },
+      { x:0, opacity:1, duration:1.2, delay:i*.08, ease:'power2.out',
+        scrollTrigger:{ trigger:el, start:'top 92%' } });
+  });
+
+  // the sheet settles in, then the words arrive
+  gsap.utils.toArray('.inv-sheet, .thm-sheet').forEach(el => {
+    gsap.fromTo(el,
+      { opacity:0, y:24, scale:.985 },
+      { opacity:1, y:0, scale:1, duration:1.7, ease:'expo.out',
+        scrollTrigger:{ trigger:el, start:'top 75%' } });
+  });
+  gsap.fromTo('.__none',
+    { opacity:0, y:24, scale:.985 },
+    { opacity:1, y:0, scale:1, duration:1.7, ease:'expo.out',
+      scrollTrigger:{ trigger:'#invitation', start:'top 75%' } });
+  ['#invitation', '#theme'].forEach(sec => {
+    gsap.fromTo(sec + ' .inv-t, ' + sec + ' .inv-line',
+      { opacity:0, y:9 },
+      { opacity:1, y:0, duration:1.1, stagger:.06, ease:'power2.out',
+        scrollTrigger:{ trigger:sec, start:'top 62%' } });
+  });
+
+  // ornaments drift slower than the page
+  gsap.utils.toArray('[data-float]').forEach(el => {
+    const dir = parseFloat(el.dataset.float) || 1;
+    gsap.to(el, { yPercent: dir * 24, rotate: dir * 3, ease:'none',
+      scrollTrigger:{ trigger: el.closest('section'), start:'top bottom', end:'bottom top', scrub:1.4 } });
+  });
+
+  // section backgrounds breathe very slightly as you pass through them
+  gsap.utils.toArray('section').forEach(sec => {
+    gsap.fromTo(sec, { backgroundPosition:'50% 0%' }, { backgroundPosition:'50% 100%', ease:'none',
+      scrollTrigger:{ trigger:sec, start:'top bottom', end:'bottom top', scrub:2 } });
+  });
+}
+
+/* ─── RSVP ─── */
+const form = document.getElementById('rsvpForm');
+let attending = '';
+
+document.querySelectorAll('#attendGroup .chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#attendGroup .chip').forEach(c => c.setAttribute('aria-pressed','false'));
+    chip.setAttribute('aria-pressed','true');
+    attending = chip.dataset.val;
+    document.getElementById('errAttend').classList.add('hidden');
+  });
+});
+
+const showErr = (id, show) => document.getElementById(id).classList.toggle('hidden', !show);
+
+function validate(){
+  const nOk = document.getElementById('name').value.trim().length > 1;
+  const aOk = !!attending;
+  showErr('errName', !nOk); showErr('errAttend', !aOk);
+  return nOk && aOk;
+}
+
+form.addEventListener('submit', e => { e.preventDefault(); if (validate()) submit(); });
+
+async function submit(){
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Sending...';
+
+  const payload = {
+    name: document.getElementById('name').value.trim(),
+    attending: attending
+  };
+
+  try {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/rsvps', {
+      method:'POST',
+      headers:{
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    showSuccess(attending === 'yes');
+  } catch(err){
+    btn.disabled = false; btn.textContent = 'Send reply';
+    alert("That didn't send. Please check your connection and try again.");
+  }
+}
+
+function showSuccess(coming){
+  form.classList.add('hidden');
+  const box = document.getElementById('success');
+  if (!coming){
+    document.getElementById('successTitle').textContent = "You will be missed";
+    document.getElementById('successBody').textContent  = "Thank you for telling us. We will be praying you are with us in spirit.";
+  }
+  box.classList.remove('hidden');
+  gsap.from(box, { y:20, opacity:0, duration:.8, ease:'power3.out' });
+}
+</script>
+</body>
+</html>
