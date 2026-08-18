@@ -44,6 +44,7 @@
   .btn:hover{ background:var(--terra); border-color:var(--terra); color:var(--beige); }
   .btn:disabled{ opacity:.45; cursor:not-allowed; }
   .btn.small{ padding:9px 16px; font-size:.62rem; }
+  .btn[aria-pressed="true"]{ background:var(--terra); border-color:var(--terra); color:var(--beige); }
 
   .gate{ max-width:380px; margin:14vh auto; text-align:center; }
   .hidden{ display:none !important; }
@@ -122,9 +123,9 @@
 
   <div class="toolbar">
     <input class="field" id="search" type="search" placeholder="Search by name" />
-    <button class="btn small" data-filter="all" id="fAll">All</button>
-    <button class="btn small" data-filter="yes">Attending</button>
-    <button class="btn small" data-filter="no">Regrets</button>
+    <button class="btn small" data-filter="all" id="fAll" aria-pressed="true">All</button>
+    <button class="btn small" data-filter="yes" aria-pressed="false">Attending</button>
+    <button class="btn small" data-filter="no" aria-pressed="false">Regrets</button>
   </div>
 
   <table>
@@ -198,13 +199,19 @@ $('refreshBtn').addEventListener('click', async () => {
 });
 
 document.querySelectorAll('[data-filter]').forEach(b => {
-  b.addEventListener('click', () => { filter = b.dataset.filter; render(); });
+  b.addEventListener('click', () => {
+    filter = b.dataset.filter;
+    document.querySelectorAll('[data-filter]').forEach(o =>
+      o.setAttribute('aria-pressed', String(o === b)));
+    render();
+  });
 });
 $('search').addEventListener('input', render);
 
 function fmt(iso){
   const d = new Date(iso);
-  return d.toLocaleString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+  if (isNaN(d)) return '—';
+  return d.toLocaleString('en-GB', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
 }
 
 function esc(s){
@@ -225,13 +232,15 @@ function render(){
   $('sNo').textContent    = rows.filter(r => r.attending === 'no').length;
   $('sToday').textContent = rows.filter(r => new Date(r.created_at).getTime() > dayAgo).length;
 
-  $('rows').innerHTML = view.map(r =>
-    '<tr>' +
+  $('rows').innerHTML = view.map(r => {
+    const yes = r.attending === 'yes';
+    // r.attending goes into a class attribute, so only ever emit a known word
+    return '<tr>' +
       '<td class="serif" style="font-size:1.05rem">' + esc(r.name) + '</td>' +
-      '<td><span class="pill ' + r.attending + '">' + (r.attending === 'yes' ? 'Attending' : 'Regrets') + '</span></td>' +
-      '<td class="muted">' + fmt(r.created_at) + '</td>' +
-    '</tr>'
-  ).join('');
+      '<td><span class="pill ' + (yes ? 'yes' : 'no') + '">' + (yes ? 'Attending' : 'Regrets') + '</span></td>' +
+      '<td class="muted">' + esc(fmt(r.created_at)) + '</td>' +
+    '</tr>';
+  }).join('');
 
   $('empty').classList.toggle('hidden', view.length > 0);
   $('lastSync').textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
@@ -242,11 +251,16 @@ $('csvBtn').addEventListener('click', () => {
   const csv = ['Name,Attending,Received']
     .concat(rows.map(r => [q(r.name), q(r.attending), q(r.created_at)].join(',')))
     .join('\n');
-  const url = URL.createObjectURL(new Blob([csv], { type:'text/csv;charset=utf-8' }));
+  // a BOM so Excel opens Arabic and accented names in the right encoding
+  const url = URL.createObjectURL(new Blob(['\ufeff' + csv], { type:'text/csv;charset=utf-8' }));
   const a = document.createElement('a');
   a.href = url; a.download = 'rsvps-' + new Date().toISOString().slice(0,10) + '.csv';
+  // Firefox ignores an anchor that is not in the document, and revoking the
+  // URL in the same tick can cancel the save before it begins
+  document.body.appendChild(a);
   a.click();
-  URL.revokeObjectURL(url);
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 
 // stay signed in across reloads within the same tab
