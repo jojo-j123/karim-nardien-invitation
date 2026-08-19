@@ -342,7 +342,7 @@
 
       <!-- the warm wash that gathers along the joins as they close -->
       <g id="mendGlow" clip-path="url(#cpPot)" opacity="0">
-        <g fill="none" stroke="#C89A80" stroke-width="9" stroke-linecap="round" filter="url(#mendBlur)" opacity=".55">
+        <g fill="none" stroke="#CBAA72" stroke-width="9" stroke-linecap="round" filter="url(#mendBlur)" opacity=".5">
           <path class="join" d="M -20 88 C 24 82, 58 106, 96 96 C 122 89, 136 86, 150 95 C 166 105, 196 84, 232 96 C 268 108, 292 92, 320 100"/>
           <path class="join" d="M 150 95 C 160 124, 140 146, 149 168 C 156 186, 139 190, 143 205"/>
           <path class="join" d="M -20 198 C 22 194, 56 214, 92 202 C 114 195, 131 198, 143 205 C 159 213, 190 194, 226 206 C 262 218, 292 200, 320 208"/>
@@ -358,7 +358,7 @@
 
       <!-- the faint trace the mend leaves behind -->
       <g id="mendTrace" clip-path="url(#cpPot)" opacity="0"
-         fill="none" stroke="#BE9B7F" stroke-width="1.1" stroke-linecap="round">
+         fill="none" stroke="#BFA05E" stroke-width="1.15" stroke-linecap="round">
         <path d="M -20 88 C 24 82, 58 106, 96 96 C 122 89, 136 86, 150 95 C 166 105, 196 84, 232 96 C 268 108, 292 92, 320 100"/>
         <path d="M 150 95 C 160 124, 140 146, 149 168 C 156 186, 139 190, 143 205"/>
         <path d="M -20 198 C 22 194, 56 214, 92 202 C 114 195, 131 198, 143 205 C 159 213, 190 194, 226 206 C 262 218, 292 200, 320 208"/>
@@ -794,7 +794,7 @@ function runOpening(){
   /* ── MENDED ── a warm wash gathers along the joins as they close, then all
      but leaves. What remains is a faint trace: the mending is part of it now. */
   tl.to('#mendGlow', { opacity:1, duration:1.6, ease:'power1.inOut' }, 8.4)
-    .to('#mendTrace', { opacity:.30, duration:1.8, ease:'power1.out' }, 9.5)
+    .to('#mendTrace', { opacity:.42, duration:1.8, ease:'power1.out' }, 9.5)
     .to('#mendGlow', { opacity:.16, duration:2.4, ease:'power1.out' }, 10.0);
 
   tl.to(caption, { opacity:0, duration:.5 }, 9.9)
