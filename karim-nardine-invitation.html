@@ -87,14 +87,14 @@
 
   /* the vessels themselves, set small and quiet through the page: the same
      thrown pot the story is told with, each one already mended */
-  .pot{ position:absolute; pointer-events:none; z-index:0; opacity:.3; aspect-ratio:300/400; }
+  .pot{ position:absolute; pointer-events:none; z-index:0; opacity:.38; aspect-ratio:300/400; }
   .pot svg{ width:100%; height:100%; display:block; }
-  @media (max-width:640px){ .pot{ opacity:.26; } }
+  @media (max-width:640px){ .pot{ opacity:.34; } }
   /* the filled urn, standing in the lower corner of every page */
-  .urn{ position:absolute; pointer-events:none; z-index:0; opacity:.34;
+  .urn{ position:absolute; pointer-events:none; z-index:0; opacity:.42;
         aspect-ratio:300/400; width:clamp(56px, 14.5vw, 124px); }
   .urn svg{ width:100%; height:100%; display:block; }
-  @media (max-width:640px){ .urn{ opacity:.3; } }
+  @media (max-width:640px){ .urn{ opacity:.38; } }
   /* the narration is written a word at a time and never rewritten, so the
      whole sentence sits on one line and each word keeps its own place */
   .narr .nline{ display:inline-block; white-space:nowrap; }
@@ -321,70 +321,131 @@
 <body class="is-locked font-sans no-js">
 <script>document.body.classList.remove('no-js');</script>
 
-<!-- the vessel of the story, drawn once and set small through the page.
-     Same silhouette, same clay, same throwing lines and the same four mends in
-     their true places, so the mark is the pot itself rather than a likeness. -->
+<!-- the vessels of the page, painted rather than drawn: the same silhouettes
+     as the story's pot and the corner urns, but laid in as watercolour — thin
+     washes that do not quite agree, pigment pooling where a wash met its own
+     edge, the tooth of the paper showing through, and a loose line sitting a
+     little off the paint it belongs to. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <linearGradient id="markClay" x1=".18" y1="0" x2=".86" y2="1">
-      <stop offset="0%" stop-color="#FBF8F2"/><stop offset="42%" stop-color="#F5EFE4"/>
-      <stop offset="78%" stop-color="#EDE1D2"/><stop offset="100%" stop-color="#E4D3C0"/>
-    </linearGradient>
-    <clipPath id="markClip"><path d="M 130 63 C 133 72, 135 80, 134 89 C 116 106, 94 132, 87 170 C 80 208, 86 252, 104 284 C 110 296, 114 306, 117 315 C 140 320, 162 320, 185 315 C 188 306, 192 296, 198 284 C 216 252, 222 208, 215 170 C 208 132, 186 106, 168 89 C 167 80, 169 72, 172 63 C 158 57, 144 57, 130 63 Z"/></clipPath>
+    <!-- ── the wet edge: three wobbles, so no two layers of a mark dry alike.
+           Kept small on purpose: these are thrown pots, not loose sketches,
+           and the vessel's neck is only a few units wide — too much
+           displacement eats it ── -->
+    <filter id="wcA" x="-14%" y="-14%" width="128%" height="128%">
+      <feTurbulence type="fractalNoise" baseFrequency=".014" numOctaves="2" seed="11" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="wcB" x="-14%" y="-14%" width="128%" height="128%">
+      <feTurbulence type="fractalNoise" baseFrequency=".021" numOctaves="2" seed="29" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="wcC" x="-12%" y="-12%" width="124%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="5" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- pigment gathering as a wash dries against its own edge -->
+    <filter id="wcPool" x="-14%" y="-14%" width="128%" height="128%">
+      <feTurbulence type="fractalNoise" baseFrequency=".022" numOctaves="2" seed="17" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="5" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feGaussianBlur in="d" stdDeviation="1.7"/>
+    </filter>
+    <!-- a wash bleeding outward, for gold laid wet into wet -->
+    <filter id="wcWet" x="-18%" y="-18%" width="136%" height="136%">
+      <feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="23" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="7" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feGaussianBlur in="d" stdDeviation="4"/>
+    </filter>
+    <!-- the tooth of the paper showing through the pigment -->
+    <filter id="wcGrain" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency=".5" numOctaves="2" seed="4"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 .40  0 0 0 0 .33  0 0 0 0 .25  0 0 0 .5 0"/>
+    </filter>
+
+    <!-- ══ the mended vessel, painted ══ -->
+    <path id="vesselBody" d="M 130 63 C 133 72, 135 80, 134 89 C 116 106, 94 132, 87 170 C 80 208, 86 252, 104 284 C 110 296, 114 306, 117 315 C 140 320, 162 320, 185 315 C 188 306, 192 296, 198 284 C 216 252, 222 208, 215 170 C 208 132, 186 106, 168 89 C 167 80, 169 72, 172 63 C 158 57, 144 57, 130 63 Z"/>
+    <!-- a clipPath's children must be shapes: a use of a group clips to nothing -->
+    <clipPath id="vesselGeoClip"><use href="#vesselBody"/></clipPath>
+    <g id="vesselJoins" fill="none" stroke-linecap="round">
+      <path d="M -20 88 C 24 82, 58 106, 96 96 C 122 89, 136 86, 150 95 C 166 105, 196 84, 232 96 C 268 108, 292 92, 320 100"/>
+      <path d="M 150 95 C 160 124, 140 146, 149 168 C 156 186, 139 190, 143 205"/>
+      <path d="M -20 198 C 22 194, 56 214, 92 202 C 114 195, 131 198, 143 205 C 159 213, 190 194, 226 206 C 262 218, 292 200, 320 208"/>
+      <path d="M -20 278 C 30 274, 76 294, 120 282 C 168 269, 224 296, 268 282 C 290 275, 306 280, 320 286"/>
+    </g>
     <symbol id="vesselMark" viewBox="0 0 300 400">
-      <path d="M 130 63 C 133 72, 135 80, 134 89 C 116 106, 94 132, 87 170 C 80 208, 86 252, 104 284 C 110 296, 114 306, 117 315 C 140 320, 162 320, 185 315 C 188 306, 192 296, 198 284 C 216 252, 222 208, 215 170 C 208 132, 186 106, 168 89 C 167 80, 169 72, 172 63 C 158 57, 144 57, 130 63 Z" fill="url(#markClay)" stroke="#9A8E79" stroke-width="3" stroke-linejoin="round"/>
-      <path d="M 130 63 C 143 69, 159 69, 172 63" fill="none" stroke="#9A8E79" stroke-width="2.2" opacity=".6"/>
-      <g clip-path="url(#markClip)" fill="none" stroke="#BCB29D" stroke-width="2" opacity=".45">
-        <path d="M 94 156 C 128 166, 174 166, 208 155"/>
-        <path d="M 88 196 C 126 208, 176 208, 214 195"/>
-        <path d="M 95 246 C 130 258, 172 258, 207 245"/>
+      <use href="#vesselBody" fill="#EADFCA" opacity=".46" filter="url(#wcA)"/>
+      <use href="#vesselBody" fill="#DCC9AC" opacity=".26" filter="url(#wcB)" transform="translate(2.5,-2)"/>
+      <g clip-path="url(#vesselGeoClip)">
+        <ellipse cx="198" cy="230" rx="36" ry="94" fill="#C3AE8F" opacity=".2"  filter="url(#wcB)"/>
+        <ellipse cx="120" cy="186" rx="21" ry="42" fill="#FCF8F1" opacity=".36" filter="url(#wcB)"/>
+        <path d="M 100 196 C 124 186, 158 202, 186 192 C 194 218, 178 248, 148 252 C 116 256, 96 228, 100 196 Z"
+              fill="#FBF6EC" opacity=".28" filter="url(#wcB)"/>
+        <use href="#vesselBody" fill="none" stroke="#B3A183" stroke-width="6" opacity=".4" filter="url(#wcPool)"/>
+        <rect x="70" y="45" width="170" height="290" filter="url(#wcGrain)" opacity=".13"/>
+        <g fill="none" stroke="#AEA187" stroke-width="2" opacity=".24" filter="url(#wcC)">
+          <path d="M 94 156 C 128 166, 174 166, 208 155"/>
+          <path d="M 88 196 C 126 208, 176 208, 214 195"/>
+          <path d="M 95 246 C 130 258, 172 258, 207 245"/>
+        </g>
+        <!-- the gold, wet into wet: the bloom it made, then the line that dried in it -->
+        <use href="#vesselJoins" stroke="#DCC07A" stroke-width="8"   opacity=".4" filter="url(#wcWet)"/>
+        <use href="#vesselJoins" stroke="#BE9838" stroke-width="2.2" opacity=".7" filter="url(#wcC)"/>
       </g>
-      <g clip-path="url(#markClip)" fill="none" stroke="#C6A751" stroke-width="2.8" stroke-linecap="round" opacity=".9">
-        <path d="M -20 88 C 24 82, 58 106, 96 96 C 122 89, 136 86, 150 95 C 166 105, 196 84, 232 96 C 268 108, 292 92, 320 100"/>
-        <path d="M 150 95 C 160 124, 140 146, 149 168 C 156 186, 139 190, 143 205"/>
-        <path d="M -20 198 C 22 194, 56 214, 92 202 C 114 195, 131 198, 143 205 C 159 213, 190 194, 226 206 C 262 218, 292 200, 320 208"/>
-        <path d="M -20 278 C 30 274, 76 294, 120 282 C 168 269, 224 296, 268 282 C 290 275, 306 280, 320 286"/>
-      </g>
+      <path d="M 130 63 C 143 69, 159 69, 172 63" fill="none" stroke="#8E846E" stroke-width="1.4" opacity=".38" filter="url(#wcC)"/>
+      <use href="#vesselBody" fill="none" stroke="#8E846E" stroke-width="1.4" opacity=".42" filter="url(#wcB)"/>
     </symbol>
-    <linearGradient id="urnClay" x1=".15" y1="0" x2=".9" y2="1">
-      <stop offset="0%" stop-color="#EDD3BB"/><stop offset="40%" stop-color="#E4C0A2"/>
-      <stop offset="78%" stop-color="#D6AB8A"/><stop offset="100%" stop-color="#C89A7B"/>
-    </linearGradient>
-    <clipPath id="urnClip"><path d="M 108 150 C 112 160, 118 166, 122 174 C 96 196, 82 226, 82 258 C 82 300, 100 340, 124 362 C 119 368, 116 374, 116 381 L 184 381 C 184 374, 181 368, 176 362 C 200 340, 218 300, 218 258 C 218 226, 204 196, 178 174 C 182 166, 188 160, 192 150 Z"/></clipPath>
+
+    <!-- ══ the urn, painted ══ -->
+    <path id="urnBody" d="M 108 150 C 112 160, 118 166, 122 174 C 96 196, 82 226, 82 258 C 82 300, 100 340, 124 362 C 119 368, 116 374, 116 381 L 184 381 C 184 374, 181 368, 176 362 C 200 340, 218 300, 218 258 C 218 226, 204 196, 178 174 C 182 166, 188 160, 192 150 Z"/>
+    <path id="urnHR"  d="M 188 152 C 224 158, 240 194, 216 228 L 205 220 C 224 194, 214 168, 185 164 Z"/>
+    <path id="urnHL"  d="M 112 152 C 76 158, 60 194, 84 228 L 95 220 C 76 194, 86 168, 115 164 Z"/>
+    <path id="urnRim" d="M 100 146 C 118 154, 182 154, 200 146 C 200 140, 190 136, 150 136 C 110 136, 100 140, 100 146 Z"/>
+    <g id="urnGeo"><use href="#urnBody"/><use href="#urnHR"/><use href="#urnHL"/><use href="#urnRim"/></g>
+    <clipPath id="urnGeoClip">
+      <use href="#urnBody"/><use href="#urnHR"/><use href="#urnHL"/><use href="#urnRim"/>
+    </clipPath>
     <symbol id="urnMark" viewBox="0 0 300 400">
-      <g fill="none" stroke="#A6A184" stroke-width="2.2" stroke-linecap="round" opacity=".8">
+      <g fill="none" stroke="#9FA284" stroke-width="2.8" stroke-linecap="round" opacity=".4" filter="url(#wcC)">
         <path d="M 150 150 C 140 124, 126 104, 111 90"/>
         <path d="M 150 150 C 155 122, 167 102, 186 86"/>
         <path d="M 150 150 C 150 128, 149 108, 149 92"/>
         <path d="M 150 150 C 138 134, 122 126, 106 124"/>
         <path d="M 150 150 C 163 136, 180 130, 196 130"/>
       </g>
-      <g fill="#B4AE8E" opacity=".5">
-        <ellipse cx="128" cy="116" rx="10" ry="5" transform="rotate(-32 128 116)"/>
-        <ellipse cx="171" cy="112" rx="10" ry="5" transform="rotate(28 171 112)"/>
-        <ellipse cx="150" cy="124" rx="9" ry="4.6" transform="rotate(-6 150 124)"/>
+      <g fill="#A9AE86" opacity=".3" filter="url(#wcA)">
+        <ellipse cx="128" cy="116" rx="11" ry="5.5" transform="rotate(-32 128 116)"/>
+        <ellipse cx="171" cy="112" rx="11" ry="5.5" transform="rotate(28 171 112)"/>
+        <ellipse cx="150" cy="124" rx="10" ry="5" transform="rotate(-6 150 124)"/>
       </g>
-      <g fill="#D89B72" opacity=".82">
-        <circle cx="109" cy="86" r="12.5"/><circle cx="189" cy="82" r="13.5"/><circle cx="149" cy="88" r="11"/>
-        <circle cx="102" cy="121" r="8"/><circle cx="200" cy="127" r="8.5"/>
+      <g fill="#DE9560" opacity=".36" filter="url(#wcB)">
+        <circle cx="109" cy="86" r="13"/><circle cx="189" cy="82" r="14"/><circle cx="149" cy="88" r="11.5"/>
+        <circle cx="102" cy="121" r="8.5"/><circle cx="200" cy="127" r="9"/>
       </g>
-      <g fill="#C07C52" opacity=".5">
-        <circle cx="109" cy="86" r="4.6"/><circle cx="189" cy="82" r="5"/><circle cx="149" cy="88" r="4"/>
-        <circle cx="102" cy="121" r="3"/><circle cx="200" cy="127" r="3.2"/>
+      <g fill="#BE6E3C" opacity=".3" filter="url(#wcC)">
+        <circle cx="107" cy="88" r="5.6"/><circle cx="191" cy="84" r="6"/><circle cx="148" cy="90" r="4.8"/>
+        <circle cx="101" cy="123" r="3.4"/><circle cx="201" cy="129" r="3.6"/>
       </g>
-      <path d="M 108 150 C 112 160, 118 166, 122 174 C 96 196, 82 226, 82 258 C 82 300, 100 340, 124 362 C 119 368, 116 374, 116 381 L 184 381 C 184 374, 181 368, 176 362 C 200 340, 218 300, 218 258 C 218 226, 204 196, 178 174 C 182 166, 188 160, 192 150 Z"
-            fill="url(#urnClay)" stroke="#A2846A" stroke-width="2.7" stroke-linejoin="round"/>
-      <g fill="url(#urnClay)" stroke="#A2846A" stroke-width="2.4" stroke-linejoin="round">
-        <path d="M 188 152 C 224 158, 240 194, 216 228 L 205 220 C 224 194, 214 168, 185 164 Z"/>
-        <path d="M 112 152 C 76 158, 60 194, 84 228 L 95 220 C 76 194, 86 168, 115 164 Z"/>
+      <!-- two thin washes that do not quite agree, so the colour lives and the
+           paper is never fully covered -->
+      <use href="#urnGeo" fill="#E6C4A4" opacity=".38" filter="url(#wcA)"/>
+      <use href="#urnGeo" fill="#D8AB84" opacity=".26" filter="url(#wcB)" transform="translate(3,-2.5)"/>
+      <g clip-path="url(#urnGeoClip)">
+        <ellipse cx="200" cy="278" rx="40" ry="100" fill="#B9805A" opacity=".2"  filter="url(#wcB)"/>
+        <ellipse cx="150" cy="374" rx="66" ry="24"  fill="#A9714C" opacity=".18" filter="url(#wcC)"/>
+        <ellipse cx="126" cy="232" rx="24" ry="46"  fill="#F9F1E6" opacity=".34" filter="url(#wcB)"/>
+        <ellipse cx="134" cy="308" rx="20" ry="30"  fill="#F9F1E6" opacity=".26" filter="url(#wcB)"/>
+        <path d="M 104 236 C 130 226, 168 244, 196 232 C 206 258, 190 288, 160 292 C 126 296, 100 268, 104 236 Z"
+              fill="#F6EADB" opacity=".3" filter="url(#wcB)"/>
+        <use href="#urnGeo" fill="none" stroke="#A9714C" stroke-width="7" opacity=".42" filter="url(#wcPool)"/>
+        <rect x="55" y="125" width="190" height="280" filter="url(#wcGrain)" opacity=".14"/>
+        <g fill="none" stroke="#9E6C48" stroke-width="2.2" opacity=".22" filter="url(#wcC)">
+          <path d="M 86 224 C 122 236, 178 236, 214 223"/>
+          <path d="M 82 262 C 120 276, 180 276, 218 261"/>
+          <path d="M 92 306 C 124 318, 176 318, 208 305"/>
+        </g>
       </g>
-      <path d="M 100 146 C 118 154, 182 154, 200 146 C 200 140, 190 136, 150 136 C 110 136, 100 140, 100 146 Z"
-            fill="url(#urnClay)" stroke="#A2846A" stroke-width="2.7" stroke-linejoin="round"/>
-      <g clip-path="url(#urnClip)" fill="none" stroke="#A87F5C" stroke-width="1.9" opacity=".34">
-        <path d="M 86 224 C 122 236, 178 236, 214 223"/>
-        <path d="M 82 262 C 120 276, 180 276, 218 261"/>
-        <path d="M 92 306 C 124 318, 176 318, 208 305"/>
-      </g>
+      <!-- the drawn line, thin and loose, sitting a little off its own wash -->
+      <use href="#urnGeo" fill="none" stroke="#96694A" stroke-width="1.5" opacity=".45" filter="url(#wcB)"/>
     </symbol>
   </defs>
 </svg>
