@@ -84,6 +84,12 @@
   .bot.stems-r { background-image:url("botanicals/bot-stems-right.webp"); aspect-ratio:268/700; }
   .bot.leaves-r{ background-image:url("botanicals/bot-leaves-right.webp");aspect-ratio:280/430; }
   .bot.flip{ transform:scaleX(-1); }
+
+  /* the vessels themselves, set small and quiet through the page: the same
+     thrown pot the story is told with, each one already mended */
+  .pot{ position:absolute; pointer-events:none; z-index:0; opacity:.52; aspect-ratio:100/150; }
+  .pot svg{ width:100%; height:100%; display:block; }
+  @media (max-width:640px){ .pot{ opacity:.46; } }
   @media (max-width:640px){ .bot{ opacity:.88; } }
 
   .rule-line{ height:1px; background:linear-gradient(90deg,transparent,var(--rule),transparent); }
@@ -298,6 +304,36 @@
 <body class="is-locked font-sans no-js">
 <script>document.body.classList.remove('no-js');</script>
 
+<!-- thrown vessels, each carrying its own mend: drawn once, set through the page -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="potTall" viewBox="0 0 100 150">
+      <path d="M41 18 C42 24 43 29 42 34 C31 44 22 58 19 76 C16 95 20 116 29 130 C32 135 34 139 35 142 L65 142 C66 139 68 135 71 130 C80 116 84 95 81 76 C78 58 69 44 58 34 C57 29 58 24 59 18 C53 15 47 15 41 18 Z"
+            fill="#F6F1E9" stroke="#9A8E79" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M41 18 C46 21 54 21 59 18" fill="none" stroke="#9A8E79" stroke-width="1.2" opacity=".7"/>
+      <g fill="none" stroke="#C6A751" stroke-width="1.5" stroke-linecap="round" opacity=".85">
+        <path d="M23 66 C38 71 60 70 78 65"/><path d="M50 34 C47 48 53 58 50 68"/>
+      </g>
+    </symbol>
+    <symbol id="potRound" viewBox="0 0 100 150">
+      <path d="M38 26 C39 32 38 37 36 41 C21 52 12 72 14 94 C16 118 33 138 50 138 C67 138 84 118 86 94 C88 72 79 52 64 41 C62 37 61 32 62 26 C54 22 46 22 38 26 Z"
+            fill="#F6F1E9" stroke="#9A8E79" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M38 26 C44 29 56 29 62 26" fill="none" stroke="#9A8E79" stroke-width="1.2" opacity=".7"/>
+      <g fill="none" stroke="#C6A751" stroke-width="1.5" stroke-linecap="round" opacity=".85">
+        <path d="M16 88 C34 95 66 94 84 86"/><path d="M50 41 C54 56 46 66 50 88"/>
+      </g>
+    </symbol>
+    <symbol id="potBowl" viewBox="0 0 100 150">
+      <path d="M22 74 C20 66 26 60 34 58 C44 55 58 55 68 58 C76 60 81 66 79 74 C76 96 68 122 60 134 L41 134 C33 122 25 96 22 74 Z"
+            fill="#F6F1E9" stroke="#9A8E79" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M27 64 C40 71 61 71 74 64" fill="none" stroke="#9A8E79" stroke-width="1.2" opacity=".7"/>
+      <g fill="none" stroke="#C6A751" stroke-width="1.5" stroke-linecap="round" opacity=".85">
+        <path d="M24 92 C38 98 62 97 77 90"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="wash"></div>
 <div class="grain"></div>
 
@@ -469,6 +505,7 @@
 <section class="botanicals relative overflow-hidden py-24 sm:py-32 px-6 text-center">
   
   <div class="bot leaves-r" style="top:0; right:0; width:34%"></div>
+  <div class="pot" style="bottom:2%; right:6%; width:13%"><svg viewBox="0 0 100 150"><use href="#potRound"/></svg></div>
   <div class="bot blush-l" style="bottom:0; left:0; width:36%"></div>
   <div class="max-w-xl mx-auto">
     <p class="reveal font-serif italic text-lg sm:text-2xl text-ink/70 leading-relaxed">
@@ -489,6 +526,7 @@
 
 
   <div class="bot stems-r" style="top:0; right:1%; width:18%"></div>
+  <div class="pot" style="top:1%; left:5%; width:11%"><svg viewBox="0 0 100 150"><use href="#potTall"/></svg></div>
   <div class="bot blush-l flip" style="bottom:0; right:0; width:32%"></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
@@ -533,6 +571,7 @@
 <section class="botanicals relative overflow-hidden py-16 sm:py-28 px-5 sm:px-6">
 
   <div class="bot stems-l" style="top:0; left:1%; width:18%"></div>
+  <div class="pot" style="bottom:2%; left:7%; width:13%"><svg viewBox="0 0 100 150"><use href="#potBowl"/></svg></div>
   <div class="bot leaves-r flip" style="bottom:0; right:0; width:32%"></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
@@ -586,12 +625,13 @@
 
 
   <div class="bot stems-r flip" style="top:0; right:1%; width:19%"></div>
+  <div class="pot" style="top:1%; left:6%; width:12%"><svg viewBox="0 0 100 150"><use href="#potTall"/></svg></div>
   <div class="bot blush-l" style="bottom:0; left:0; width:34%"></div>
   <div class="max-w-lg mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">Kindly reply</p>
       <h2 class="font-script text-4xl sm:text-6xl mt-4 text-ink reveal">Take Your Place</h2>
-      <p class="text-sm font-light text-ink/50 mt-4 reveal">By 15 August 2026</p>
+      <p class="text-sm font-light text-ink/50 mt-4 reveal">By 10 September 2026</p>
       <div class="rule-line w-24 mx-auto mt-6 reveal"></div>
     </div>
 
@@ -633,6 +673,7 @@
 <footer class="botanicals relative overflow-hidden py-14 text-center px-6">
 
   <div class="bot stems-l" style="bottom:0; left:2%; width:17%"></div>
+  <div class="pot" style="top:4%; left:50%; margin-left:-5%; width:10%"><svg viewBox="0 0 100 150"><use href="#potRound"/></svg></div>
   <div class="bot stems-r flip" style="bottom:0; right:2%; width:17%"></div>
   <div class="rule-line w-32 mx-auto mb-8 relative"></div>
   <p class="font-serif italic text-lg text-ink/70">He makes all things new.</p>
