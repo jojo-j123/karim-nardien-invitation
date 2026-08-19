@@ -234,11 +234,15 @@
   }
   @supports not (translate:1px){ .narr{ transform:translate(-50%,-50%); } }
 
+  /* The prompt was 8px of faint tracked caps pinned to the very bottom edge,
+     where a phone's own browser chrome sits — guests were not seeing it. It now
+     reads at a normal size and sits under the vessel, where the eye already is. */
   #openingHint{
-    position:absolute; left:0; right:0; bottom:calc(14px + env(safe-area-inset-bottom));
-    text-align:center; font-family:Jost,system-ui,sans-serif; font-weight:300;
-    font-size:.52rem; letter-spacing:.3em; text-transform:uppercase;
-    color:rgba(74,67,53,.34); pointer-events:none;
+    position:absolute; left:0; right:0;
+    bottom:calc(16% + env(safe-area-inset-bottom));
+    text-align:center; font-family:Jost,system-ui,sans-serif; font-weight:400;
+    font-size:clamp(.74rem, 3.1vw, .92rem); letter-spacing:.24em;
+    text-transform:uppercase; color:rgba(74,67,53,.62); pointer-events:none;
   }
 
   /* ── music toggle ── */
@@ -862,7 +866,10 @@ function armOpening(){
     gsap.to('#vaseWrap', { opacity:1, duration:1.6, ease:'power2.out' });
     gsap.from('#vaseWrap', { y:14, duration:2.0, ease:'power2.out' });
     hint.textContent = 'Tap to begin';
-    gsap.fromTo(hint, { opacity:0 }, { opacity:1, duration:1.1, delay:.7 });
+    // it breathes, so an eye that has not found it is drawn to it
+    gsap.fromTo(hint, { opacity:0 },
+      { opacity:1, duration:1.1, delay:.7, ease:'power2.out',
+        onComplete(){ gsap.to(hint, { opacity:.45, duration:1.4, repeat:-1, yoyo:true, ease:'sine.inOut' }); } });
   }
 
   const begin = e => {
@@ -870,6 +877,8 @@ function armOpening(){
     if (e && e.type === 'keydown') e.preventDefault();
     opening.removeEventListener('click', begin);
     removeEventListener('keydown', begin);
+    gsap.killTweensOf(hint);
+    gsap.to(hint, { opacity:0, duration:.5, ease:'power1.out' });
     runOpening();
   };
   opening.addEventListener('click', begin);
@@ -891,7 +900,6 @@ function runOpening(){
     return;
   }
 
-  hint.textContent = 'Tap to skip';
   const bloom = { v:0 };
   const tl = gsap.timeline({ onComplete:() => { clearTimeout(watchdog); finish(); } });
 
@@ -972,16 +980,12 @@ function runOpening(){
 
   /* ── INVITATION ── */
   tl.to(invText(), { opacity:1, duration:1.6, stagger:.12, ease:'power2.out' }, 22.2)
-    .to(hint, { opacity:0, duration:.8 }, 22.2)
     .to(opening, { opacity:0, duration:1.2, ease:'power2.inOut' }, 25.6);
 
   // the net is now the story's own length plus a margin, so it can only ever
   // rescue a timeline that has genuinely stalled
   watchdog = setTimeout(finish, (tl.duration() + 10) * 1000);
 
-  const skip = () => { if (tl.progress() > .01 && tl.progress() < 1) tl.timeScale(7); };
-  opening.addEventListener('click', skip);
-  addEventListener('keydown', e => { if (e.key === 'Escape') skip(); });
 }
 
 if (document.readyState === 'complete') armOpening();
