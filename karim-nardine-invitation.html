@@ -87,9 +87,9 @@
 
   /* the vessels themselves, set small and quiet through the page: the same
      thrown pot the story is told with, each one already mended */
-  .pot{ position:absolute; pointer-events:none; z-index:0; opacity:.52; aspect-ratio:100/150; }
+  .pot{ position:absolute; pointer-events:none; z-index:0; opacity:.3; aspect-ratio:300/400; }
   .pot svg{ width:100%; height:100%; display:block; }
-  @media (max-width:640px){ .pot{ opacity:.46; } }
+  @media (max-width:640px){ .pot{ opacity:.26; } }
   @media (max-width:640px){ .bot{ opacity:.88; } }
 
   .rule-line{ height:1px; background:linear-gradient(90deg,transparent,var(--rule),transparent); }
@@ -308,31 +308,29 @@
 <body class="is-locked font-sans no-js">
 <script>document.body.classList.remove('no-js');</script>
 
-<!-- thrown vessels, each carrying its own mend: drawn once, set through the page -->
+<!-- the vessel of the story, drawn once and set small through the page.
+     Same silhouette, same clay, same throwing lines and the same four mends in
+     their true places, so the mark is the pot itself rather than a likeness. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <symbol id="potTall" viewBox="0 0 100 150">
-      <path d="M41 18 C42 24 43 29 42 34 C31 44 22 58 19 76 C16 95 20 116 29 130 C32 135 34 139 35 142 L65 142 C66 139 68 135 71 130 C80 116 84 95 81 76 C78 58 69 44 58 34 C57 29 58 24 59 18 C53 15 47 15 41 18 Z"
-            fill="#F6F1E9" stroke="#9A8E79" stroke-width="1.6" stroke-linejoin="round"/>
-      <path d="M41 18 C46 21 54 21 59 18" fill="none" stroke="#9A8E79" stroke-width="1.2" opacity=".7"/>
-      <g fill="none" stroke="#C6A751" stroke-width="1.5" stroke-linecap="round" opacity=".85">
-        <path d="M23 66 C38 71 60 70 78 65"/><path d="M50 34 C47 48 53 58 50 68"/>
+    <linearGradient id="markClay" x1=".18" y1="0" x2=".86" y2="1">
+      <stop offset="0%" stop-color="#FBF8F2"/><stop offset="42%" stop-color="#F5EFE4"/>
+      <stop offset="78%" stop-color="#EDE1D2"/><stop offset="100%" stop-color="#E4D3C0"/>
+    </linearGradient>
+    <clipPath id="markClip"><path d="M 130 63 C 133 72, 135 80, 134 89 C 116 106, 94 132, 87 170 C 80 208, 86 252, 104 284 C 110 296, 114 306, 117 315 C 140 320, 162 320, 185 315 C 188 306, 192 296, 198 284 C 216 252, 222 208, 215 170 C 208 132, 186 106, 168 89 C 167 80, 169 72, 172 63 C 158 57, 144 57, 130 63 Z"/></clipPath>
+    <symbol id="vesselMark" viewBox="0 0 300 400">
+      <path d="M 130 63 C 133 72, 135 80, 134 89 C 116 106, 94 132, 87 170 C 80 208, 86 252, 104 284 C 110 296, 114 306, 117 315 C 140 320, 162 320, 185 315 C 188 306, 192 296, 198 284 C 216 252, 222 208, 215 170 C 208 132, 186 106, 168 89 C 167 80, 169 72, 172 63 C 158 57, 144 57, 130 63 Z" fill="url(#markClay)" stroke="#9A8E79" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M 130 63 C 143 69, 159 69, 172 63" fill="none" stroke="#9A8E79" stroke-width="2.2" opacity=".6"/>
+      <g clip-path="url(#markClip)" fill="none" stroke="#BCB29D" stroke-width="2" opacity=".45">
+        <path d="M 94 156 C 128 166, 174 166, 208 155"/>
+        <path d="M 88 196 C 126 208, 176 208, 214 195"/>
+        <path d="M 95 246 C 130 258, 172 258, 207 245"/>
       </g>
-    </symbol>
-    <symbol id="potRound" viewBox="0 0 100 150">
-      <path d="M38 26 C39 32 38 37 36 41 C21 52 12 72 14 94 C16 118 33 138 50 138 C67 138 84 118 86 94 C88 72 79 52 64 41 C62 37 61 32 62 26 C54 22 46 22 38 26 Z"
-            fill="#F6F1E9" stroke="#9A8E79" stroke-width="1.6" stroke-linejoin="round"/>
-      <path d="M38 26 C44 29 56 29 62 26" fill="none" stroke="#9A8E79" stroke-width="1.2" opacity=".7"/>
-      <g fill="none" stroke="#C6A751" stroke-width="1.5" stroke-linecap="round" opacity=".85">
-        <path d="M16 88 C34 95 66 94 84 86"/><path d="M50 41 C54 56 46 66 50 88"/>
-      </g>
-    </symbol>
-    <symbol id="potBowl" viewBox="0 0 100 150">
-      <path d="M22 74 C20 66 26 60 34 58 C44 55 58 55 68 58 C76 60 81 66 79 74 C76 96 68 122 60 134 L41 134 C33 122 25 96 22 74 Z"
-            fill="#F6F1E9" stroke="#9A8E79" stroke-width="1.6" stroke-linejoin="round"/>
-      <path d="M27 64 C40 71 61 71 74 64" fill="none" stroke="#9A8E79" stroke-width="1.2" opacity=".7"/>
-      <g fill="none" stroke="#C6A751" stroke-width="1.5" stroke-linecap="round" opacity=".85">
-        <path d="M24 92 C38 98 62 97 77 90"/>
+      <g clip-path="url(#markClip)" fill="none" stroke="#C6A751" stroke-width="2.8" stroke-linecap="round" opacity=".9">
+        <path d="M -20 88 C 24 82, 58 106, 96 96 C 122 89, 136 86, 150 95 C 166 105, 196 84, 232 96 C 268 108, 292 92, 320 100"/>
+        <path d="M 150 95 C 160 124, 140 146, 149 168 C 156 186, 139 190, 143 205"/>
+        <path d="M -20 198 C 22 194, 56 214, 92 202 C 114 195, 131 198, 143 205 C 159 213, 190 194, 226 206 C 262 218, 292 200, 320 208"/>
+        <path d="M -20 278 C 30 274, 76 294, 120 282 C 168 269, 224 296, 268 282 C 290 275, 306 280, 320 286"/>
       </g>
     </symbol>
   </defs>
@@ -509,7 +507,7 @@
 <section class="botanicals relative overflow-hidden py-24 sm:py-32 px-6 text-center">
   
   <div class="bot leaves-r" style="top:0; right:0; width:34%"></div>
-  <div class="pot" style="bottom:2%; right:6%; width:13%"><svg viewBox="0 0 100 150"><use href="#potRound"/></svg></div>
+  <div class="pot" style="bottom:2%; right:5%; width:20%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
   <div class="bot blush-l" style="bottom:0; left:0; width:36%"></div>
   <div class="max-w-xl mx-auto">
     <p class="reveal font-serif italic text-lg sm:text-2xl text-ink/70 leading-relaxed">
@@ -530,7 +528,7 @@
 
 
   <div class="bot stems-r" style="top:0; right:1%; width:18%"></div>
-  <div class="pot" style="top:1%; left:5%; width:11%"><svg viewBox="0 0 100 150"><use href="#potTall"/></svg></div>
+  <div class="pot" style="top:1%; left:4%; width:17%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
   <div class="bot blush-l flip" style="bottom:0; right:0; width:32%"></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
@@ -575,7 +573,7 @@
 <section class="botanicals relative overflow-hidden py-16 sm:py-28 px-5 sm:px-6">
 
   <div class="bot stems-l" style="top:0; left:1%; width:18%"></div>
-  <div class="pot" style="bottom:2%; left:7%; width:13%"><svg viewBox="0 0 100 150"><use href="#potBowl"/></svg></div>
+  <div class="pot" style="bottom:2%; left:6%; width:20%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
   <div class="bot leaves-r flip" style="bottom:0; right:0; width:32%"></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
@@ -629,7 +627,7 @@
 
 
   <div class="bot stems-r flip" style="top:0; right:1%; width:19%"></div>
-  <div class="pot" style="top:1%; left:6%; width:12%"><svg viewBox="0 0 100 150"><use href="#potTall"/></svg></div>
+  <div class="pot" style="top:1%; left:5%; width:18%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
   <div class="bot blush-l" style="bottom:0; left:0; width:34%"></div>
   <div class="max-w-lg mx-auto relative">
     <div class="text-center">
@@ -677,7 +675,7 @@
 <footer class="botanicals relative overflow-hidden py-14 text-center px-6">
 
   <div class="bot stems-l" style="bottom:0; left:2%; width:17%"></div>
-  <div class="pot" style="top:4%; left:50%; margin-left:-5%; width:10%"><svg viewBox="0 0 100 150"><use href="#potRound"/></svg></div>
+  <div class="pot" style="top:4%; left:50%; margin-left:-8%; width:16%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
   <div class="bot stems-r flip" style="bottom:0; right:2%; width:17%"></div>
   <div class="rule-line w-32 mx-auto mb-8 relative"></div>
   <p class="font-serif italic text-lg text-ink/70">He makes all things new.</p>
@@ -903,6 +901,24 @@ function runOpening(){
   const bloom = { v:0 };
   const tl = gsap.timeline({ onComplete:() => { clearTimeout(watchdog); finish(); } });
 
+  /* A way out, but not one a guest can trip over. Tapping does nothing for the
+     first ten seconds — that was what let an uncertain guest race the whole
+     story past — and only then does the offer appear and the tap start working. */
+  let canSkip = false;
+  tl.call(() => {
+    canSkip = true;
+    hint.textContent = 'Tap to skip';
+    gsap.to(hint, { opacity:.4, duration:.9, ease:'power1.out' });
+  }, null, 10);
+
+  opening.addEventListener('click', () => {
+    if (!canSkip || tl.progress() >= 1) return;
+    canSkip = false;
+    gsap.killTweensOf(hint);
+    gsap.to(hint, { opacity:0, duration:.35 });
+    gsap.to(tl, { timeScale:5, duration:.6, ease:'power2.in' });
+  });
+
   /* ── WHOLE ── */
   tl.to(caption, { opacity:1, duration:.9, ease:'power2.out' }, .2);
 
@@ -979,7 +995,8 @@ function runOpening(){
     .to(caption, { opacity:0, duration:1.0 }, 19.6);
 
   /* ── INVITATION ── */
-  tl.to(invText(), { opacity:1, duration:1.6, stagger:.12, ease:'power2.out' }, 22.2)
+  tl.to(hint, { opacity:0, duration:.7 }, 21.4)
+    .to(invText(), { opacity:1, duration:1.6, stagger:.12, ease:'power2.out' }, 22.2)
     .to(opening, { opacity:0, duration:1.2, ease:'power2.inOut' }, 25.6);
 
   // the net is now the story's own length plus a margin, so it can only ever
