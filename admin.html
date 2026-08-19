@@ -47,6 +47,41 @@
   .btn[aria-pressed="true"]{ background:var(--terra); border-color:var(--terra); color:var(--beige); }
 
   .gate{ max-width:380px; margin:14vh auto; text-align:center; }
+
+  .pw-wrap{ position:relative; }
+  .pw-wrap .field{ padding-right:40px; }
+  .pw-toggle{
+    position:absolute; right:0; bottom:6px; width:34px; height:34px;
+    display:flex; align-items:center; justify-content:center;
+    background:none; border:0; padding:0; cursor:pointer;
+    color:rgba(58,43,34,.45); transition:color .3s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .pw-toggle:hover{ color:var(--clay); }
+  .pw-toggle svg{ width:18px; height:18px; display:block; }
+  .pw-toggle .eye-off{ display:none; }
+  .pw-toggle[aria-pressed="true"] .eye-on{ display:none; }
+  .pw-toggle[aria-pressed="true"] .eye-off{ display:block; }
+
+  .remember{
+    display:flex; align-items:center; justify-content:center; gap:9px;
+    margin-top:18px; font-size:.72rem; color:rgba(58,43,34,.6); cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .remember input{
+    appearance:none; -webkit-appearance:none; margin:0;
+    width:15px; height:15px; border:1px solid rgba(58,43,34,.3);
+    background:transparent; cursor:pointer; position:relative; flex:none;
+    transition:border-color .3s ease, background .3s ease;
+  }
+  .remember input:checked{ border-color:var(--clay); background:rgba(178,112,74,.12); }
+  .remember input:checked::after{
+    content:''; position:absolute; left:4px; top:0.5px;
+    width:4px; height:9px; border:solid var(--terra);
+    border-width:0 1.5px 1.5px 0; transform:rotate(43deg);
+  }
+  .remember input:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+  .note{ font-size:.62rem; color:rgba(58,43,34,.4); margin-top:10px; line-height:1.6; }
   .hidden{ display:none !important; }
   .err{ color:var(--terra); font-size:.8rem; margin-top:14px; }
 
@@ -94,9 +129,33 @@
   <p class="sub">Nardien &amp; Karim &middot; 19 September 2026</p>
   <div class="seam"></div>
   <label class="track" style="font-size:.56rem; color:rgba(58,43,34,.5)" for="code">Passcode</label>
-  <input class="field" id="code" type="password" autocomplete="current-password" style="margin-top:6px" />
+  <div class="pw-wrap" style="margin-top:6px">
+    <input class="field" id="code" type="password" autocomplete="current-password" />
+    <button type="button" class="pw-toggle" id="pwToggle" aria-pressed="false"
+            aria-label="Show passcode" title="Show passcode">
+      <svg class="eye-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M1.8 12S5.8 5 12 5s10.2 7 10.2 7-4 7-10.2 7S1.8 12 1.8 12z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+      <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9.9 5.2A9.6 9.6 0 0 1 12 5c6.2 0 10.2 7 10.2 7a18 18 0 0 1-3 3.7"/>
+        <path d="M6.4 6.5A17.7 17.7 0 0 0 1.8 12S5.8 19 12 19a9.6 9.6 0 0 0 4-.85"/>
+        <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+        <path d="M3 3l18 18"/>
+      </svg>
+    </button>
+  </div>
   <p class="err hidden" id="gateErr">That passcode was not accepted.</p>
-  <div style="margin-top:26px"><button class="btn" id="enterBtn">Enter</button></div>
+
+  <label class="remember" for="remember">
+    <input type="checkbox" id="remember" />
+    <span>Remember on this device</span>
+  </label>
+  <p class="note">Only tick this on a phone or computer that is yours alone.</p>
+
+  <div style="margin-top:22px"><button class="btn" id="enterBtn">Enter</button></div>
 </div>
 
 <!-- dashboard -->
@@ -109,6 +168,7 @@
     <div style="display:flex; gap:8px">
       <button class="btn small" id="refreshBtn">Refresh</button>
       <button class="btn small" id="csvBtn">Export CSV</button>
+      <button class="btn small" id="signOutBtn">Sign out</button>
     </div>
   </div>
 
@@ -155,6 +215,47 @@ let passcode = '';
 
 const $ = id => document.getElementById(id);
 
+/* ─── keeping the passcode ───
+   sessionStorage lasts until the tab closes; localStorage is the "remember"
+   box and survives until it is signed out. Only one of the two ever holds it,
+   so ticking or unticking the box moves it rather than leaving a copy behind. */
+const KEY = 'kn_code';
+const store = {
+  save(code, remember){
+    try {
+      (remember ? localStorage : sessionStorage).setItem(KEY, code);
+      (remember ? sessionStorage : localStorage).removeItem(KEY);
+    } catch(e){ /* private mode: stay signed in for this page view only */ }
+  },
+  load(){
+    try {
+      const l = localStorage.getItem(KEY);
+      if (l) return { code:l, remembered:true };
+      const s = sessionStorage.getItem(KEY);
+      if (s) return { code:s, remembered:false };
+    } catch(e){}
+    return null;
+  },
+  clear(){
+    try { localStorage.removeItem(KEY); sessionStorage.removeItem(KEY); } catch(e){}
+  }
+};
+
+/* ─── show / hide the passcode ─── */
+const pwToggle = $('pwToggle');
+pwToggle.addEventListener('click', () => {
+  const showing = pwToggle.getAttribute('aria-pressed') === 'true';
+  const next = !showing;
+  pwToggle.setAttribute('aria-pressed', String(next));
+  pwToggle.setAttribute('aria-label', next ? 'Hide passcode' : 'Show passcode');
+  pwToggle.title = next ? 'Hide passcode' : 'Show passcode';
+  const el = $('code');
+  const at = el.selectionStart;               // switching type drops the caret
+  el.type = next ? 'text' : 'password';
+  el.focus();
+  try { el.setSelectionRange(at, at); } catch(e){}
+});
+
 async function fetchRsvps(code){
   const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/get_rsvps', {
     method: 'POST',
@@ -175,20 +276,37 @@ $('code').addEventListener('keydown', e => { if (e.key === 'Enter') enter(); });
 async function enter(){
   const code = $('code').value.trim();
   const btn = $('enterBtn');
+  if (!code) { $('gateErr').classList.remove('hidden'); return; }
   btn.disabled = true; btn.textContent = 'Checking';
   try {
     rows = await fetchRsvps(code);
     passcode = code;
-    sessionStorage.setItem('kn_code', code);
-    $('gate').classList.add('hidden');
-    $('panel').classList.remove('hidden');
-    render();
+    store.save(code, $('remember').checked);
+    openPanel();
   } catch(err){
     $('gateErr').classList.remove('hidden');
+    $('code').select();
   } finally {
     btn.disabled = false; btn.textContent = 'Enter';
   }
 }
+
+function openPanel(){
+  $('gateErr').classList.add('hidden');
+  $('gate').classList.add('hidden');
+  $('panel').classList.remove('hidden');
+  render();
+}
+
+$('signOutBtn').addEventListener('click', () => {
+  store.clear();
+  passcode = ''; rows = [];
+  $('code').value = '';
+  $('remember').checked = false;
+  $('panel').classList.add('hidden');
+  $('gate').classList.remove('hidden');
+  $('code').focus();
+});
 
 $('refreshBtn').addEventListener('click', async () => {
   const btn = $('refreshBtn');
@@ -263,17 +381,20 @@ $('csvBtn').addEventListener('click', () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 
-// stay signed in across reloads within the same tab
+// come back signed in: for this tab, or on this device if it was remembered
 (async () => {
-  const saved = sessionStorage.getItem('kn_code');
-  if (!saved) return;
+  const saved = store.load();
+  if (!saved) { $('code').focus(); return; }
+  $('remember').checked = saved.remembered;
   try {
-    rows = await fetchRsvps(saved);
-    passcode = saved;
-    $('gate').classList.add('hidden');
-    $('panel').classList.remove('hidden');
-    render();
-  } catch(e){ sessionStorage.removeItem('kn_code'); }
+    rows = await fetchRsvps(saved.code);
+    passcode = saved.code;
+    openPanel();
+  } catch(e){
+    // the passcode has changed or was never right: forget it and ask again
+    store.clear();
+    $('code').focus();
+  }
 })();
 </script>
 </body>
