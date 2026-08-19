@@ -335,8 +335,8 @@
         <clipPath id="cpNeck"><path d="M -20 -20 L 320 -20 L 320 100 C 292 92, 268 108, 232 96 C 196 84, 166 105, 150 95 C 136 86, 122 89, 96 96 C 58 106, 24 82, -20 88 L -20 -20 Z"/></clipPath>
         <clipPath id="cpUpL"><path d="M -20 88 C 24 82, 58 106, 96 96 C 122 89, 136 86, 150 95 C 160 124, 140 146, 149 168 C 156 186, 139 190, 143 205 C 131 198, 114 195, 92 202 C 56 214, 22 194, -20 198 Z"/></clipPath>
         <clipPath id="cpUpR"><path d="M 150 95 C 166 105, 196 84, 232 96 C 268 108, 292 92, 320 100 L 320 208 C 292 200, 262 218, 226 206 C 190 194, 159 213, 143 205 C 139 190, 156 186, 149 168 C 140 146, 160 124, 150 95 Z"/></clipPath>
-        <clipPath id="cpLow"><path d="M -20 198 C 22 194, 56 214, 92 202 C 114 195, 131 198, 143 205 C 159 213, 190 194, 226 206 C 262 218, 292 200, 320 208 L 320 286 C 306 280, 290 275, 268 282 C 224 296, 168 269, 120 282 C 76 294, 30 274, -20 278 Z"/></clipPath>
-        <clipPath id="cpFoot"><path d="M -20 278 C 30 274, 76 294, 120 282 C 168 269, 224 296, 268 282 C 290 275, 306 280, 320 286 L 320 420 L -20 420 Z"/></clipPath>
+        <clipPath id="cpLow"><path class="mend-line" d="M -20 198 C 22 194, 56 214, 92 202 C 114 195, 131 198, 143 205 C 159 213, 190 194, 226 206 C 262 218, 292 200, 320 208 L 320 286 C 306 280, 290 275, 268 282 C 224 296, 168 269, 120 282 C 76 294, 30 274, -20 278 Z"/></clipPath>
+        <clipPath id="cpFoot"><path class="mend-line" d="M -20 278 C 30 274, 76 294, 120 282 C 168 269, 224 296, 268 282 C 290 275, 306 280, 320 286 L 320 420 L -20 420 Z"/></clipPath>
         <clipPath id="cpPot"><use href="#potSil"/></clipPath>
       </defs>
 
@@ -356,11 +356,11 @@
       <g class="piece" id="pcUpR"  clip-path="url(#cpUpR)"><use href="#potArt"/></g>
       <g class="piece" id="pcNeck" clip-path="url(#cpNeck)"><use href="#potArt"/></g>
 
-      <!-- the faint trace the mend leaves behind -->
+      <!-- the gold that runs into the joins once every piece is home -->
       <g id="mendTrace" clip-path="url(#cpPot)" opacity="0"
-         fill="none" stroke="#BFA05E" stroke-width="1.15" stroke-linecap="round">
-        <path d="M -20 88 C 24 82, 58 106, 96 96 C 122 89, 136 86, 150 95 C 166 105, 196 84, 232 96 C 268 108, 292 92, 320 100"/>
-        <path d="M 150 95 C 160 124, 140 146, 149 168 C 156 186, 139 190, 143 205"/>
+         fill="none" stroke="#BFA05E" stroke-width="1.25" stroke-linecap="round">
+        <path class="mend-line" d="M -20 88 C 24 82, 58 106, 96 96 C 122 89, 136 86, 150 95 C 166 105, 196 84, 232 96 C 268 108, 292 92, 320 100"/>
+        <path class="mend-line" d="M 150 95 C 160 124, 140 146, 149 168 C 156 186, 139 190, 143 205"/>
         <path d="M -20 198 C 22 194, 56 214, 92 202 C 114 195, 131 198, 143 205 C 159 213, 190 194, 226 206 C 262 218, 292 200, 320 208"/>
         <path d="M -20 278 C 30 274, 76 294, 120 282 C 168 269, 224 296, 268 282 C 290 275, 306 280, 320 286"/>
       </g>
@@ -720,6 +720,12 @@ if (hasGSAP){
   gsap.set('#sheet .inv-t, #sheet .inv-line', { opacity:0 });
   gsap.set('#vaseWrap', { opacity:0 });
   PIECES.forEach(p => gsap.set('#' + p.id, { x:0, y:0, rotation:0, transformOrigin:'50% 50%' }));
+  // the gold is drawn along each join rather than faded on, so every line
+  // starts fully retracted, measured rather than guessed
+  gsap.utils.toArray('.mend-line').forEach(p => {
+    const len = Math.ceil(p.getTotalLength()) + 1;
+    gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+  });
 }
 
 /* the vessel is set out on the paper and waits: nothing moves until the
@@ -754,6 +760,8 @@ function runOpening(){
   opening.dataset.done = '1';
 
   if (reduced){
+    gsap.set('.mend-line', { strokeDashoffset:0 });
+    gsap.set('#mendTrace', { opacity:.5 });
     gsap.set('#vaseWrap', { opacity:0 });
     gsap.to(opening, { opacity:0, duration:.5, onComplete:() => { clearTimeout(watchdog); finish(); } });
     return;
@@ -794,8 +802,10 @@ function runOpening(){
   /* ── MENDED ── a warm wash gathers along the joins as they close, then all
      but leaves. What remains is a faint trace: the mending is part of it now. */
   tl.to('#mendGlow', { opacity:1, duration:1.6, ease:'power1.inOut' }, 8.4)
-    .to('#mendTrace', { opacity:.42, duration:1.8, ease:'power1.out' }, 9.5)
-    .to('#mendGlow', { opacity:.16, duration:2.4, ease:'power1.out' }, 10.0);
+    .to('#mendTrace', { opacity:.5, duration:.4, ease:'power1.out' }, 8.9)
+    // every piece is home by 9.0s: only then does the gold run along the breaks
+    .to('.mend-line', { strokeDashoffset:0, duration:1.5, stagger:.28, ease:'power2.inOut' }, 9.1)
+    .to('#mendGlow', { opacity:.18, duration:2.4, ease:'power1.out' }, 10.6);
 
   tl.to(caption, { opacity:0, duration:.5 }, 9.9)
     .call(() => { caption.textContent = 'Mended in grace'; }, null, 10.4)
@@ -804,20 +814,20 @@ function runOpening(){
   /* ── BLOOMING ── the painting rises out of the mended pot the way the
      painted stems point: rooted low, growing up and outward. Four eased
      steps, so it reads as one stem, then another, then the whole border. */
-  tl.to(bloom, { v:.22, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 11.6)
-    .to(bloom, { v:.44, duration:2.2, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 14.3)
-    .to(bloom, { v:.70, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 16.8)
-    .to(bloom, { v:1,   duration:3.4, ease:'sine.out',   onUpdate:() => setBloom(bloom.v) }, 19.4);
+  tl.to(bloom, { v:.22, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 12.2)
+    .to(bloom, { v:.44, duration:2.2, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 14.6)
+    .to(bloom, { v:.70, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 16.9)
+    .to(bloom, { v:1,   duration:3.2, ease:'sine.out',   onUpdate:() => setBloom(bloom.v) }, 19.2);
 
   /* ── the pot gives way to what grew out of it ── */
-  tl.to('#vaseWrap', { scale:.52, duration:6.0, ease:'sine.inOut' }, 14.0)
-    .to('#vaseWrap', { opacity:0, duration:3.6, ease:'power1.inOut' }, 18.0)
-    .to(caption, { opacity:0, duration:1.0 }, 18.6);
+  tl.to('#vaseWrap', { scale:.52, duration:6.0, ease:'sine.inOut' }, 15.2)
+    .to('#vaseWrap', { opacity:0, duration:3.6, ease:'power1.inOut' }, 18.6)
+    .to(caption, { opacity:0, duration:1.0 }, 19.0);
 
   /* ── INVITATION ── */
-  tl.to(invText(), { opacity:1, duration:1.6, stagger:.16, ease:'power2.out' }, 21.4)
-    .to(hint, { opacity:0, duration:.8 }, 21.4)
-    .to(opening, { opacity:0, duration:1.2, ease:'power2.inOut' }, 25.2);
+  tl.to(invText(), { opacity:1, duration:1.6, stagger:.12, ease:'power2.out' }, 21.6)
+    .to(hint, { opacity:0, duration:.8 }, 21.6)
+    .to(opening, { opacity:0, duration:1.2, ease:'power2.inOut' }, 25.0);
 
   const skip = () => { if (tl.progress() > .01 && tl.progress() < 1) tl.timeScale(7); };
   opening.addEventListener('click', skip);
