@@ -1050,8 +1050,15 @@ function runOpening(){
 
   /* ── the pot gives way to what grew out of it ── */
   tl.to('#vaseWrap', { scale:.6, duration:6.0, ease:'sine.inOut' }, 15.8)
-    .to('#vaseWrap', { opacity:0, duration:3.6, ease:'power1.inOut' }, 19.2)
-    .to(caption, { opacity:0, duration:1.0 }, 19.6);
+    .to('#vaseWrap', { opacity:0, duration:3.6, ease:'power1.inOut' }, 19.2);
+
+  /* the line the guest read on the cover closes the story it opened. Each of
+     its three words has now been shown on the vessel in turn, so it comes
+     back to say them together, and leaves before the invitation arrives. */
+  tl.to(caption, { opacity:0, duration:.6 }, 17.4)
+    .call(() => { caption.textContent = 'Broken, Gathered, Made Whole.'; }, null, 18.0)
+    .to(caption, { opacity:1, duration:1.1, ease:'power2.out' }, 18.05)
+    .to(caption, { opacity:0, duration:1.0 }, 20.8);
 
   /* ── INVITATION ── */
   tl.to(hint, { opacity:0, duration:.7 }, 21.4)
