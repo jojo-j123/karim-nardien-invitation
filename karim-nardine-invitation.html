@@ -957,8 +957,8 @@ const PIECES = [
 
 if (hasGSAP){
   setBloom(0);
-  gsap.set('#captionLine', { x:0 });
-  gsap.set('#caption .nw', { opacity:1 });
+  gsap.set('#caption', { opacity:1 });
+  gsap.set('#caption .nw', { opacity:0 });
   gsap.set('#sheet .inv-t, #sheet .inv-line', { opacity:0 });
   gsap.set('#vaseWrap', { opacity:0 });
   PIECES.forEach(p => gsap.set('#' + p.id, { x:0, y:0, rotation:0, transformOrigin:'50% 50%' }));
@@ -984,11 +984,10 @@ function armOpening(){
   if (reduced){
     hint.textContent = 'Tap to open';
     gsap.set('#vaseWrap', { opacity:1 });
-    gsap.to([caption, hint], { opacity:1, duration:.4 });
+    gsap.to(hint, { opacity:1, duration:.4 });
   } else {
     gsap.to('#vaseWrap', { opacity:1, duration:1.6, ease:'power2.out' });
     gsap.from('#vaseWrap', { y:14, duration:2.0, ease:'power2.out' });
-    gsap.to(caption, { opacity:1, duration:1.4, delay:.35, ease:'power2.out' });
     hint.textContent = 'Tap to open';
     // it breathes, so an eye that has not found it is drawn to it
     gsap.fromTo(hint, { opacity:0 },
@@ -1063,9 +1062,8 @@ function runOpening(){
   tl.to('#vaseWrap', { scale:1.012, duration:.5, ease:'power2.in' }, .9)
     .to('#vaseWrap', { scale:1, duration:1.4, ease:'power2.out' }, 1.4);
 
-  tl.to(nWords, { opacity:0, duration:.5 }, 1.3)
-    .set(nLine,  { x:nAt[0] }, 1.8)
-    .to(nWords[0], { opacity:1, duration:.6, ease:'power2.out' }, 1.85);
+  tl.set(nLine, { x:nAt[0] }, 0)
+    .to(nWords[0], { opacity:1, duration:.8, ease:'power2.out' }, 1.75);
 
   PIECES.forEach((p, i) => {
     tl.to('#' + p.id, { x:p.x, y:p.y, rotation:p.r, duration:2.4 * p.d,
