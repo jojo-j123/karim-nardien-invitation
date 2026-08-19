@@ -318,6 +318,9 @@
         <filter id="mendBlur" x="-40%" y="-40%" width="180%" height="180%">
           <feGaussianBlur stdDeviation="4.2"/>
         </filter>
+        <filter id="goldBlur" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="2.6"/>
+        </filter>
 
         <!-- the pot, drawn once and reused by every piece -->
         <g id="potArt">
@@ -356,9 +359,19 @@
       <g class="piece" id="pcUpR"  clip-path="url(#cpUpR)"><use href="#potArt"/></g>
       <g class="piece" id="pcNeck" clip-path="url(#cpNeck)"><use href="#potArt"/></g>
 
+      <!-- the light the gold gives off, drawn in step with it -->
+      <g id="mendShine" clip-path="url(#cpPot)" opacity="0"
+         fill="none" stroke="#E0C06B" stroke-width="4.6" stroke-linecap="round"
+         filter="url(#goldBlur)">
+        <path class="mend-line-glow" d="M -20 88 C 24 82, 58 106, 96 96 C 122 89, 136 86, 150 95 C 166 105, 196 84, 232 96 C 268 108, 292 92, 320 100"/>
+        <path class="mend-line-glow" d="M 150 95 C 160 124, 140 146, 149 168 C 156 186, 139 190, 143 205"/>
+        <path class="mend-line-glow" d="M -20 198 C 22 194, 56 214, 92 202 C 114 195, 131 198, 143 205 C 159 213, 190 194, 226 206 C 262 218, 292 200, 320 208"/>
+        <path class="mend-line-glow" d="M -20 278 C 30 274, 76 294, 120 282 C 168 269, 224 296, 268 282 C 290 275, 306 280, 320 286"/>
+      </g>
+
       <!-- the gold that runs into the joins once every piece is home -->
       <g id="mendTrace" clip-path="url(#cpPot)" opacity="0"
-         fill="none" stroke="#BFA05E" stroke-width="1.25" stroke-linecap="round">
+         fill="none" stroke="#C6A751" stroke-width="1.3" stroke-linecap="round">
         <path class="mend-line" d="M -20 88 C 24 82, 58 106, 96 96 C 122 89, 136 86, 150 95 C 166 105, 196 84, 232 96 C 268 108, 292 92, 320 100"/>
         <path class="mend-line" d="M 150 95 C 160 124, 140 146, 149 168 C 156 186, 139 190, 143 205"/>
         <path d="M -20 198 C 22 194, 56 214, 92 202 C 114 195, 131 198, 143 205 C 159 213, 190 194, 226 206 C 262 218, 292 200, 320 208"/>
@@ -616,6 +629,10 @@ function finish(){
   if (entered) return;
   entered = true;
   setBloom(1);
+  // whatever brought us here, the vessel has had its turn: the invitation is
+  // never shown over it
+  if (hasGSAP) gsap.set('#vaseWrap', { opacity:0 });
+  else { const v = $('vaseWrap'); if (v) v.style.opacity = '0'; }
   document.querySelectorAll('#sheet .inv-t, #sheet .inv-line')
     .forEach(el => { el.style.opacity = 1; });
 
@@ -636,7 +653,12 @@ if (hasST){
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(refreshTriggers);
   addEventListener('load', refreshTriggers);
 }
-const watchdog = setTimeout(finish, 16000);
+// A safety net, not a timer on the story. It covers "the scripts loaded but
+// nothing ever happened"; it is cleared the moment the opening is armed and
+// waiting on the guest, and re-armed against the timeline's own length once
+// the story is actually running. At a flat 16s it was firing part-way through
+// and forcing the invitation up over a vessel that had not yet gone.
+let watchdog = setTimeout(finish, 12000);
 addEventListener('error', () => { clearTimeout(watchdog); finish(); });
 
 /* ─── MUSIC ─── */
@@ -722,7 +744,7 @@ if (hasGSAP){
   PIECES.forEach(p => gsap.set('#' + p.id, { x:0, y:0, rotation:0, transformOrigin:'50% 50%' }));
   // the gold is drawn along each join rather than faded on, so every line
   // starts fully retracted, measured rather than guessed
-  gsap.utils.toArray('.mend-line').forEach(p => {
+  gsap.utils.toArray('.mend-line, .mend-line-glow').forEach(p => {
     const len = Math.ceil(p.getTotalLength()) + 1;
     gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
   });
@@ -753,6 +775,7 @@ function armOpening(){
   };
   opening.addEventListener('click', begin);
   addEventListener('keydown', begin);
+  clearTimeout(watchdog);   // armed and waiting for the guest is not a stall
 }
 
 function runOpening(){
@@ -760,8 +783,9 @@ function runOpening(){
   opening.dataset.done = '1';
 
   if (reduced){
-    gsap.set('.mend-line', { strokeDashoffset:0 });
-    gsap.set('#mendTrace', { opacity:.5 });
+    gsap.set('.mend-line, .mend-line-glow', { strokeDashoffset:0 });
+    gsap.set('#mendTrace', { opacity:.72 });
+    gsap.set('#mendShine', { opacity:.62 });
     gsap.set('#vaseWrap', { opacity:0 });
     gsap.to(opening, { opacity:0, duration:.5, onComplete:() => { clearTimeout(watchdog); finish(); } });
     return;
@@ -802,9 +826,14 @@ function runOpening(){
   /* ── MENDED ── a warm wash gathers along the joins as they close, then all
      but leaves. What remains is a faint trace: the mending is part of it now. */
   tl.to('#mendGlow', { opacity:1, duration:1.6, ease:'power1.inOut' }, 8.4)
-    .to('#mendTrace', { opacity:.5, duration:.4, ease:'power1.out' }, 8.9)
+    .to('#mendTrace', { opacity:.72, duration:.4, ease:'power1.out' }, 8.9)
+    .to('#mendShine', { opacity:.75, duration:.5, ease:'power1.out' }, 8.9)
     // every piece is home by 9.0s: only then does the gold run along the breaks
     .to('.mend-line', { strokeDashoffset:0, duration:1.5, stagger:.28, ease:'power2.inOut' }, 9.1)
+    .to('.mend-line-glow', { strokeDashoffset:0, duration:1.5, stagger:.28, ease:'power2.inOut' }, 9.1)
+    // the light flares as the last join closes, then settles to a steady warmth
+    .to('#mendShine', { opacity:1, duration:.9, ease:'sine.inOut' }, 11.0)
+    .to('#mendShine', { opacity:.62, duration:2.0, ease:'sine.inOut' }, 11.9)
     .to('#mendGlow', { opacity:.18, duration:2.4, ease:'power1.out' }, 10.6);
 
   tl.to(caption, { opacity:0, duration:.5 }, 9.9)
@@ -828,6 +857,10 @@ function runOpening(){
   tl.to(invText(), { opacity:1, duration:1.6, stagger:.12, ease:'power2.out' }, 21.6)
     .to(hint, { opacity:0, duration:.8 }, 21.6)
     .to(opening, { opacity:0, duration:1.2, ease:'power2.inOut' }, 25.0);
+
+  // the net is now the story's own length plus a margin, so it can only ever
+  // rescue a timeline that has genuinely stalled
+  watchdog = setTimeout(finish, (tl.duration() + 10) * 1000);
 
   const skip = () => { if (tl.progress() > .01 && tl.progress() < 1) tl.timeScale(7); };
   opening.addEventListener('click', skip);
