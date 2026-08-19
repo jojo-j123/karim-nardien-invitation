@@ -65,6 +65,23 @@
     background-size:7px 7px, 11px 11px; background-position:0 0, 3px 4px;
   }
 
+  /* ── botanical accents ──
+     Painted flowers set into the margins of the page. Each is a piece cut from
+     the invitation's own watercolour, with the paper keyed out by luminance and
+     the cut feathered to nothing, so it drops onto the page as paint rather
+     than as a rectangle. Swap the four files to change the flowers everywhere. */
+  .bot{
+    position:absolute; pointer-events:none; z-index:0;
+    background-repeat:no-repeat; background-position:center;
+    background-size:contain; opacity:.92;
+  }
+  .bot.stems-l { background-image:url("botanicals/bot-stems-left.webp"); }
+  .bot.blush-l { background-image:url("botanicals/bot-blush-left.webp"); }
+  .bot.stems-r { background-image:url("botanicals/bot-stems-right.webp"); }
+  .bot.leaves-r{ background-image:url("botanicals/bot-leaves-right.webp"); }
+  .bot.flip{ transform:scaleX(-1); }
+  @media (max-width:640px){ .bot{ opacity:.8; } }
+
   .rule-line{ height:1px; background:linear-gradient(90deg,transparent,var(--rule),transparent); }
   .hair{ border:1px solid rgba(74,67,53,.13); }
   .track{ letter-spacing:.3em; } .track-sm{ letter-spacing:.2em; }
@@ -435,7 +452,10 @@
 </section>
 
 <!-- ════ A QUIET PAGE : the verse, and the days between ════ -->
-<section class="relative py-24 sm:py-32 px-6 text-center">
+<section class="botanicals relative overflow-hidden py-24 sm:py-32 px-6 text-center">
+  
+  <div class="bot leaves-r" style="top:-2%; right:-7%; width:40%; height:34%"></div>
+  <div class="bot blush-l" style="bottom:-3%; left:-8%; width:42%; height:32%"></div>
   <div class="max-w-xl mx-auto">
     <p class="reveal font-serif italic text-lg sm:text-2xl text-ink/70 leading-relaxed">
       &ldquo;We are the clay, and you our potter; we are all the work of your hand.&rdquo;
@@ -451,8 +471,11 @@
   </div>
 </section>
 <!-- ════ PROGRAM ════ -->
-<section class="relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
+<section class="botanicals relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
 
+
+  <div class="bot stems-l flip" style="top:1%; left:-8%; width:30%; height:34%"></div>
+  <div class="bot stems-r" style="bottom:0%; right:-7%; width:30%; height:34%"></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">The day</p>
@@ -493,7 +516,10 @@
 </section>
 
 <!-- ════ VENUE ════ -->
-<section class="relative overflow-hidden py-16 sm:py-28 px-5 sm:px-6">
+<section class="botanicals relative overflow-hidden py-16 sm:py-28 px-5 sm:px-6">
+
+  <div class="bot blush-l" style="bottom:-2%; left:-7%; width:38%; height:26%"></div>
+  <div class="bot leaves-r flip" style="top:0%; right:-6%; width:34%; height:24%"></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">Where</p>
@@ -536,8 +562,11 @@
 </section>
 
 <!-- ════ RSVP ════ -->
-<section id="rsvp" class="relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
+<section id="rsvp" class="botanicals relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
 
+
+  <div class="bot stems-r" style="top:0%; right:-6%; width:32%; height:26%"></div>
+  <div class="bot blush-l flip" style="bottom:-1%; left:-7%; width:40%; height:24%"></div>
   <div class="max-w-lg mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">Kindly reply</p>
@@ -549,7 +578,7 @@
     <div class="card hair mt-9 p-6 sm:p-10 reveal" style="background:rgba(233,225,213,.42)">
       <form id="rsvpForm" novalidate>
         <label class="block track-sm text-[.56rem] uppercase text-ink/45 mb-1" for="name">Full name</label>
-        <input class="field" id="name" name="name" type="text" placeholder="As it appears on your invitation"
+        <input class="field" id="name" name="name" type="text"
                autocomplete="name" enterkeyhint="done" aria-describedby="errName" />
         <p id="errName" class="text-[.75rem] text-terra mt-2 hidden font-light" role="alert">Please enter your full name.</p>
 
@@ -581,8 +610,11 @@
   </div>
 </section>
 
-<footer class="py-14 text-center px-6">
-  <div class="rule-line w-32 mx-auto mb-8"></div>
+<footer class="botanicals relative overflow-hidden py-14 text-center px-6">
+
+  <div class="bot stems-l" style="bottom:-14%; left:-5%; width:26%; height:118%"></div>
+  <div class="bot stems-r flip" style="bottom:-14%; right:-5%; width:26%; height:118%"></div>
+  <div class="rule-line w-32 mx-auto mb-8 relative"></div>
   <p class="font-serif italic text-lg text-ink/70">He makes all things new.</p>
   <p class="track text-[.48rem] uppercase text-ink/30 mt-4 leading-loose">Karim &amp; Nardien &middot; Nineteen September &middot; Twenty Twenty Six</p>
 </footer>
