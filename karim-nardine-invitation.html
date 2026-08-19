@@ -11,7 +11,9 @@
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Karim &amp; Nardien | 19 September 2026" />
 <meta property="og:description" content="Heliopolis Evangelical Church, Cairo. Saturday 19 September 2026, 1:30 PM." />
-<meta property="og:image" content="https://ukgllbcigjesjhnsoirz.supabase.co/storage/v1/object/public/music/invitation-plate.webp" />
+<!-- absolute, because link scrapers do not resolve relative paths.
+     Update the host here if the invitation moves to its own domain. -->
+<meta property="og:image" content="https://nardien-karim-wedding.vercel.app/invitation-plate.png" />
 <meta property="og:locale" content="en_GB" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Karim &amp; Nardien | 19 September 2026" />
@@ -21,8 +23,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="https://ukgllbcigjesjhnsoirz.supabase.co/storage/v1/object/public/music/invitation-plate.webp">
-<link rel="preload" as="image" href="https://ukgllbcigjesjhnsoirz.supabase.co/storage/v1/object/public/music/theme-plate.webp">
+<link rel="preload" as="image" href="invitation-plate.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Pinyon+Script&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -131,17 +132,27 @@
     aspect-ratio:994/1583; height:var(--h);
   }
   .thm-sheet{
-    --h:min(calc(100svh - var(--pad) * 2), calc((100vw - var(--pad) * 2) * 1484 / 1060));
-    aspect-ratio:1060/1484; height:var(--h);
-    background-image:url("https://ukgllbcigjesjhnsoirz.supabase.co/storage/v1/object/public/music/theme-plate.webp");
+    --h:min(calc(100svh - var(--pad) * 2), calc((100vw - var(--pad) * 2) * 1583 / 994));
+    aspect-ratio:994/1583; height:var(--h);
+  }
+  .thm-art{
+    position:absolute; inset:0; pointer-events:none;
+    background-image:url("invitation-plate.png");
     background-size:100% 100%; background-position:center; background-repeat:no-repeat;
+    transform:scaleX(-1);   /* the same frame, turned over: a suite, not a copy */
+    opacity:.5;
+  }
+  .thm-sheet::after{
+    content:''; position:absolute; inset:0; pointer-events:none; opacity:.05;
+    background-image:radial-gradient(rgba(74,67,53,.5) .5px, transparent .6px);
+    background-size:7px 7px;
   }
 
   /* the painted plate sits on its own layer so it can be revealed without
      taking the paper underneath with it */
   .plate-art{
     position:absolute; inset:0; pointer-events:none;
-    background-image:url("https://ukgllbcigjesjhnsoirz.supabase.co/storage/v1/object/public/music/invitation-plate.webp");
+    background-image:url("invitation-plate.png");
     background-size:100% 100%; background-position:center; background-repeat:no-repeat;
     --r1:0%; --r2:6%;
     -webkit-mask-image:radial-gradient(circle at 50% 70%, #000 var(--r1), transparent var(--r2));
@@ -383,15 +394,18 @@
 <!-- ════ THE THEME ════ -->
 <section id="theme" class="inv-stage">
   <div class="thm-sheet">
-    <p class="inv-t caps clay" style="top:31.1%; font-size:calc(var(--h) * 0.01)">The theme</p>
-    <p class="inv-t script" style="top:37.6%; font-size:calc(var(--h) * 0.037)">Mended in Grace</p>
-    <p class="inv-t body" style="top:56.3%; font-size:calc(var(--h) * 0.0185); width:62%; line-height:2.05">
+    <div class="thm-art"></div>
+    <p class="inv-t caps clay" style="top:31.5%; font-size:calc(var(--h) * 0.0092)">The theme</p>
+    <p class="inv-t script" style="top:38.4%; font-size:calc(var(--h) * 0.042)">Mended in Grace</p>
+    <span class="inv-line" style="top:45.6%; width:15%"></span>
+    <p class="inv-t body" style="top:56.4%; font-size:calc(var(--h) * 0.0178); width:64%; line-height:2.15">
       All of these pieces, broken and scattered,<br>
       gathered in mercy, mended, and made whole.<br>
       God shapes us like pottery,<br>
       and he makes all things new.
     </p>
-    <p class="inv-t clay" style="top:70.1%; font-size:calc(var(--h) * 0.017); font-style:italic">Amazing grace, how sweet the sound.</p>
+    <span class="inv-line" style="top:67.4%; width:11%"></span>
+    <p class="inv-t clay" style="top:73%; font-size:calc(var(--h) * 0.0165); font-style:italic">Amazing grace, how sweet the sound.</p>
   </div>
 </section>
 
@@ -562,9 +576,11 @@ const EVENT = {
 
 const SUPABASE_URL = "https://ukgllbcigjesjhnsoirz.supabase.co";
 const SUPABASE_KEY = "sb_publishable_XZMhkrrrEF2XUhkfWKSySQ_ZZO3RE8W";
+// the bucket stores the track inside the folder it was uploaded into; the
+// tidy path and the local copy are kept as fallbacks
 const MUSIC_PATHS = [
-  SUPABASE_URL + "/storage/v1/object/public/music/music.mp3",
   SUPABASE_URL + "/storage/v1/object/public/music/Untitled%20folder/music.mp3",
+  SUPABASE_URL + "/storage/v1/object/public/music/music.mp3",
   "music.mp3"
 ];
 
@@ -667,15 +683,6 @@ musicBtn.addEventListener('click', async () => {
   } catch(e){ setMusicState(false); }
   finally { musicBusy = false; }
 });
-
-/* ─── the plate falls back to a local copy if the remote one is missing ─── */
-(() => {
-  const remote = getComputedStyle(plateArt).backgroundImage.match(/url\(["']?(.*?)["']?\)/);
-  if (!remote) return;
-  const probe = new Image();
-  probe.onerror = () => { plateArt.style.backgroundImage = 'url("invitation-plate.png")'; };
-  probe.src = remote[1];
-})();
 
 /* ══════════════════════════════════════════════════════════════════════
    THE OPENING — one continuous story, told on the sheet itself:
@@ -839,7 +846,7 @@ if (hasST && !reduced){
       { opacity:1, y:0, scale:1, duration:1.8, ease:'expo.out', clearProps:'transform',
         scrollTrigger:{ trigger:el, start:'top 78%', once:true } });
   });
-  gsap.fromTo('#theme .inv-t', { opacity:0 },
+  gsap.fromTo('#theme .inv-t, #theme .inv-line', { opacity:0 },
     { opacity:1, duration:1.3, stagger:.1, ease:'power2.out',
       scrollTrigger:{ trigger:'#theme', start:'top 62%', once:true } });
 }
