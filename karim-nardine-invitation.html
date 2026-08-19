@@ -90,6 +90,14 @@
   .pot{ position:absolute; pointer-events:none; z-index:0; opacity:.3; aspect-ratio:300/400; }
   .pot svg{ width:100%; height:100%; display:block; }
   @media (max-width:640px){ .pot{ opacity:.26; } }
+  /* the filled urn, standing in the lower corner of every page */
+  .urn{ position:absolute; pointer-events:none; z-index:0; opacity:.34;
+        aspect-ratio:300/400; width:clamp(56px, 14.5vw, 124px); }
+  .urn svg{ width:100%; height:100%; display:block; }
+  @media (max-width:640px){ .urn{ opacity:.3; } }
+  @media (max-width:1199px){
+    .has-urn{ padding-bottom:calc(clamp(56px, 14.5vw, 124px) * 1.334 + 1.25rem) !important; }
+  }
   @media (max-width:640px){ .bot{ opacity:.88; } }
 
   .rule-line{ height:1px; background:linear-gradient(90deg,transparent,var(--rule),transparent); }
@@ -182,8 +190,8 @@
     background-image:url("invitation-plate.webp");
     background-size:100% 100%; background-position:center; background-repeat:no-repeat;
     --r1:0%; --r2:0%;   /* closed until the story opens it */
-    -webkit-mask-image:radial-gradient(ellipse 76% 98% at 50% 88%, #000 var(--r1), transparent var(--r2));
-            mask-image:radial-gradient(ellipse 76% 98% at 50% 88%, #000 var(--r1), transparent var(--r2));
+    -webkit-mask-image:radial-gradient(ellipse 76% 98% at 50% 93%, #000 var(--r1), transparent var(--r2));
+            mask-image:radial-gradient(ellipse 76% 98% at 50% 93%, #000 var(--r1), transparent var(--r2));
   }
   /* the faintest tooth of paper, so a bare sheet is never flat */
   .inv-sheet::after{
@@ -193,7 +201,7 @@
   }
 
   .vase-wrap{
-    position:absolute; left:12%; width:76%; top:18.19%;
+    position:absolute; left:11.8%; width:76.4%; bottom:-7.3%;
     pointer-events:none;
     transform-origin:50% 86%;   /* it settles toward its own foot as it goes */
   }
@@ -202,17 +210,18 @@
   .inv-t{
     position:absolute; left:50%; translate:-50% -50%;
     margin:0; width:72%; text-align:center;
-    font-family:"Cormorant Garamond","Times New Roman",Times,serif; font-weight:400;
+    font-family:"Cormorant Garamond","Times New Roman",Times,serif; font-weight:500;
     color:var(--ink); line-height:1.25;
   }
+  .inv-t.body{ font-weight:500; }
   .inv-t.caps{
-    font-family:Jost,system-ui,sans-serif; font-weight:300;
-    letter-spacing:.3em; text-transform:uppercase; color:rgba(74,67,53,.5);
+    font-family:Jost,system-ui,sans-serif; font-weight:500;
+    letter-spacing:.22em; text-transform:uppercase; color:rgba(74,67,53,.72);
   }
   .inv-t.clay{ color:var(--clay); }
-  .inv-t.script{ font-family:"Pinyon Script","Snell Roundhand","Brush Script MT",cursive; line-height:1.1; }
+  .inv-t.script{ font-family:"Pinyon Script","Snell Roundhand","Brush Script MT",cursive; font-weight:400; line-height:1.1; }
   .inv-t.amp{ font-style:italic; color:var(--clay); }
-  .inv-t.body{ color:rgba(74,67,53,.68); }
+  .inv-t.body{ color:rgba(74,67,53,.74); }
   .inv-line{
     position:absolute; left:50%; translate:-50% 0; height:1px;
     background:linear-gradient(90deg,transparent,var(--rule),transparent);
@@ -225,7 +234,7 @@
   /* the narration: part of the page it is telling, not a caption stuck to the
      bottom of the screen. Sized from the sheet so it scales with the paper. */
   .narr{
-    position:absolute; left:50%; top:9.6%; translate:-50% -50%;
+    position:absolute; left:50%; top:34%; translate:-50% -50%;
     margin:0; width:80%; text-align:center; opacity:0;
     font-family:"Cormorant Garamond","Times New Roman",Times,serif;
     font-style:italic; font-weight:400; letter-spacing:.02em;
@@ -239,9 +248,9 @@
      reads at a normal size and sits under the vessel, where the eye already is. */
   #openingHint{
     position:absolute; left:0; right:0;
-    bottom:calc(16% + env(safe-area-inset-bottom));
+    bottom:calc(52% + env(safe-area-inset-bottom));
     text-align:center; font-family:Jost,system-ui,sans-serif; font-weight:400;
-    font-size:clamp(.74rem, 3.1vw, .92rem); letter-spacing:.24em;
+    font-size:clamp(.86rem, 3.7vw, 1.06rem); letter-spacing:.22em;
     text-transform:uppercase; color:rgba(74,67,53,.62); pointer-events:none;
   }
 
@@ -333,6 +342,46 @@
         <path d="M -20 278 C 30 274, 76 294, 120 282 C 168 269, 224 296, 268 282 C 290 275, 306 280, 320 286"/>
       </g>
     </symbol>
+    <linearGradient id="urnClay" x1=".15" y1="0" x2=".9" y2="1">
+      <stop offset="0%" stop-color="#EDD3BB"/><stop offset="40%" stop-color="#E4C0A2"/>
+      <stop offset="78%" stop-color="#D6AB8A"/><stop offset="100%" stop-color="#C89A7B"/>
+    </linearGradient>
+    <clipPath id="urnClip"><path d="M 108 150 C 112 160, 118 166, 122 174 C 96 196, 82 226, 82 258 C 82 300, 100 340, 124 362 C 119 368, 116 374, 116 381 L 184 381 C 184 374, 181 368, 176 362 C 200 340, 218 300, 218 258 C 218 226, 204 196, 178 174 C 182 166, 188 160, 192 150 Z"/></clipPath>
+    <symbol id="urnMark" viewBox="0 0 300 400">
+      <g fill="none" stroke="#A6A184" stroke-width="2.2" stroke-linecap="round" opacity=".8">
+        <path d="M 150 150 C 140 124, 126 104, 111 90"/>
+        <path d="M 150 150 C 155 122, 167 102, 186 86"/>
+        <path d="M 150 150 C 150 128, 149 108, 149 92"/>
+        <path d="M 150 150 C 138 134, 122 126, 106 124"/>
+        <path d="M 150 150 C 163 136, 180 130, 196 130"/>
+      </g>
+      <g fill="#B4AE8E" opacity=".5">
+        <ellipse cx="128" cy="116" rx="10" ry="5" transform="rotate(-32 128 116)"/>
+        <ellipse cx="171" cy="112" rx="10" ry="5" transform="rotate(28 171 112)"/>
+        <ellipse cx="150" cy="124" rx="9" ry="4.6" transform="rotate(-6 150 124)"/>
+      </g>
+      <g fill="#D89B72" opacity=".82">
+        <circle cx="109" cy="86" r="12.5"/><circle cx="189" cy="82" r="13.5"/><circle cx="149" cy="88" r="11"/>
+        <circle cx="102" cy="121" r="8"/><circle cx="200" cy="127" r="8.5"/>
+      </g>
+      <g fill="#C07C52" opacity=".5">
+        <circle cx="109" cy="86" r="4.6"/><circle cx="189" cy="82" r="5"/><circle cx="149" cy="88" r="4"/>
+        <circle cx="102" cy="121" r="3"/><circle cx="200" cy="127" r="3.2"/>
+      </g>
+      <path d="M 108 150 C 112 160, 118 166, 122 174 C 96 196, 82 226, 82 258 C 82 300, 100 340, 124 362 C 119 368, 116 374, 116 381 L 184 381 C 184 374, 181 368, 176 362 C 200 340, 218 300, 218 258 C 218 226, 204 196, 178 174 C 182 166, 188 160, 192 150 Z"
+            fill="url(#urnClay)" stroke="#A2846A" stroke-width="2.7" stroke-linejoin="round"/>
+      <g fill="url(#urnClay)" stroke="#A2846A" stroke-width="2.4" stroke-linejoin="round">
+        <path d="M 188 152 C 224 158, 240 194, 216 228 L 205 220 C 224 194, 214 168, 185 164 Z"/>
+        <path d="M 112 152 C 76 158, 60 194, 84 228 L 95 220 C 76 194, 86 168, 115 164 Z"/>
+      </g>
+      <path d="M 100 146 C 118 154, 182 154, 200 146 C 200 140, 190 136, 150 136 C 110 136, 100 140, 100 146 Z"
+            fill="url(#urnClay)" stroke="#A2846A" stroke-width="2.7" stroke-linejoin="round"/>
+      <g clip-path="url(#urnClip)" fill="none" stroke="#A87F5C" stroke-width="1.9" opacity=".34">
+        <path d="M 86 224 C 122 236, 178 236, 214 223"/>
+        <path d="M 82 262 C 120 276, 180 276, 218 261"/>
+        <path d="M 92 306 C 124 318, 176 318, 208 305"/>
+      </g>
+    </symbol>
   </defs>
 </svg>
 
@@ -357,7 +406,7 @@
   <div class="inv-stage">
 <div class="inv-sheet" id="sheet">
   <div class="plate-art" id="plateArt"></div>
-  <p class="narr" id="caption">Whole</p>
+  <p class="narr" id="caption">Broken, Gathered, Made Whole.</p>
 
   <!-- ── the vessel: one thrown pot, five pieces, drawn as one silhouette and
        cut by clip paths so every fracture edge is a true broken edge ── -->
@@ -449,31 +498,31 @@
     </svg>
   </div>
 
-  <p class="inv-t" style="top:15.9%; font-size:calc(var(--h) * 0.0195)">Raef El-Gamal &amp; Mayada Mounir</p>
-  <p class="inv-t caps" style="top:19.9%; font-size:calc(var(--h) * 0.0086)">Together with</p>
-  <p class="inv-t" style="top:23.9%; font-size:calc(var(--h) * 0.0195)">Raafat Sedky &amp; Amaney Sabry</p>
+  <p class="inv-t" style="top:15.7%; font-size:calc(var(--h) * 0.0238)">Raef El-Gamal &amp; Mayada Mounir</p>
+  <p class="inv-t caps" style="top:19.9%; font-size:calc(var(--h) * 0.0152)">Together with</p>
+  <p class="inv-t" style="top:24.1%; font-size:calc(var(--h) * 0.0238)">Raafat Sedky &amp; Amaney Sabry</p>
 
-  <p class="inv-t caps" style="top:29.6%; font-size:calc(var(--h) * 0.0088); width:56%; line-height:2.1">
+  <p class="inv-t caps" style="top:29.8%; font-size:calc(var(--h) * 0.015); width:66%; line-height:1.9">
     Request the honour of your presence at the marriage of
   </p>
 
   <p class="inv-t script" style="top:39.6%; font-size:calc(var(--h) * 0.05)">Karim Raef</p>
-  <p class="inv-t amp" style="top:45.2%; font-size:calc(var(--h) * 0.021)">&amp;</p>
+  <p class="inv-t amp" style="top:45.2%; font-size:calc(var(--h) * 0.0245)">&amp;</p>
   <p class="inv-t script" style="top:50.8%; font-size:calc(var(--h) * 0.05)">Nardien Raafat</p>
 
   <span class="inv-line" style="top:58%; width:18%"></span>
 
-  <p class="inv-t body" style="top:67.2%; font-size:calc(var(--h) * 0.0195); width:52%; line-height:1.75">
+  <p class="inv-t body" style="top:67.2%; font-size:calc(var(--h) * 0.0232); width:58%; line-height:1.7">
     Come witness their marriage, and celebrate what God's grace and mercy has put back together.
   </p>
 
-  <p class="inv-t caps clay" style="top:77.6%; font-size:calc(var(--h) * 0.0086)">Date</p>
-  <p class="inv-t" style="top:81.4%; font-size:calc(var(--h) * 0.0195)">Saturday, 19 September 2026</p>
+  <p class="inv-t caps clay" style="top:77.5%; font-size:calc(var(--h) * 0.0152)">Date</p>
+  <p class="inv-t" style="top:81.5%; font-size:calc(var(--h) * 0.0238)">Saturday, 19 September 2026</p>
 
   <span class="inv-line" style="top:85.6%; width:14%"></span>
 
-  <p class="inv-t caps clay" style="top:89.2%; font-size:calc(var(--h) * 0.0086)">Hour</p>
-  <p class="inv-t" style="top:92.9%; font-size:calc(var(--h) * 0.0195)">1:30 PM</p>
+  <p class="inv-t caps clay" style="top:89.1%; font-size:calc(var(--h) * 0.0152)">Hour</p>
+  <p class="inv-t" style="top:93%; font-size:calc(var(--h) * 0.0238)">1:30 PM</p>
 </div>
 
   </div>
@@ -489,25 +538,25 @@
 <section id="theme" class="inv-stage">
   <div class="thm-sheet">
     <div class="thm-art"></div>
-    <p class="inv-t caps clay" style="top:31.5%; font-size:calc(var(--h) * 0.0092)">The theme</p>
+    <p class="inv-t caps clay" style="top:31.5%; font-size:calc(var(--h) * 0.0152)">The theme</p>
     <p class="inv-t script" style="top:38.4%; font-size:calc(var(--h) * 0.042)">Mended in Grace</p>
     <span class="inv-line" style="top:45.6%; width:15%"></span>
-    <p class="inv-t body" style="top:56.4%; font-size:calc(var(--h) * 0.0178); width:64%; line-height:2.15">
+    <p class="inv-t body" style="top:56.4%; font-size:calc(var(--h) * 0.0212); width:68%; line-height:2">
       All of these pieces, broken and scattered,<br>
       gathered in mercy, mended, and made whole.<br>
       God shapes us like pottery,<br>
       and he makes all things new.
     </p>
     <span class="inv-line" style="top:67.4%; width:11%"></span>
-    <p class="inv-t clay" style="top:73%; font-size:calc(var(--h) * 0.0165); font-style:italic">Amazing grace, how sweet the sound.</p>
+    <p class="inv-t clay" style="top:73%; font-size:calc(var(--h) * 0.0195); font-style:italic">Amazing grace, how sweet the sound.</p>
   </div>
 </section>
 
 <!-- ════ A QUIET PAGE : the verse, and the days between ════ -->
-<section class="botanicals relative overflow-hidden py-24 sm:py-32 px-6 text-center">
+<section class="botanicals has-urn relative overflow-hidden py-24 sm:py-32 px-6 text-center">
   
   <div class="bot leaves-r" style="top:0; right:0; width:34%"></div>
-  <div class="pot" style="bottom:2%; right:5%; width:20%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
+  <div class="urn" style="bottom:0; right:4%"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
   <div class="bot blush-l" style="bottom:0; left:0; width:36%"></div>
   <div class="max-w-xl mx-auto">
     <p class="reveal font-serif italic text-lg sm:text-2xl text-ink/70 leading-relaxed">
@@ -524,12 +573,13 @@
   </div>
 </section>
 <!-- ════ PROGRAM ════ -->
-<section class="botanicals relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
+<section class="botanicals has-urn relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
 
 
   <div class="bot stems-r" style="top:0; right:1%; width:18%"></div>
   <div class="pot" style="top:1%; left:4%; width:17%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
-  <div class="bot blush-l flip" style="bottom:0; right:0; width:32%"></div>
+  <div class="bot blush-l" style="bottom:0; left:0; width:32%"></div>
+  <div class="urn" style="bottom:0; right:4%"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">The day</p>
@@ -570,11 +620,12 @@
 </section>
 
 <!-- ════ VENUE ════ -->
-<section class="botanicals relative overflow-hidden py-16 sm:py-28 px-5 sm:px-6">
+<section class="botanicals has-urn relative overflow-hidden py-16 sm:py-28 px-5 sm:px-6">
 
   <div class="bot stems-l" style="top:0; left:1%; width:18%"></div>
   <div class="pot" style="bottom:2%; left:6%; width:20%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
-  <div class="bot leaves-r flip" style="bottom:0; right:0; width:32%"></div>
+  <div class="bot leaves-r" style="top:0; right:0; width:30%"></div>
+  <div class="urn" style="bottom:0; right:4%"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">Where</p>
@@ -623,12 +674,13 @@
 </section>
 
 <!-- ════ RSVP ════ -->
-<section id="rsvp" class="botanicals relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
+<section id="rsvp" class="botanicals has-urn relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
 
 
   <div class="bot stems-r flip" style="top:0; right:1%; width:19%"></div>
   <div class="pot" style="top:1%; left:5%; width:18%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
   <div class="bot blush-l" style="bottom:0; left:0; width:34%"></div>
+  <div class="urn" style="bottom:0; right:4%"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
   <div class="max-w-lg mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">Kindly reply</p>
@@ -672,11 +724,11 @@
   </div>
 </section>
 
-<footer class="botanicals relative overflow-hidden py-14 text-center px-6">
+<footer class="botanicals has-urn relative overflow-hidden py-14 text-center px-6">
 
   <div class="bot stems-l" style="bottom:0; left:2%; width:17%"></div>
-  <div class="pot" style="top:4%; left:50%; margin-left:-8%; width:16%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
-  <div class="bot stems-r flip" style="bottom:0; right:2%; width:17%"></div>
+  <div class="bot stems-r flip" style="top:0; right:2%; width:16%"></div>
+  <div class="urn" style="bottom:0; right:5%"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
   <div class="rule-line w-32 mx-auto mb-8 relative"></div>
   <p class="font-serif italic text-lg text-ink/70">He makes all things new.</p>
   <p class="track text-[.48rem] uppercase text-ink/30 mt-4 leading-loose">Karim &amp; Nardien &middot; Nineteen September &middot; Twenty Twenty Six</p>
@@ -724,10 +776,16 @@ function finish(){
   if (entered) return;
   entered = true;
   setBloom(1);
-  // whatever brought us here, the vessel has had its turn: the invitation is
-  // never shown over it
-  if (hasGSAP) gsap.set('#vaseWrap', { opacity:0 });
-  else { const v = $('vaseWrap'); if (v) v.style.opacity = '0'; }
+  // whatever brought us here, the vessel has had its turn, and so has the
+  // narration: the invitation is never shown over either of them. Any tween
+  // still in flight is stopped first, or it would paint them back in.
+  if (hasGSAP){
+    gsap.killTweensOf(['#vaseWrap', '#caption']);
+    gsap.set(['#vaseWrap', '#caption'], { opacity:0 });
+  } else {
+    const v = $('vaseWrap'); if (v) v.style.opacity = '0';
+    const c = $('caption');  if (c) c.style.opacity = '0';
+  }
   document.querySelectorAll('#sheet .inv-t, #sheet .inv-line')
     .forEach(el => { el.style.opacity = 1; });
 
@@ -859,11 +917,12 @@ function armOpening(){
   if (reduced){
     hint.textContent = 'Tap to open';
     gsap.set('#vaseWrap', { opacity:1 });
-    gsap.to(hint, { opacity:1, duration:.4 });
+    gsap.to([caption, hint], { opacity:1, duration:.4 });
   } else {
     gsap.to('#vaseWrap', { opacity:1, duration:1.6, ease:'power2.out' });
     gsap.from('#vaseWrap', { y:14, duration:2.0, ease:'power2.out' });
-    hint.textContent = 'Tap to begin';
+    gsap.to(caption, { opacity:1, duration:1.4, delay:.35, ease:'power2.out' });
+    hint.textContent = 'Tap to open';
     // it breathes, so an eye that has not found it is drawn to it
     gsap.fromTo(hint, { opacity:0 },
       { opacity:1, duration:1.1, delay:.7, ease:'power2.out',
@@ -990,7 +1049,7 @@ function runOpening(){
     .to(bloom, { v:1,   duration:3.2, ease:'sine.out',   onUpdate:() => setBloom(bloom.v) }, 19.8);
 
   /* ── the pot gives way to what grew out of it ── */
-  tl.to('#vaseWrap', { scale:.52, duration:6.0, ease:'sine.inOut' }, 15.8)
+  tl.to('#vaseWrap', { scale:.6, duration:6.0, ease:'sine.inOut' }, 15.8)
     .to('#vaseWrap', { opacity:0, duration:3.6, ease:'power1.inOut' }, 19.2)
     .to(caption, { opacity:0, duration:1.0 }, 19.6);
 
