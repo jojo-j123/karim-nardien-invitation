@@ -65,6 +65,23 @@
     background-size:7px 7px, 11px 11px; background-position:0 0, 3px 4px;
   }
 
+  /* ── botanical accents ──
+     Painted flowers set into the margins of the page. Each is a piece cut from
+     the invitation's own watercolour, with the paper keyed out by luminance and
+     the cut feathered to nothing, so it drops onto the page as paint rather
+     than as a rectangle. Swap the four files to change the flowers everywhere. */
+  .bot{
+    position:absolute; pointer-events:none; z-index:0;
+    background-repeat:no-repeat; background-position:center;
+    background-size:contain; opacity:.92;
+  }
+  .bot.stems-l { background-image:url("botanicals/bot-stems-left.webp"); }
+  .bot.blush-l { background-image:url("botanicals/bot-blush-left.webp"); }
+  .bot.stems-r { background-image:url("botanicals/bot-stems-right.webp"); }
+  .bot.leaves-r{ background-image:url("botanicals/bot-leaves-right.webp"); }
+  .bot.flip{ transform:scaleX(-1); }
+  @media (max-width:640px){ .bot{ opacity:.8; } }
+
   .rule-line{ height:1px; background:linear-gradient(90deg,transparent,var(--rule),transparent); }
   .hair{ border:1px solid rgba(74,67,53,.13); }
   .track{ letter-spacing:.3em; } .track-sm{ letter-spacing:.2em; }
@@ -359,6 +376,16 @@
       <g class="piece" id="pcUpR"  clip-path="url(#cpUpR)"><use href="#potArt"/></g>
       <g class="piece" id="pcNeck" clip-path="url(#cpNeck)"><use href="#potArt"/></g>
 
+      <!-- the light that travels each join, ahead of the gold it leaves behind -->
+      <g id="mendSpark" clip-path="url(#cpPot)" opacity="0"
+         fill="none" stroke="#F2DFA6" stroke-width="2.8" stroke-linecap="round"
+         filter="url(#goldBlur)">
+        <path class="mend-spark" d="M -20 88 C 24 82, 58 106, 96 96 C 122 89, 136 86, 150 95 C 166 105, 196 84, 232 96 C 268 108, 292 92, 320 100"/>
+        <path class="mend-spark" d="M 150 95 C 160 124, 140 146, 149 168 C 156 186, 139 190, 143 205"/>
+        <path class="mend-spark" d="M -20 198 C 22 194, 56 214, 92 202 C 114 195, 131 198, 143 205 C 159 213, 190 194, 226 206 C 262 218, 292 200, 320 208"/>
+        <path class="mend-spark" d="M -20 278 C 30 274, 76 294, 120 282 C 168 269, 224 296, 268 282 C 290 275, 306 280, 320 286"/>
+      </g>
+
       <!-- the light the gold gives off, drawn in step with it -->
       <g id="mendShine" clip-path="url(#cpPot)" opacity="0"
          fill="none" stroke="#E0C06B" stroke-width="4.6" stroke-linecap="round"
@@ -435,7 +462,10 @@
 </section>
 
 <!-- ════ A QUIET PAGE : the verse, and the days between ════ -->
-<section class="relative py-24 sm:py-32 px-6 text-center">
+<section class="botanicals relative overflow-hidden py-24 sm:py-32 px-6 text-center">
+  
+  <div class="bot leaves-r" style="top:-2%; right:-7%; width:40%; height:34%"></div>
+  <div class="bot blush-l" style="bottom:-3%; left:-8%; width:42%; height:32%"></div>
   <div class="max-w-xl mx-auto">
     <p class="reveal font-serif italic text-lg sm:text-2xl text-ink/70 leading-relaxed">
       &ldquo;We are the clay, and you our potter; we are all the work of your hand.&rdquo;
@@ -451,8 +481,11 @@
   </div>
 </section>
 <!-- ════ PROGRAM ════ -->
-<section class="relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
+<section class="botanicals relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
 
+
+  <div class="bot stems-l flip" style="top:1%; left:-8%; width:30%; height:34%"></div>
+  <div class="bot stems-r" style="bottom:0%; right:-7%; width:30%; height:34%"></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">The day</p>
@@ -493,7 +526,10 @@
 </section>
 
 <!-- ════ VENUE ════ -->
-<section class="relative overflow-hidden py-16 sm:py-28 px-5 sm:px-6">
+<section class="botanicals relative overflow-hidden py-16 sm:py-28 px-5 sm:px-6">
+
+  <div class="bot blush-l" style="bottom:-2%; left:-7%; width:38%; height:26%"></div>
+  <div class="bot leaves-r flip" style="top:0%; right:-6%; width:34%; height:24%"></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">Where</p>
@@ -507,18 +543,24 @@
       <div class="relative grid sm:grid-cols-[190px_1fr] items-center gap-6 p-8 sm:p-11">
 
         <!-- line-drawn church -->
-        <svg viewBox="0 0 160 170" class="w-28 sm:w-full mx-auto" fill="none"
+        <svg viewBox="0 0 160 150" class="w-28 sm:w-full mx-auto" fill="none"
              stroke="#B08A6E" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">
-          <path d="M80 10 v22"/><path d="M70 20 h20"/>
-          <path d="M80 32 L58 62 v70 h44 V62 z"/>
-          <path d="M58 132 H26 V88 l32 -22"/>
-          <path d="M102 132 h32 V88 l-32 -22"/>
-          <path d="M80 132 v-30 a10 10 0 0 1 20 0" transform="translate(-10,0)"/>
-          <path d="M72 82 a8 8 0 0 1 16 0 v14 H72 z"/>
-          <path d="M38 106 a6 6 0 0 1 12 0 v12 H38 z"/>
-          <path d="M110 106 a6 6 0 0 1 12 0 v12 H110 z"/>
-          <path d="M16 132 h128"/>
-          <path d="M80 62 v14" opacity=".6"/>
+          <!-- cross -->
+          <path d="M80 26 V8"/>
+          <path d="M72 15 H88"/>
+          <!-- nave, standing on the ground line -->
+          <path d="M56 136 V60 L80 26 L104 60 V136"/>
+          <!-- the two aisles, their roofs meeting the nave just under its eaves -->
+          <path d="M24 136 V92 L56 64"/>
+          <path d="M136 136 V92 L104 64"/>
+          <!-- arched door, closed on both jambs -->
+          <path d="M72 136 V112 A8 8 0 0 1 88 112 V136"/>
+          <!-- arched window in the gable -->
+          <path d="M74 92 V84 A6 6 0 0 1 86 84 V92 Z"/>
+          <!-- aisle windows -->
+          <path d="M36 120 V112 A5 5 0 0 1 46 112 V120 Z"/>
+          <path d="M114 120 V112 A5 5 0 0 1 124 112 V120 Z"/>
+          <path d="M14 136 H146"/>
         </svg>
 
         <div class="text-center sm:text-left">
@@ -536,8 +578,11 @@
 </section>
 
 <!-- ════ RSVP ════ -->
-<section id="rsvp" class="relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
+<section id="rsvp" class="botanicals relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
 
+
+  <div class="bot stems-r" style="top:0%; right:-6%; width:32%; height:26%"></div>
+  <div class="bot blush-l flip" style="bottom:-1%; left:-7%; width:40%; height:24%"></div>
   <div class="max-w-lg mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">Kindly reply</p>
@@ -549,7 +594,7 @@
     <div class="card hair mt-9 p-6 sm:p-10 reveal" style="background:rgba(233,225,213,.42)">
       <form id="rsvpForm" novalidate>
         <label class="block track-sm text-[.56rem] uppercase text-ink/45 mb-1" for="name">Full name</label>
-        <input class="field" id="name" name="name" type="text" placeholder="As it appears on your invitation"
+        <input class="field" id="name" name="name" type="text"
                autocomplete="name" enterkeyhint="done" aria-describedby="errName" />
         <p id="errName" class="text-[.75rem] text-terra mt-2 hidden font-light" role="alert">Please enter your full name.</p>
 
@@ -581,8 +626,11 @@
   </div>
 </section>
 
-<footer class="py-14 text-center px-6">
-  <div class="rule-line w-32 mx-auto mb-8"></div>
+<footer class="botanicals relative overflow-hidden py-14 text-center px-6">
+
+  <div class="bot stems-l" style="bottom:-14%; left:-5%; width:26%; height:118%"></div>
+  <div class="bot stems-r flip" style="bottom:-14%; right:-5%; width:26%; height:118%"></div>
+  <div class="rule-line w-32 mx-auto mb-8 relative"></div>
   <p class="font-serif italic text-lg text-ink/70">He makes all things new.</p>
   <p class="track text-[.48rem] uppercase text-ink/30 mt-4 leading-loose">Karim &amp; Nardien &middot; Nineteen September &middot; Twenty Twenty Six</p>
 </footer>
@@ -748,6 +796,12 @@ if (hasGSAP){
     const len = Math.ceil(p.getTotalLength()) + 1;
     gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
   });
+  // the travelling head is one short dash on an otherwise empty pattern, so
+  // sliding the offset walks it from one end of a join to the other
+  gsap.utils.toArray('.mend-spark').forEach(p => {
+    p._len = Math.ceil(p.getTotalLength()) + 1;
+    gsap.set(p, { strokeDasharray: '26 ' + p._len, strokeDashoffset: 0 });
+  });
 }
 
 /* the vessel is set out on the paper and waits: nothing moves until the
@@ -784,6 +838,7 @@ function runOpening(){
 
   if (reduced){
     gsap.set('.mend-line, .mend-line-glow', { strokeDashoffset:0 });
+    gsap.set('#mendSpark', { opacity:0 });
     gsap.set('#mendTrace', { opacity:.72 });
     gsap.set('#mendShine', { opacity:.62 });
     gsap.set('#vaseWrap', { opacity:0 });
@@ -826,37 +881,54 @@ function runOpening(){
   /* ── MENDED ── a warm wash gathers along the joins as they close, then all
      but leaves. What remains is a faint trace: the mending is part of it now. */
   tl.to('#mendGlow', { opacity:1, duration:1.6, ease:'power1.inOut' }, 8.4)
-    .to('#mendTrace', { opacity:.72, duration:.4, ease:'power1.out' }, 8.9)
-    .to('#mendShine', { opacity:.75, duration:.5, ease:'power1.out' }, 8.9)
-    // every piece is home by 9.0s: only then does the gold run along the breaks
-    .to('.mend-line', { strokeDashoffset:0, duration:1.5, stagger:.28, ease:'power2.inOut' }, 9.1)
-    .to('.mend-line-glow', { strokeDashoffset:0, duration:1.5, stagger:.28, ease:'power2.inOut' }, 9.1)
-    // the light flares as the last join closes, then settles to a steady warmth
-    .to('#mendShine', { opacity:1, duration:.9, ease:'sine.inOut' }, 11.0)
-    .to('#mendShine', { opacity:.62, duration:2.0, ease:'sine.inOut' }, 11.9)
-    .to('#mendGlow', { opacity:.18, duration:2.4, ease:'power1.out' }, 10.6);
+    .to('#mendTrace', { opacity:.72, duration:.4, ease:'power1.out' }, 8.8)
+    .to('#mendShine', { opacity:.7, duration:.5, ease:'power1.out' }, 8.8)
+    .to('#mendSpark', { opacity:.95, duration:.35, ease:'power1.out' }, 8.8);
 
-  tl.to(caption, { opacity:0, duration:.5 }, 9.9)
-    .call(() => { caption.textContent = 'Mended in grace'; }, null, 10.4)
-    .to(caption, { opacity:1, duration:.8 }, 10.45);
+  /* Every piece is home by 9.0s, and only then is the vessel mended — one
+     break at a time, from the foot upward, so the healing reads as a journey
+     through the pot rather than four lines arriving together. A bright head
+     travels each join and leaves the gold behind it. */
+  const lines  = gsap.utils.toArray('.mend-line');
+  const glows  = gsap.utils.toArray('.mend-line-glow');
+  const sparks = gsap.utils.toArray('.mend-spark');
+  const ORDER  = [3, 2, 1, 0];        // the foot, the belly, the long seam, the neck
+  ORDER.forEach((j, step) => {
+    const at = 9.0 + step * 1.05, run = 1.0;
+    tl.to(sparks[j], { strokeDashoffset: -sparks[j]._len, duration: run, ease:'power1.inOut' }, at)
+      .to(lines[j],  { strokeDashoffset: 0, duration: run, ease:'power1.inOut' }, at)
+      .to(glows[j],  { strokeDashoffset: 0, duration: run, ease:'power1.inOut' }, at)
+      // each join brightens as its head arrives, then eases back
+      .to('#mendShine', { opacity:.95, duration:.45, ease:'sine.out' }, at + run - .45)
+      .to('#mendShine', { opacity:.6,  duration:.6,  ease:'sine.inOut' }, at + run);
+  });
+
+  // the head has nowhere left to travel; what stays is the gold and its warmth
+  tl.to('#mendSpark', { opacity:0, duration:.7, ease:'power1.out' }, 13.1)
+    .to('#mendShine', { opacity:.68, duration:1.6, ease:'sine.inOut' }, 13.2)
+    .to('#mendGlow',  { opacity:.18, duration:2.4, ease:'power1.out' }, 12.2);
+
+  tl.to(caption, { opacity:0, duration:.5 }, 13.0)
+    .call(() => { caption.textContent = 'Mended in grace'; }, null, 13.5)
+    .to(caption, { opacity:1, duration:.8 }, 13.55);
 
   /* ── BLOOMING ── the painting rises out of the mended pot the way the
      painted stems point: rooted low, growing up and outward. Four eased
      steps, so it reads as one stem, then another, then the whole border. */
-  tl.to(bloom, { v:.22, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 12.2)
-    .to(bloom, { v:.44, duration:2.2, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 14.6)
-    .to(bloom, { v:.70, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 16.9)
-    .to(bloom, { v:1,   duration:3.2, ease:'sine.out',   onUpdate:() => setBloom(bloom.v) }, 19.2);
+  tl.to(bloom, { v:.22, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 14.7)
+    .to(bloom, { v:.44, duration:2.2, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 17.1)
+    .to(bloom, { v:.70, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 19.4)
+    .to(bloom, { v:1,   duration:3.2, ease:'sine.out',   onUpdate:() => setBloom(bloom.v) }, 21.7);
 
   /* ── the pot gives way to what grew out of it ── */
-  tl.to('#vaseWrap', { scale:.52, duration:6.0, ease:'sine.inOut' }, 15.2)
-    .to('#vaseWrap', { opacity:0, duration:3.6, ease:'power1.inOut' }, 18.6)
-    .to(caption, { opacity:0, duration:1.0 }, 19.0);
+  tl.to('#vaseWrap', { scale:.52, duration:6.0, ease:'sine.inOut' }, 17.7)
+    .to('#vaseWrap', { opacity:0, duration:3.6, ease:'power1.inOut' }, 21.1)
+    .to(caption, { opacity:0, duration:1.0 }, 21.5);
 
   /* ── INVITATION ── */
-  tl.to(invText(), { opacity:1, duration:1.6, stagger:.12, ease:'power2.out' }, 21.6)
-    .to(hint, { opacity:0, duration:.8 }, 21.6)
-    .to(opening, { opacity:0, duration:1.2, ease:'power2.inOut' }, 25.0);
+  tl.to(invText(), { opacity:1, duration:1.6, stagger:.12, ease:'power2.out' }, 24.1)
+    .to(hint, { opacity:0, duration:.8 }, 24.1)
+    .to(opening, { opacity:0, duration:1.2, ease:'power2.inOut' }, 27.5);
 
   // the net is now the story's own length plus a margin, so it can only ever
   // rescue a timeline that has genuinely stalled
