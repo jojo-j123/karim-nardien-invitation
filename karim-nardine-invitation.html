@@ -73,14 +73,18 @@
   .bot{
     position:absolute; pointer-events:none; z-index:0;
     background-repeat:no-repeat; background-position:center;
-    background-size:contain; opacity:.92;
+    background-size:contain; opacity:.95;
   }
-  .bot.stems-l { background-image:url("botanicals/bot-stems-left.webp"); }
-  .bot.blush-l { background-image:url("botanicals/bot-blush-left.webp"); }
-  .bot.stems-r { background-image:url("botanicals/bot-stems-right.webp"); }
-  .bot.leaves-r{ background-image:url("botanicals/bot-leaves-right.webp"); }
+  /* Each accent takes its artwork's own proportion, so the box is the painting
+     and nothing is letterboxed. They are also kept wholly inside their section:
+     the sections clip their overflow, and a feathered cut that runs past the
+     edge gets a hard straight edge cut back into it. */
+  .bot.stems-l { background-image:url("botanicals/bot-stems-left.webp");  aspect-ratio:267/705; }
+  .bot.blush-l { background-image:url("botanicals/bot-blush-left.webp");  aspect-ratio:294/395; }
+  .bot.stems-r { background-image:url("botanicals/bot-stems-right.webp"); aspect-ratio:268/700; }
+  .bot.leaves-r{ background-image:url("botanicals/bot-leaves-right.webp");aspect-ratio:280/430; }
   .bot.flip{ transform:scaleX(-1); }
-  @media (max-width:640px){ .bot{ opacity:.8; } }
+  @media (max-width:640px){ .bot{ opacity:.88; } }
 
   .rule-line{ height:1px; background:linear-gradient(90deg,transparent,var(--rule),transparent); }
   .hair{ border:1px solid rgba(74,67,53,.13); }
@@ -378,7 +382,7 @@
 
       <!-- the light that travels each join, ahead of the gold it leaves behind -->
       <g id="mendSpark" clip-path="url(#cpPot)" opacity="0"
-         fill="none" stroke="#F2DFA6" stroke-width="2.8" stroke-linecap="round"
+         fill="none" stroke="#F6E6B4" stroke-width="3.2" stroke-linecap="round"
          filter="url(#goldBlur)">
         <path class="mend-spark" d="M -20 88 C 24 82, 58 106, 96 96 C 122 89, 136 86, 150 95 C 166 105, 196 84, 232 96 C 268 108, 292 92, 320 100"/>
         <path class="mend-spark" d="M 150 95 C 160 124, 140 146, 149 168 C 156 186, 139 190, 143 205"/>
@@ -464,8 +468,8 @@
 <!-- ════ A QUIET PAGE : the verse, and the days between ════ -->
 <section class="botanicals relative overflow-hidden py-24 sm:py-32 px-6 text-center">
   
-  <div class="bot leaves-r" style="top:-2%; right:-7%; width:40%; height:34%"></div>
-  <div class="bot blush-l" style="bottom:-3%; left:-8%; width:42%; height:32%"></div>
+  <div class="bot leaves-r" style="top:0; right:0; width:34%"></div>
+  <div class="bot blush-l" style="bottom:0; left:0; width:36%"></div>
   <div class="max-w-xl mx-auto">
     <p class="reveal font-serif italic text-lg sm:text-2xl text-ink/70 leading-relaxed">
       &ldquo;We are the clay, and you our potter; we are all the work of your hand.&rdquo;
@@ -484,8 +488,8 @@
 <section class="botanicals relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
 
 
-  <div class="bot stems-l flip" style="top:1%; left:-8%; width:30%; height:34%"></div>
-  <div class="bot stems-r" style="bottom:0%; right:-7%; width:30%; height:34%"></div>
+  <div class="bot stems-r" style="top:0; right:1%; width:18%"></div>
+  <div class="bot blush-l flip" style="bottom:0; right:0; width:32%"></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">The day</p>
@@ -528,8 +532,8 @@
 <!-- ════ VENUE ════ -->
 <section class="botanicals relative overflow-hidden py-16 sm:py-28 px-5 sm:px-6">
 
-  <div class="bot blush-l" style="bottom:-2%; left:-7%; width:38%; height:26%"></div>
-  <div class="bot leaves-r flip" style="top:0%; right:-6%; width:34%; height:24%"></div>
+  <div class="bot stems-l" style="top:0; left:1%; width:18%"></div>
+  <div class="bot leaves-r flip" style="bottom:0; right:0; width:32%"></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">Where</p>
@@ -537,7 +541,7 @@
       <div class="rule-line w-24 mx-auto mt-6 reveal"></div>
     </div>
 
-    <div class="card hair relative mt-10 overflow-hidden reveal" style="background:rgba(247,243,237,.8)">
+    <div class="card hair relative mt-10 overflow-hidden reveal" style="background:#F4EFE8">
       <div class="absolute inset-2 pointer-events-none" style="border:1px solid rgba(176,138,110,.26)"></div>
 
       <div class="relative grid sm:grid-cols-[190px_1fr] items-center gap-6 p-8 sm:p-11">
@@ -581,8 +585,8 @@
 <section id="rsvp" class="botanicals relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
 
 
-  <div class="bot stems-r" style="top:0%; right:-6%; width:32%; height:26%"></div>
-  <div class="bot blush-l flip" style="bottom:-1%; left:-7%; width:40%; height:24%"></div>
+  <div class="bot stems-r flip" style="top:0; right:1%; width:19%"></div>
+  <div class="bot blush-l" style="bottom:0; left:0; width:34%"></div>
   <div class="max-w-lg mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">Kindly reply</p>
@@ -591,7 +595,7 @@
       <div class="rule-line w-24 mx-auto mt-6 reveal"></div>
     </div>
 
-    <div class="card hair mt-9 p-6 sm:p-10 reveal" style="background:rgba(233,225,213,.42)">
+    <div class="card hair mt-9 p-6 sm:p-10 reveal" style="background:#EDE6DB">
       <form id="rsvpForm" novalidate>
         <label class="block track-sm text-[.56rem] uppercase text-ink/45 mb-1" for="name">Full name</label>
         <input class="field" id="name" name="name" type="text"
@@ -628,8 +632,8 @@
 
 <footer class="botanicals relative overflow-hidden py-14 text-center px-6">
 
-  <div class="bot stems-l" style="bottom:-14%; left:-5%; width:26%; height:118%"></div>
-  <div class="bot stems-r flip" style="bottom:-14%; right:-5%; width:26%; height:118%"></div>
+  <div class="bot stems-l" style="bottom:0; left:2%; width:17%"></div>
+  <div class="bot stems-r flip" style="bottom:0; right:2%; width:17%"></div>
   <div class="rule-line w-32 mx-auto mb-8 relative"></div>
   <p class="font-serif italic text-lg text-ink/70">He makes all things new.</p>
   <p class="track text-[.48rem] uppercase text-ink/30 mt-4 leading-loose">Karim &amp; Nardien &middot; Nineteen September &middot; Twenty Twenty Six</p>
@@ -800,7 +804,7 @@ if (hasGSAP){
   // sliding the offset walks it from one end of a join to the other
   gsap.utils.toArray('.mend-spark').forEach(p => {
     p._len = Math.ceil(p.getTotalLength()) + 1;
-    gsap.set(p, { strokeDasharray: '26 ' + p._len, strokeDashoffset: 0 });
+    gsap.set(p, { strokeDasharray: '34 ' + p._len, strokeDashoffset: 0 });
   });
 }
 
@@ -894,41 +898,41 @@ function runOpening(){
   const sparks = gsap.utils.toArray('.mend-spark');
   const ORDER  = [3, 2, 1, 0];        // the foot, the belly, the long seam, the neck
   ORDER.forEach((j, step) => {
-    const at = 9.0 + step * 1.05, run = 1.0;
-    tl.to(sparks[j], { strokeDashoffset: -sparks[j]._len, duration: run, ease:'power1.inOut' }, at)
-      .to(lines[j],  { strokeDashoffset: 0, duration: run, ease:'power1.inOut' }, at)
-      .to(glows[j],  { strokeDashoffset: 0, duration: run, ease:'power1.inOut' }, at)
-      // each join brightens as its head arrives, then eases back
-      .to('#mendShine', { opacity:.95, duration:.45, ease:'sine.out' }, at + run - .45)
-      .to('#mendShine', { opacity:.6,  duration:.6,  ease:'sine.inOut' }, at + run);
+    const at = 9.0 + step * .5, run = .62;
+    tl.to(sparks[j], { strokeDashoffset: -sparks[j]._len, duration: run, ease:'power2.out' }, at)
+      .to(lines[j],  { strokeDashoffset: 0, duration: run, ease:'power2.out' }, at)
+      .to(glows[j],  { strokeDashoffset: 0, duration: run, ease:'power2.out' }, at)
+      // a quick catch of light as each head lands, gone almost as fast
+      .to('#mendShine', { opacity:1, duration:.16, ease:'sine.out' }, at + run - .18)
+      .to('#mendShine', { opacity:.62, duration:.34, ease:'sine.inOut' }, at + run - .02);
   });
 
-  // the head has nowhere left to travel; what stays is the gold and its warmth
-  tl.to('#mendSpark', { opacity:0, duration:.7, ease:'power1.out' }, 13.1)
-    .to('#mendShine', { opacity:.68, duration:1.6, ease:'sine.inOut' }, 13.2)
-    .to('#mendGlow',  { opacity:.18, duration:2.4, ease:'power1.out' }, 12.2);
+  // the heads have nowhere left to travel; what stays is the gold and its warmth
+  tl.to('#mendSpark', { opacity:0, duration:.45, ease:'power1.out' }, 11.15)
+    .to('#mendShine', { opacity:.72, duration:1.1, ease:'sine.inOut' }, 11.25)
+    .to('#mendGlow',  { opacity:.18, duration:1.8, ease:'power1.out' }, 10.9);
 
-  tl.to(caption, { opacity:0, duration:.5 }, 13.0)
-    .call(() => { caption.textContent = 'Mended in grace'; }, null, 13.5)
-    .to(caption, { opacity:1, duration:.8 }, 13.55);
+  tl.to(caption, { opacity:0, duration:.5 }, 11.1)
+    .call(() => { caption.textContent = 'Mended in grace'; }, null, 11.6)
+    .to(caption, { opacity:1, duration:.8 }, 11.65);
 
   /* ── BLOOMING ── the painting rises out of the mended pot the way the
      painted stems point: rooted low, growing up and outward. Four eased
      steps, so it reads as one stem, then another, then the whole border. */
-  tl.to(bloom, { v:.22, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 14.7)
-    .to(bloom, { v:.44, duration:2.2, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 17.1)
-    .to(bloom, { v:.70, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 19.4)
-    .to(bloom, { v:1,   duration:3.2, ease:'sine.out',   onUpdate:() => setBloom(bloom.v) }, 21.7);
+  tl.to(bloom, { v:.22, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 12.8)
+    .to(bloom, { v:.44, duration:2.2, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 15.2)
+    .to(bloom, { v:.70, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 17.5)
+    .to(bloom, { v:1,   duration:3.2, ease:'sine.out',   onUpdate:() => setBloom(bloom.v) }, 19.8);
 
   /* ── the pot gives way to what grew out of it ── */
-  tl.to('#vaseWrap', { scale:.52, duration:6.0, ease:'sine.inOut' }, 17.7)
-    .to('#vaseWrap', { opacity:0, duration:3.6, ease:'power1.inOut' }, 21.1)
-    .to(caption, { opacity:0, duration:1.0 }, 21.5);
+  tl.to('#vaseWrap', { scale:.52, duration:6.0, ease:'sine.inOut' }, 15.8)
+    .to('#vaseWrap', { opacity:0, duration:3.6, ease:'power1.inOut' }, 19.2)
+    .to(caption, { opacity:0, duration:1.0 }, 19.6);
 
   /* ── INVITATION ── */
-  tl.to(invText(), { opacity:1, duration:1.6, stagger:.12, ease:'power2.out' }, 24.1)
-    .to(hint, { opacity:0, duration:.8 }, 24.1)
-    .to(opening, { opacity:0, duration:1.2, ease:'power2.inOut' }, 27.5);
+  tl.to(invText(), { opacity:1, duration:1.6, stagger:.12, ease:'power2.out' }, 22.2)
+    .to(hint, { opacity:0, duration:.8 }, 22.2)
+    .to(opening, { opacity:0, duration:1.2, ease:'power2.inOut' }, 25.6);
 
   // the net is now the story's own length plus a margin, so it can only ever
   // rescue a timeline that has genuinely stalled
