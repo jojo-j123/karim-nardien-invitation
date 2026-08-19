@@ -154,9 +154,9 @@
     position:absolute; inset:0; pointer-events:none;
     background-image:url("invitation-plate.webp");
     background-size:100% 100%; background-position:center; background-repeat:no-repeat;
-    --r1:0%; --r2:6%;
-    -webkit-mask-image:radial-gradient(circle at 50% 70%, #000 var(--r1), transparent var(--r2));
-            mask-image:radial-gradient(circle at 50% 70%, #000 var(--r1), transparent var(--r2));
+    --r1:0%; --r2:0%;   /* closed until the story opens it */
+    -webkit-mask-image:radial-gradient(ellipse 76% 98% at 50% 88%, #000 var(--r1), transparent var(--r2));
+            mask-image:radial-gradient(ellipse 76% 98% at 50% 88%, #000 var(--r1), transparent var(--r2));
   }
   /* the faintest tooth of paper, so a bare sheet is never flat */
   .inv-sheet::after{
@@ -194,6 +194,18 @@
     .inv-t{ transform:translate(-50%,-50%); }
     .inv-line{ transform:translateX(-50%); }
   }
+
+  /* the narration: part of the page it is telling, not a caption stuck to the
+     bottom of the screen. Sized from the sheet so it scales with the paper. */
+  .narr{
+    position:absolute; left:50%; top:9.6%; translate:-50% -50%;
+    margin:0; width:80%; text-align:center; opacity:0;
+    font-family:"Cormorant Garamond","Times New Roman",Times,serif;
+    font-style:italic; font-weight:400; letter-spacing:.02em;
+    color:rgba(74,67,53,.62); line-height:1.3;
+    font-size:calc(var(--h) * 0.036);
+  }
+  @supports not (translate:1px){ .narr{ transform:translate(-50%,-50%); } }
 
   #openingHint{
     position:absolute; left:0; right:0; bottom:calc(14px + env(safe-area-inset-bottom));
@@ -286,6 +298,7 @@
   <div class="inv-stage">
 <div class="inv-sheet" id="sheet">
   <div class="plate-art" id="plateArt"></div>
+  <p class="narr" id="caption">Whole</p>
 
   <!-- ── the vessel: one thrown pot, five pieces, drawn as one silhouette and
        cut by clip paths so every fracture edge is a true broken edge ── -->
@@ -382,7 +395,6 @@
 </div>
 
   </div>
-  <p id="caption" class="inv-t caps" style="position:absolute; top:auto; bottom:calc(46px + env(safe-area-inset-bottom)); translate:-50% 0; font-size:.56rem; opacity:0; width:auto">Whole</p>
   <p id="openingHint">&nbsp;</p>
 </div>
 
@@ -596,8 +608,8 @@ let entered = false;
 const plateArt = $('plateArt');
 
 function setBloom(v){          // 0 = bare paper, 1 = the plate fully painted in
-  plateArt.style.setProperty('--r1', (v * 118) + '%');
-  plateArt.style.setProperty('--r2', (v * 118 + 13) + '%');
+  plateArt.style.setProperty('--r1', (v * 132) + '%');
+  plateArt.style.setProperty('--r2', (v * 132 + 15) + '%');
 }
 
 function finish(){
@@ -710,10 +722,36 @@ if (hasGSAP){
   PIECES.forEach(p => gsap.set('#' + p.id, { x:0, y:0, rotation:0, transformOrigin:'50% 50%' }));
 }
 
+/* the vessel is set out on the paper and waits: nothing moves until the
+   guest asks it to. */
+function armOpening(){
+  if (!hasGSAP){ clearTimeout(watchdog); finish(); return; }
+
+  if (reduced){
+    hint.textContent = 'Tap to open';
+    gsap.set('#vaseWrap', { opacity:1 });
+    gsap.to(hint, { opacity:1, duration:.4 });
+  } else {
+    gsap.to('#vaseWrap', { opacity:1, duration:1.6, ease:'power2.out' });
+    gsap.from('#vaseWrap', { y:14, duration:2.0, ease:'power2.out' });
+    hint.textContent = 'Tap to begin';
+    gsap.fromTo(hint, { opacity:0 }, { opacity:1, duration:1.1, delay:.7 });
+  }
+
+  const begin = e => {
+    if (e && e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
+    if (e && e.type === 'keydown') e.preventDefault();
+    opening.removeEventListener('click', begin);
+    removeEventListener('keydown', begin);
+    runOpening();
+  };
+  opening.addEventListener('click', begin);
+  addEventListener('keydown', begin);
+}
+
 function runOpening(){
   if (opening.dataset.done) return;
   opening.dataset.done = '1';
-  if (!hasGSAP){ clearTimeout(watchdog); finish(); return; }
 
   if (reduced){
     gsap.set('#vaseWrap', { opacity:0 });
@@ -725,74 +763,69 @@ function runOpening(){
   const bloom = { v:0 };
   const tl = gsap.timeline({ onComplete:() => { clearTimeout(watchdog); finish(); } });
 
-  /* ── WHOLE ── the pot is simply there, on the paper */
-  tl.to('#vaseWrap', { opacity:1, duration:1.5, ease:'power2.out' }, 0)
-    .fromTo('#vaseWrap', { y:14 }, { y:0, duration:1.8, ease:'power2.out' }, 0)
-    .to(caption, { opacity:1, duration:1.1 }, .5);
+  /* ── WHOLE ── */
+  tl.to(caption, { opacity:1, duration:.9, ease:'power2.out' }, .2);
 
-  /* ── BROKEN ── it lets go: slowly, and only into five pieces */
-  tl.to(caption, { opacity:0, duration:.5 }, 2.5)
-    .call(() => { caption.textContent = 'Broken'; }, null, 3.0)
-    .to(caption, { opacity:1, duration:.6 }, 3.05);
+  /* ── BROKEN ── the pot gives, then lets go */
+  tl.to('#vaseWrap', { scale:1.012, duration:.5, ease:'power2.in' }, .9)
+    .to('#vaseWrap', { scale:1, duration:1.4, ease:'power2.out' }, 1.4);
 
-  // the smallest settling before the break, the way a cracked thing gives
-  tl.to('#vaseWrap', { scale:1.012, duration:.5, ease:'power2.in' }, 2.6)
-    .to('#vaseWrap', { scale:1, duration:1.4, ease:'power2.out' }, 3.1);
+  tl.to(caption, { opacity:0, duration:.5 }, 1.3)
+    .call(() => { caption.textContent = 'Broken'; }, null, 1.8)
+    .to(caption, { opacity:1, duration:.6 }, 1.85);
 
   PIECES.forEach((p, i) => {
     tl.to('#' + p.id, { x:p.x, y:p.y, rotation:p.r, duration:2.4 * p.d,
-                        ease:'power2.out' }, 3.05 + i * .13);
+                        ease:'power2.out' }, 1.45 + i * .13);
   });
 
   /* ── they stay apart a moment, so the loss registers ── */
 
-  /* ── GATHERED ── and then they come back */
-  tl.to(caption, { opacity:0, duration:.5 }, 7.2)
-    .call(() => { caption.textContent = 'Gathered'; }, null, 7.7)
-    .to(caption, { opacity:1, duration:.6 }, 7.75);
+  /* ── GATHERED ── */
+  tl.to(caption, { opacity:0, duration:.5 }, 5.5)
+    .call(() => { caption.textContent = 'Gathered'; }, null, 6.0)
+    .to(caption, { opacity:1, duration:.6 }, 6.05);
 
   PIECES.forEach((p, i) => {
     tl.to('#' + p.id, { x:0, y:0, rotation:0, duration:2.6,
-                        ease:'power2.inOut' }, 7.7 + i * .1);
+                        ease:'power2.inOut' }, 6.0 + i * .1);
   });
 
   /* ── MENDED ── a warm wash gathers along the joins as they close, then all
-     but disappears. What is left is a faint trace: the pot is whole, and the
-     mending is part of it now. */
-  tl.to('#mendGlow', { opacity:1, duration:1.6, ease:'power1.inOut' }, 10.1)
-    .to('#mendGlow', { opacity:.16, duration:2.4, ease:'power1.out' }, 11.7)
-    .to('#mendTrace', { opacity:.30, duration:1.8, ease:'power1.out' }, 11.2);
+     but leaves. What remains is a faint trace: the mending is part of it now. */
+  tl.to('#mendGlow', { opacity:1, duration:1.6, ease:'power1.inOut' }, 8.4)
+    .to('#mendTrace', { opacity:.30, duration:1.8, ease:'power1.out' }, 9.5)
+    .to('#mendGlow', { opacity:.16, duration:2.4, ease:'power1.out' }, 10.0);
 
-  tl.to(caption, { opacity:0, duration:.5 }, 11.6)
-    .call(() => { caption.textContent = 'Mended in grace'; }, null, 12.1)
-    .to(caption, { opacity:1, duration:.8 }, 12.15);
+  tl.to(caption, { opacity:0, duration:.5 }, 9.9)
+    .call(() => { caption.textContent = 'Mended in grace'; }, null, 10.4)
+    .to(caption, { opacity:1, duration:.8 }, 10.45);
 
-  /* ── BLOOMING ── the painting grows out of the mended pot: one stem, then
-     another, then the whole border. Three eased steps, so it reads as
-     flowers arriving rather than a wipe. */
-  tl.to(bloom, { v:.30, duration:2.2, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 13.2)
-    .to(bloom, { v:.58, duration:2.0, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 15.7)
-    .to(bloom, { v:1,   duration:3.0, ease:'sine.out',   onUpdate:() => setBloom(bloom.v) }, 18.0);
+  /* ── BLOOMING ── the painting rises out of the mended pot the way the
+     painted stems point: rooted low, growing up and outward. Four eased
+     steps, so it reads as one stem, then another, then the whole border. */
+  tl.to(bloom, { v:.22, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 11.6)
+    .to(bloom, { v:.44, duration:2.2, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 14.3)
+    .to(bloom, { v:.70, duration:2.4, ease:'sine.inOut', onUpdate:() => setBloom(bloom.v) }, 16.8)
+    .to(bloom, { v:1,   duration:3.4, ease:'sine.out',   onUpdate:() => setBloom(bloom.v) }, 19.4);
 
-  /* ── the pot gives way to what grew out of it: it settles down toward its
-     own foot, quietly loses weight, and is gone by the time the words land ── */
-  tl.to('#vaseWrap', { scale:.52, duration:5.2, ease:'sine.inOut' }, 14.6)
-    .to('#vaseWrap', { opacity:0, duration:3.4, ease:'power1.inOut' }, 17.6)
-    .to(caption, { opacity:0, duration:1.0 }, 18.4);
+  /* ── the pot gives way to what grew out of it ── */
+  tl.to('#vaseWrap', { scale:.52, duration:6.0, ease:'sine.inOut' }, 14.0)
+    .to('#vaseWrap', { opacity:0, duration:3.6, ease:'power1.inOut' }, 18.0)
+    .to(caption, { opacity:0, duration:1.0 }, 18.6);
 
-  /* ── INVITATION ── the words settle onto the finished paper */
-  tl.to(invText(), { opacity:1, duration:1.6, stagger:.16, ease:'power2.out' }, 19.6)
-    .to(hint, { opacity:0, duration:.8 }, 19.6)
-    .to(opening, { opacity:0, duration:1.2, ease:'power2.inOut' }, 23.4);
+  /* ── INVITATION ── */
+  tl.to(invText(), { opacity:1, duration:1.6, stagger:.16, ease:'power2.out' }, 21.4)
+    .to(hint, { opacity:0, duration:.8 }, 21.4)
+    .to(opening, { opacity:0, duration:1.2, ease:'power2.inOut' }, 25.2);
 
   const skip = () => { if (tl.progress() > .01 && tl.progress() < 1) tl.timeScale(7); };
   opening.addEventListener('click', skip);
-  opening.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') skip(); });
   addEventListener('keydown', e => { if (e.key === 'Escape') skip(); });
 }
 
-if (document.readyState === 'complete') runOpening();
-else addEventListener('load', runOpening);
+if (document.readyState === 'complete') armOpening();
+else addEventListener('load', armOpening);
 
 /* ─── COUNTDOWN ─── */
 const cd = {};
