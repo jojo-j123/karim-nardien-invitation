@@ -11,7 +11,7 @@ in it share one silhouette.
 import math, random
 
 R = random.Random(20260919)
-CX, CY, RX, RY = 148, 150, 92, 96
+CX, CY, RX, RY = 148, 166, 94, 92
 
 
 def edge(t):
@@ -48,9 +48,9 @@ out.append(('mass', [f'<path d="{d}"/>']))
 
 # ── stems: mostly buried, a few reaching past the leaves ────────────────
 stems = []
-for i in range(13):
+for i in range(16):
     t = math.radians(R.uniform(-188, 8))
-    r = R.uniform(.38, .72)
+    r = R.uniform(.30, .60)
     ex, ey = at(t, r)
     sx, sy = 150 + jit(13), MOUTH_Y + jit(5)
     mx = (sx + ex) / 2 + math.cos(t) * 24 + jit(9)
@@ -67,7 +67,7 @@ def leaf_pass(n, lo, hi, smin, smax):
         r = math.sqrt(R.uniform(lo, hi))
         x, y = at(t, r)
         x += jit(4); y += jit(4)
-        if y > 264:
+        if y > 272:
             continue
         ang = math.degrees(t) + jit(44)
         rx = R.uniform(smin, smax)
@@ -76,13 +76,13 @@ def leaf_pass(n, lo, hi, smin, smax):
                    f'transform="rotate({ang:.0f} {x:.0f} {y:.0f})"/>')
     return got
 
-out.append(('leavesdark', leaf_pass(95, .02, .82, 4.2, 8.6)))
-out.append(('leaveslight', leaf_pass(85, .18, 1.02, 3.6, 7.4)))
+out.append(('leavesdark', leaf_pass(140, .02, .86, 4.2, 9.0)))
+out.append(('leaveslight', leaf_pass(125, .16, 1.04, 3.4, 7.6)))
 
 # a skirt of leaves gathered where the plant leaves the mouth of the jar, so
 # there is no bare stalk between the two
 skirt = []
-for _ in range(46):
+for _ in range(64):
     a = math.radians(R.uniform(-172, -8))
     rr = R.uniform(.18, .95)
     x = 150 + math.cos(a) * 74 * rr + jit(6)
@@ -95,14 +95,32 @@ for _ in range(46):
                  f'transform="rotate({ang:.0f} {x:.0f} {y:.0f})"/>')
 out.append(('skirt', skirt))
 
+# ── the drape: what falls over the front of the jar, painted after it ────
+drape_l, drape_b = [], []
+for _ in range(52):
+    a = math.radians(R.uniform(-168, -12))
+    rr = R.uniform(.62, 1.06)
+    x = 150 + math.cos(a) * 80 * rr + jit(7)
+    y = 248 + (1 - math.sin(a)) * 30 * rr + jit(8)
+    if y < 236 or y > 302:
+        continue
+    ang = R.uniform(-80, 80)
+    rx = R.uniform(3.8, 7.6)
+    drape_l.append(f'<ellipse cx="{x:.0f}" cy="{y:.0f}" rx="{rx:.1f}" ry="{rx * R.uniform(.30, .46):.1f}" '
+                   f'transform="rotate({ang:.0f} {x:.0f} {y:.0f})"/>')
+    if R.random() < .5:
+        drape_b.append(f'<circle cx="{x + jit(5):.0f}" cy="{y + jit(6):.0f}" r="{R.uniform(2.2, 4.4):.1f}"/>')
+out.append(('drapeleaf', drape_l))
+out.append(('drapebud', drape_b))
+
 # ── blossom: through the whole mass, gathering toward the outside ────────
 buds, hearts = [], []
-for _ in range(130):
+for _ in range(180):
     t = math.radians(R.uniform(-204, 24))
     r = R.uniform(.20, 1.04) ** .55
     x, y = at(t, r)
     x += jit(3.5); y += jit(3.5)
-    if y > 266:
+    if y > 274:
         continue
     rad = R.uniform(1.9, 4.6)
     buds.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{rad:.1f}"/>')
