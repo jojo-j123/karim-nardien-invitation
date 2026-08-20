@@ -183,6 +183,30 @@
     background-size:7px 7px;
   }
 
+  /* The cover is a place, not a blank card: a warm wall with the light coming
+     in from the left the way it does in the painting, a floor the jar stands
+     on, and the two shadows it throws — the one it sits in, and the one that
+     runs away from the light. It goes when the invitation arrives. */
+  .cover-ground{
+    position:absolute; inset:0; pointer-events:none; overflow:hidden;
+    background:
+      radial-gradient(ellipse 68% 52% at 20% 26%, rgba(255,250,240,.9), rgba(255,250,240,0) 72%),
+      linear-gradient(180deg, rgba(196,163,128,0) 0 69%,
+                              rgba(196,163,128,.1) 74%,
+                              rgba(178,142,106,.24) 100%),
+      linear-gradient(168deg, #F8F3EA 0%, #F2EADC 48%, #EADFCC 100%);
+  }
+  .cover-ground::before{          /* the shadow the jar sits in */
+    content:''; position:absolute; left:24%; right:24%; bottom:3.4%; height:8%;
+    background:radial-gradient(ellipse at 50% 50%, rgba(122,86,52,.34), rgba(122,86,52,0) 66%);
+    filter:blur(3px);
+  }
+  .cover-ground::after{           /* and the one it throws away from the light */
+    content:''; position:absolute; left:47%; right:3%; bottom:4.4%; height:5.4%;
+    background:linear-gradient(90deg, rgba(122,86,52,.3), rgba(122,86,52,0) 76%);
+    filter:blur(6px);
+  }
+
   /* the painted plate sits on its own layer so it can be revealed without
      taking the paper underneath with it */
   .plate-art{
@@ -201,7 +225,7 @@
   }
 
   .vase-wrap{
-    position:absolute; left:19%; width:62%; bottom:5.4%;
+    position:absolute; left:13%; width:74%; bottom:4%;
     pointer-events:none;
     /* the corner marks take the symbol's quiet defaults; the cover overrides
        them, so one drawing serves as both watermark and hero */
@@ -252,7 +276,7 @@
   /* the narration: part of the page it is telling, not a caption stuck to the
      bottom of the screen. Sized from the sheet so it scales with the paper. */
   .narr{
-    position:absolute; left:50%; top:34%; translate:-50% -50%;
+    position:absolute; left:50%; top:24%; translate:-50% -50%;
     margin:0; width:80%; text-align:center; opacity:0;
     font-family:"Cormorant Garamond","Times New Roman",Times,serif;
     font-style:italic; font-weight:400; letter-spacing:.02em;
@@ -265,10 +289,9 @@
      where a phone's own browser chrome sits — guests were not seeing it. It now
      reads at a normal size and sits under the vessel, where the eye already is. */
   #openingHint{
-    position:absolute; left:0; right:0;
-    bottom:calc(52% + env(safe-area-inset-bottom));
+    position:absolute; left:0; right:0; top:32%;
     text-align:center; font-family:Jost,system-ui,sans-serif; font-weight:400;
-    font-size:clamp(.86rem, 3.7vw, 1.06rem); letter-spacing:.22em;
+    font-size:clamp(.8rem, calc(var(--h) * 0.024), 1.15rem); letter-spacing:.22em;
     text-transform:uppercase; color:rgba(74,67,53,.62); pointer-events:none;
   }
 
@@ -315,7 +338,8 @@
   /* Without scripting the sheet never moves into the page, so the opening
      layer must stop being an overlay and simply become the first screen. */
   .no-js #opening{ position:static !important; }
-  .no-js #music, .no-js .vase-wrap, .no-js #caption, .no-js #openingHint{ display:none !important; }
+  .no-js #music, .no-js .vase-wrap, .no-js #caption,
+  .no-js #openingHint, .no-js .cover-ground{ display:none !important; }
   .no-js #page{ opacity:1 !important; }
   .no-js #invitation{ display:none !important; }
   .no-js .plate-art{ -webkit-mask-image:none !important; mask-image:none !important; }
@@ -978,8 +1002,10 @@
 <div id="opening">
   <div class="inv-stage">
 <div class="inv-sheet" id="sheet">
+  <div class="cover-ground" id="coverGround"></div>
   <div class="plate-art" id="plateArt"></div>
   <p class="narr" id="caption">Broken, Gathered, Made Whole.</p>
+  <p id="openingHint">&nbsp;</p>
 
   <!-- the vessel: the jar the invitation is planted in. The same drawing the
        page's corners carry, with the pigment let out — the tokens that do it
@@ -1016,7 +1042,6 @@
 </div>
 
   </div>
-  <p id="openingHint">&nbsp;</p>
 </div>
 
 <main id="page" class="relative z-10 opacity-0">
@@ -1258,8 +1283,13 @@ let entered = false;
 const plateArt = $('plateArt');
 
 function setBloom(v){          // 0 = bare paper, 1 = the plate fully painted in
+  // The soft edge has to arrive with the opening, not sit there while it is
+  // shut: a fixed 15% feather at v=0 left a patch of the painted border
+  // showing through the paper, which the old vessel happened to stand on top
+  // of. It ramps in over the first fraction instead.
+  const feather = 15 * Math.min(1, v * 12);
   plateArt.style.setProperty('--r1', (v * 132) + '%');
-  plateArt.style.setProperty('--r2', (v * 132 + 15) + '%');
+  plateArt.style.setProperty('--r2', (v * 132 + feather) + '%');
 }
 
 function finish(){
@@ -1270,11 +1300,12 @@ function finish(){
   // narration: the invitation is never shown over either of them. Any tween
   // still in flight is stopped first, or it would paint them back in.
   if (hasGSAP){
-    gsap.killTweensOf(['#vaseWrap', '#caption']);
-    gsap.set(['#vaseWrap', '#caption'], { opacity:0 });
+    gsap.killTweensOf(['#vaseWrap', '#caption', '#coverGround', '#openingHint']);
+    gsap.set(['#vaseWrap', '#caption', '#coverGround', '#openingHint'], { opacity:0 });
   } else {
-    const v = $('vaseWrap'); if (v) v.style.opacity = '0';
-    const c = $('caption');  if (c) c.style.opacity = '0';
+    ['vaseWrap', 'caption', 'coverGround', 'openingHint'].forEach(id => {
+      const el = $(id); if (el) el.style.opacity = '0';
+    });
   }
   document.querySelectorAll('#sheet .inv-t, #sheet .inv-line')
     .forEach(el => { el.style.opacity = 1; });
@@ -1418,7 +1449,7 @@ function runOpening(){
   if (!hasGSAP || reduced){ clearTimeout(watchdog); finish(); return; }
 
   const tl = gsap.timeline({ onComplete:() => { clearTimeout(watchdog); finish(); } });
-  tl.to([caption, hint, '#vaseWrap'], { opacity:0, duration:.45, ease:'power2.in' }, 0)
+  tl.to([caption, hint, '#vaseWrap', '#coverGround'], { opacity:0, duration:.45, ease:'power2.in' }, 0)
     // the border is brought up while the jar is still half there, so it reads
     // as one thing giving way to another rather than as a shape wiping in
     .to({ v:0 }, { v:1, duration:.5, ease:'sine.out',
