@@ -9,8 +9,12 @@ into a rhythm you can see.
 `genurn.py` samples the leaves, buds and stems against a lumpy boundary — the
 same boundary that draws the underwash, so the wash and what grows in it share
 one silhouette. The seed is fixed, so the drawing comes out the same every run.
-`buildurn.py` wraps that scatter in the jar and the watercolour layers and
-prints the finished `<symbol id="urnMark">`.
+`buildurn.py` wraps that scatter in the watercolour layers and prints two
+symbols: `#urnMark`, the terracotta jar the page's corners carry, and
+`#vesselBloom`, the mended vessel in flower on the cover. The bloom itself is
+emitted once, as four groups both symbols point at with `<use>` — the cover
+lifts it to a taller mouth and squeezes the drape in with transforms, so the
+second vessel costs a wrapper rather than another four hundred shapes.
 
 Every pigment and every opacity in the symbol is a CSS custom property whose
 fallback is the quiet corner-mark value, so one drawing does both jobs: the

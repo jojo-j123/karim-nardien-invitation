@@ -154,8 +154,7 @@
     display:flex; align-items:center; justify-content:center;
     padding:var(--pad); position:relative;
   }
-  #opening{ position:fixed; inset:0; z-index:60; background:var(--paper); }
-  #opening .inv-stage{ min-height:100%; }
+  #opening{ position:fixed; inset:0; z-index:60; background:var(--paper-warm); }
 
   .inv-sheet, .thm-sheet{
     position:relative; width:auto; max-width:100%;
@@ -225,12 +224,12 @@
   }
 
   .vase-wrap{
-    position:absolute; left:13%; width:74%; bottom:4%;
-    pointer-events:none;
+    position:absolute; left:0; right:0; bottom:4.6svh;
+    display:flex; justify-content:center; pointer-events:none;
     /* the corner marks take the symbol's quiet defaults; the cover overrides
        them, so one drawing serves as both watermark and hero */
     --u-mass:#6E7C4A;  --u-mass-o:.1;
-    --u-stem:#4A5730;  --u-stem-o:.06; --u-spill-o:.7; --u-spill-bud-o:.9;
+    --u-stem:#4A5730;  --u-stem-o:.03; --u-spill-o:.7; --u-spill-bud-o:.9;
     --u-leafd:#3C4926; --u-leafd-o:.8;
     --u-skirt:#46542F; --u-skirt-o:.76;
     --u-leafl:#68784A; --u-leafl-o:.76;
@@ -246,8 +245,21 @@
     --u-grain-o:.3;
     --u-ring:#7A481F;  --u-ring-o:.36;
     --u-line:#71441A;  --u-line-o:.5;
+    /* and the mended vessel's own clay, and its gold */
+    --u-vclay1:#EFE6D6; --u-vclay1-o:.92;
+    --u-vclay2:#DFD0B6; --u-vclay2-o:.5;
+    --u-vshade:#BCA684; --u-vshade-o:.42;
+    --u-vlite:#FDFAF3;  --u-vlite-o:.5;
+    --u-vback:#F8F1E3;  --u-vback-o:.38;
+    --u-vpool:#A2916F;  --u-vpool-o:.5;
+    --u-vgrain-o:.26;
+    --u-vring:#A2957B;  --u-vring-o:.34;
+    --u-vglow:#E6CC86;  --u-vglow-o:.55;
+    --u-vgold:#B98F2E;  --u-vgold-o:.92;
+    --u-vline:#7A705C;  --u-vline-o:.6;
   }
-  .vase-wrap svg{ display:block; width:100%; height:auto; overflow:visible; }
+  /* 40..390 of the 400-unit box is plant, so 57.1svh of box is 50svh of jar */
+  .vase-wrap svg{ display:block; height:57.1svh; width:auto; overflow:visible; }
 
   .inv-t{
     position:absolute; left:50%; translate:-50% -50%;
@@ -276,12 +288,12 @@
   /* the narration: part of the page it is telling, not a caption stuck to the
      bottom of the screen. Sized from the sheet so it scales with the paper. */
   .narr{
-    position:absolute; left:50%; top:24%; translate:-50% -50%;
-    margin:0; width:80%; text-align:center; opacity:0;
+    position:absolute; left:0; right:0; top:22svh; translate:0 -50%;
+    margin:0 auto; width:88%; text-align:center; opacity:0;
     font-family:"Cormorant Garamond","Times New Roman",Times,serif;
     font-style:italic; font-weight:400; letter-spacing:.02em;
     color:rgba(74,67,53,.62); line-height:1.3;
-    font-size:calc(var(--h) * 0.036);
+    font-size:min(5.6vw, 4.1svh);
   }
   @supports not (translate:1px){ .narr{ transform:translate(-50%,-50%); } }
 
@@ -289,9 +301,9 @@
      where a phone's own browser chrome sits — guests were not seeing it. It now
      reads at a normal size and sits under the vessel, where the eye already is. */
   #openingHint{
-    position:absolute; left:0; right:0; top:32%;
+    position:absolute; left:0; right:0; top:30svh;
     text-align:center; font-family:Jost,system-ui,sans-serif; font-weight:400;
-    font-size:clamp(.8rem, calc(var(--h) * 0.024), 1.15rem); letter-spacing:.22em;
+    font-size:min(3.8vw, 2.8svh); letter-spacing:.22em;
     text-transform:uppercase; color:rgba(74,67,53,.62); pointer-events:none;
   }
 
@@ -337,11 +349,10 @@
 
   /* Without scripting the sheet never moves into the page, so the opening
      layer must stop being an overlay and simply become the first screen. */
-  .no-js #opening{ position:static !important; }
+  .no-js #opening{ display:none !important; }
   .no-js #music, .no-js .vase-wrap, .no-js #caption,
   .no-js #openingHint, .no-js .cover-ground{ display:none !important; }
   .no-js #page{ opacity:1 !important; }
-  .no-js #invitation{ display:none !important; }
   .no-js .plate-art{ -webkit-mask-image:none !important; mask-image:none !important; }
   body.no-js{ overflow:auto !important; position:static !important; }
 
@@ -443,18 +454,18 @@
     <g id="urnGeo"><use href="#urnJar"/><use href="#urnLip"/></g>
     <!-- a clipPath's children must be shapes: a use of a group clips to nothing -->
     <clipPath id="urnGeoClip"><use href="#urnJar"/><use href="#urnLip"/></clipPath>
-    <symbol id="urnMark" viewBox="0 0 300 400">
-      <!-- ── the bloom, painted before the jar so its stems run behind the rim ── -->
-      <!-- the mass, laid in wet as one shape before anything is drawn in it -->
-      <g style="fill:var(--u-mass,#7C8757);opacity:var(--u-mass-o,.1)" filter="url(#wcWet)">
+
+    <!-- ══ the bloom, drawn once ══ Two vessels carry it — the jar in the
+         page's corners and the mended vessel on the cover — so it lives out
+         here as four groups they both point at, placed by transforms. The
+         filters go on the <use>, not in here, or they would run twice. -->
+    <g id="bloomMass" style="fill:var(--u-mass,#7C8757);opacity:var(--u-mass-o,.1)">
         
         <path d="M 262 166 Q 256 152 249 140 Q 239 129 225 122 Q 209 120 195 120 Q 187 116 185 103 Q 183 84 175 68 Q 162 60 148 62 Q 135 68 122 71 Q 109 73 96 78 Q 86 87 79 99 Q 74 110 67 120 Q 62 131 62 143 Q 69 156 78 166 Q 81 175 74 186 Q 61 201 53 220 Q 54 236 65 247 Q 80 253 95 257 Q 109 258 123 256 Q 137 249 148 242 Q 158 239 169 243 Q 182 247 196 247 Q 205 238 209 226 Q 214 215 224 209 Q 239 203 254 194 Q 262 181 262 166 Z"/>
-      </g>
-      <!-- what lies under: the stems (mostly buried), the darker leaves, and the
-           skirt of foliage where the plant leaves the mouth of the jar -->
-      <g filter="url(#wcC)">
-        <g fill="none" stroke-width="1.7" stroke-linecap="round"
-           style="stroke:var(--u-stem,#5C6940);opacity:var(--u-stem-o,.26)">
+    </g>
+    <g id="bloomUnder">
+      <g fill="none" stroke-width="1.7" stroke-linecap="round"
+         style="stroke:var(--u-stem,#5C6940);opacity:var(--u-stem-o,.26)">
         <path d="M 141 252 Q 174 196 168 127"/><path d="M 138 246 Q 120 172 132 122"/>
         <path d="M 138 245 Q 114 182 113 118"/><path d="M 138 253 Q 189 215 190 167"/>
         <path d="M 140 254 Q 112 188 129 138"/><path d="M 156 249 Q 111 196 109 131"/>
@@ -463,8 +474,8 @@
         <path d="M 153 247 Q 180 201 181 147"/><path d="M 151 250 Q 181 186 177 144"/>
         <path d="M 152 249 Q 144 181 136 129"/><path d="M 139 253 Q 93 207 104 160"/>
         <path d="M 144 252 Q 177 207 168 141"/><path d="M 155 245 Q 144 197 143 134"/>
-        </g>
-        <g style="fill:var(--u-leafd,#4F5C36);opacity:var(--u-leafd-o,.34)">
+      </g>
+      <g style="fill:var(--u-leafd,#4F5C36);opacity:var(--u-leafd-o,.34)">
         <ellipse cx="91" cy="186" rx="7.7" ry="3.4" transform="rotate(-213 91 186)"/>
         <ellipse cx="128" cy="121" rx="6.1" ry="2.1" transform="rotate(-147 128 121)"/>
         <ellipse cx="165" cy="73" rx="6.8" ry="2.2" transform="rotate(-51 165 73)"/>
@@ -605,8 +616,8 @@
         <ellipse cx="167" cy="126" rx="5.0" ry="1.5" transform="rotate(-33 167 126)"/>
         <ellipse cx="129" cy="127" rx="5.1" ry="2.3" transform="rotate(-124 129 127)"/>
         <ellipse cx="124" cy="81" rx="5.7" ry="1.7" transform="rotate(-136 124 81)"/>
-        </g>
-        <g style="fill:var(--u-skirt,#5C6940);opacity:var(--u-skirt-o,.34)">
+      </g>
+      <g style="fill:var(--u-skirt,#5C6940);opacity:var(--u-skirt-o,.34)">
         <ellipse cx="171" cy="248" rx="4.8" ry="1.8" transform="rotate(56 171 248)"/>
         <ellipse cx="203" cy="244" rx="6.6" ry="2.9" transform="rotate(11 203 244)"/>
         <ellipse cx="182" cy="253" rx="7.6" ry="3.2" transform="rotate(-56 182 253)"/>
@@ -660,11 +671,10 @@
         <ellipse cx="152" cy="249" rx="6.4" ry="2.7" transform="rotate(48 152 249)"/>
         <ellipse cx="214" cy="249" rx="5.5" ry="1.7" transform="rotate(-55 214 249)"/>
         <ellipse cx="198" cy="248" rx="5.2" ry="2.2" transform="rotate(52 198 248)"/>
-        </g>
       </g>
-      <!-- and what lies over: the lit leaves and the blossom -->
-      <g filter="url(#wcB)">
-        <g style="fill:var(--u-leafl,#77855A);opacity:var(--u-leafl-o,.38)">
+    </g>
+    <g id="bloomOver">
+      <g style="fill:var(--u-leafl,#77855A);opacity:var(--u-leafl-o,.38)">
         <ellipse cx="94" cy="175" rx="6.6" ry="2.5" transform="rotate(-224 94 175)"/>
         <ellipse cx="142" cy="74" rx="4.6" ry="2.1" transform="rotate(-113 142 74)"/>
         <ellipse cx="249" cy="149" rx="6.5" ry="2.1" transform="rotate(6 249 149)"/>
@@ -790,8 +800,8 @@
         <ellipse cx="164" cy="79" rx="6.2" ry="2.9" transform="rotate(-74 164 79)"/>
         <ellipse cx="235" cy="186" rx="7.6" ry="3.6" transform="rotate(11 235 186)"/>
         <ellipse cx="247" cy="136" rx="3.7" ry="1.5" transform="rotate(-9 247 136)"/>
-        </g>
-        <g style="fill:var(--u-bud,#DC7C2A);opacity:var(--u-bud-o,.52)">
+      </g>
+      <g style="fill:var(--u-bud,#DC7C2A);opacity:var(--u-bud-o,.52)">
         <circle cx="257" cy="170" r="3.4"/><circle cx="191" cy="141" r="3.9"/>
         <circle cx="102" cy="156" r="2.2"/><circle cx="105" cy="127" r="4.3"/><circle cx="129" cy="71" r="3.5"/>
         <circle cx="116" cy="111" r="3.0"/><circle cx="207" cy="129" r="3.8"/>
@@ -858,8 +868,8 @@
         <circle cx="174" cy="72" r="2.5"/><circle cx="198" cy="148" r="3.9"/><circle cx="98" cy="175" r="2.6"/>
         <circle cx="166" cy="102" r="4.3"/><circle cx="121" cy="138" r="3.9"/>
         <circle cx="102" cy="102" r="3.6"/><circle cx="185" cy="119" r="2.8"/><circle cx="98" cy="182" r="3.1"/>
-        </g>
-        <g style="fill:var(--u-heart,#AE4C0C);opacity:var(--u-heart-o,.4)">
+      </g>
+      <g style="fill:var(--u-heart,#AE4C0C);opacity:var(--u-heart-o,.4)">
         <circle cx="129" cy="72" r="1.6"/><circle cx="206" cy="166" r="1.6"/><circle cx="235" cy="164" r="1.7"/>
         <circle cx="208" cy="178" r="1.9"/><circle cx="193" cy="156" r="1.7"/>
         <circle cx="115" cy="175" r="2.0"/><circle cx="89" cy="185" r="1.7"/><circle cx="83" cy="187" r="1.8"/>
@@ -871,51 +881,16 @@
         <circle cx="242" cy="174" r="1.6"/><circle cx="58" cy="130" r="1.9"/><circle cx="171" cy="145" r="1.7"/>
         <circle cx="220" cy="193" r="1.7"/><circle cx="88" cy="138" r="1.6"/><circle cx="102" cy="103" r="1.6"/>
         <circle cx="87" cy="85" r="1.9"/><circle cx="167" cy="101" r="2.0"/>
-        </g>
       </g>
-
-      <!-- ── the jar: two thin washes that do not quite agree, so the paper is
-             never fully covered and the terracotta keeps moving ── -->
-      <use href="#urnGeo" filter="url(#wcA)"
-           style="fill:var(--u-clay1,#D9A472);opacity:var(--u-clay1-o,.46)"/>
-      <use href="#urnGeo" filter="url(#wcB)" transform="translate(3.5,-2.5)"
-           style="fill:var(--u-clay2,#C0854E);opacity:var(--u-clay2-o,.3)"/>
-      <g clip-path="url(#urnGeoClip)">
-        <!-- the shaded side, and the light the left of it keeps -->
-        <ellipse cx="206" cy="322" rx="40" ry="86" filter="url(#wcB)"
-                 style="fill:var(--u-shade,#96602F);opacity:var(--u-shade-o,.26)"/>
-        <ellipse cx="150" cy="384" rx="62" ry="20" filter="url(#wcC)"
-                 style="fill:var(--u-foot,#845228);opacity:var(--u-foot-o,.2)"/>
-        <ellipse cx="118" cy="300" rx="24" ry="42" filter="url(#wcB)"
-                 style="fill:var(--u-lite,#F2DCC2);opacity:var(--u-lite-o,.32)"/>
-        <path d="M 96 300 C 122 290, 156 306, 184 296 C 192 322, 176 350, 146 354 C 114 358, 92 332, 96 300 Z"
-              filter="url(#wcB)"
-              style="fill:var(--u-back,#EED7BC);opacity:var(--u-back-o,.24)"/>
-        <!-- pigment pooling where the wash met its own edge -->
-        <use href="#urnGeo" fill="none" stroke-width="7" filter="url(#wcPool)"
-             style="stroke:var(--u-pool,#8E5A2C);opacity:var(--u-pool-o,.42)"/>
-        <rect x="70" y="230" width="160" height="170" filter="url(#wcGrain)"
-              style="opacity:var(--u-grain-o,.15)"/>
-        <!-- the throwing rings, brushed on damp -->
-        <g fill="none" stroke-width="2.2" filter="url(#wcC)"
-           style="stroke:var(--u-ring,#8E5A2C);opacity:var(--u-ring-o,.2)">
-          <path d="M 84 300 C 118 312, 182 312, 216 299"/>
-          <path d="M 88 340 C 120 352, 180 352, 212 339"/>
-        </g>
+    </g>
+    <g id="bloomDrape">
+      <g fill="none" stroke-width="2" stroke-linecap="round"
+         style="stroke:var(--u-stem,#5F6C42);opacity:var(--u-spill-o,.38)">
+        <path d="M 132 244 Q 108 258, 96 282"/><path d="M 172 244 Q 198 256, 210 278"/>
+        <path d="M 150 242 Q 146 262, 134 276"/><path d="M 118 246 Q 100 268, 106 296"/>
+        <path d="M 186 246 Q 208 266, 202 294"/>
       </g>
-      <!-- the drawn line, thin and loose, sitting a little off its own wash -->
-      <use href="#urnGeo" fill="none" stroke-width="1.5" filter="url(#wcB)"
-           style="stroke:var(--u-line,#7E4F26);opacity:var(--u-line-o,.42)"/>
-
-      <!-- ── the drape: what falls over the front of the jar ── -->
-      <g filter="url(#wcC)">
-        <g fill="none" stroke-width="2" stroke-linecap="round"
-           style="stroke:var(--u-stem,#5F6C42);opacity:var(--u-spill-o,.38)">
-          <path d="M 132 244 Q 108 258, 96 282"/><path d="M 172 244 Q 198 256, 210 278"/>
-          <path d="M 150 242 Q 146 262, 134 276"/><path d="M 118 246 Q 100 268, 106 296"/>
-          <path d="M 186 246 Q 208 266, 202 294"/>
-        </g>
-        <g style="fill:var(--u-leafd,#5F6C42);opacity:var(--u-spill-o,.36)">
+      <g style="fill:var(--u-leafd,#5F6C42);opacity:var(--u-spill-o,.36)">
         <ellipse cx="196" cy="286" rx="7.2" ry="2.4" transform="rotate(38 196 286)"/>
         <ellipse cx="192" cy="289" rx="5.5" ry="2.0" transform="rotate(75 192 289)"/>
         <ellipse cx="117" cy="280" rx="4.0" ry="1.4" transform="rotate(41 117 280)"/>
@@ -962,8 +937,8 @@
         <ellipse cx="99" cy="278" rx="5.6" ry="2.5" transform="rotate(-56 99 278)"/>
         <ellipse cx="171" cy="282" rx="6.5" ry="2.7" transform="rotate(-77 171 282)"/>
         <ellipse cx="71" cy="290" rx="7.6" ry="2.7" transform="rotate(10 71 290)"/>
-        </g>
-        <g style="fill:var(--u-bud,#D97A2B);opacity:var(--u-spill-bud-o,.46)">
+      </g>
+      <g style="fill:var(--u-bud,#D97A2B);opacity:var(--u-spill-bud-o,.46)">
         <circle cx="192" cy="282" r="3.2"/><circle cx="223" cy="291" r="2.5"/>
         <circle cx="113" cy="277" r="4.3"/><circle cx="195" cy="292" r="4.3"/>
         <circle cx="190" cy="274" r="2.4"/><circle cx="113" cy="300" r="2.3"/>
@@ -976,7 +951,90 @@
         <circle cx="152" cy="298" r="2.7"/><circle cx="188" cy="299" r="3.7"/>
         <circle cx="128" cy="289" r="3.3"/><circle cx="170" cy="290" r="3.4"/><circle cx="90" cy="297" r="3.3"/>
         <circle cx="74" cy="289" r="3.3"/>
+      </g>
+    </g>
+
+    <!-- ══ the jar, for the page's corners ══ -->
+    <symbol id="urnMark" viewBox="0 0 300 400">
+      <use href="#bloomMass"  filter="url(#wcWet)"/>
+      <use href="#bloomUnder" filter="url(#wcC)"/>
+      <use href="#bloomOver"  filter="url(#wcB)"/>
+      <!-- two thin washes that do not quite agree, so the paper is never
+           fully covered and the terracotta keeps moving -->
+      <use href="#urnGeo" filter="url(#wcA)"
+           style="fill:var(--u-clay1,#D9A472);opacity:var(--u-clay1-o,.46)"/>
+      <use href="#urnGeo" filter="url(#wcB)" transform="translate(3.5,-2.5)"
+           style="fill:var(--u-clay2,#C0854E);opacity:var(--u-clay2-o,.3)"/>
+      <g clip-path="url(#urnGeoClip)">
+        <ellipse cx="206" cy="322" rx="40" ry="86" filter="url(#wcB)"
+                 style="fill:var(--u-shade,#96602F);opacity:var(--u-shade-o,.26)"/>
+        <ellipse cx="150" cy="384" rx="62" ry="20" filter="url(#wcC)"
+                 style="fill:var(--u-foot,#845228);opacity:var(--u-foot-o,.2)"/>
+        <ellipse cx="118" cy="300" rx="24" ry="42" filter="url(#wcB)"
+                 style="fill:var(--u-lite,#F2DCC2);opacity:var(--u-lite-o,.32)"/>
+        <path d="M 96 300 C 122 290, 156 306, 184 296 C 192 322, 176 350, 146 354 C 114 358, 92 332, 96 300 Z"
+              filter="url(#wcB)"
+              style="fill:var(--u-back,#EED7BC);opacity:var(--u-back-o,.24)"/>
+        <use href="#urnGeo" fill="none" stroke-width="7" filter="url(#wcPool)"
+             style="stroke:var(--u-pool,#8E5A2C);opacity:var(--u-pool-o,.42)"/>
+        <rect x="70" y="230" width="160" height="170" filter="url(#wcGrain)"
+              style="opacity:var(--u-grain-o,.15)"/>
+        <g fill="none" stroke-width="2.2" filter="url(#wcC)"
+           style="stroke:var(--u-ring,#8E5A2C);opacity:var(--u-ring-o,.2)">
+          <path d="M 84 300 C 118 312, 182 312, 216 299"/>
+          <path d="M 88 340 C 120 352, 180 352, 212 339"/>
         </g>
+      </g>
+      <use href="#urnGeo" fill="none" stroke-width="1.5" filter="url(#wcB)"
+           style="stroke:var(--u-line,#7E4F26);opacity:var(--u-line-o,.42)"/>
+      <use href="#bloomDrape" filter="url(#wcC)"/>
+    </symbol>
+
+    <!-- ══ the mended vessel with the bloom in it, for the cover ══
+         The same flowers, lifted to a taller and narrower mouth, and the
+         drape squeezed in to hang from a rim a third of the jar's width. -->
+    <symbol id="vesselBloom" viewBox="0 0 300 400">
+      <g transform="translate(0,-62)">
+        <use href="#bloomMass"  filter="url(#wcWet)"/>
+        <use href="#bloomUnder" filter="url(#wcC)"/>
+        <use href="#bloomOver"  filter="url(#wcB)"/>
+      </g>
+      <g transform="translate(33,146) scale(.78)">
+        <use href="#vesselBody" filter="url(#wcA)"
+             style="fill:var(--u-vclay1,#EADFCA);opacity:var(--u-vclay1-o,.46)"/>
+        <use href="#vesselBody" filter="url(#wcB)" transform="translate(2.5,-2)"
+             style="fill:var(--u-vclay2,#DCC9AC);opacity:var(--u-vclay2-o,.26)"/>
+        <g clip-path="url(#vesselGeoClip)">
+          <ellipse cx="198" cy="230" rx="36" ry="94" filter="url(#wcB)"
+                   style="fill:var(--u-vshade,#C3AE8F);opacity:var(--u-vshade-o,.2)"/>
+          <ellipse cx="120" cy="186" rx="21" ry="42" filter="url(#wcB)"
+                   style="fill:var(--u-vlite,#FCF8F1);opacity:var(--u-vlite-o,.36)"/>
+          <path d="M 100 196 C 124 186, 158 202, 186 192 C 194 218, 178 248, 148 252 C 116 256, 96 228, 100 196 Z"
+                filter="url(#wcB)"
+                style="fill:var(--u-vback,#FBF6EC);opacity:var(--u-vback-o,.28)"/>
+          <use href="#vesselBody" fill="none" stroke-width="6" filter="url(#wcPool)"
+               style="stroke:var(--u-vpool,#B3A183);opacity:var(--u-vpool-o,.4)"/>
+          <rect x="70" y="45" width="170" height="290" filter="url(#wcGrain)"
+                style="opacity:var(--u-vgrain-o,.13)"/>
+          <g fill="none" stroke-width="2" filter="url(#wcC)"
+             style="stroke:var(--u-vring,#AEA187);opacity:var(--u-vring-o,.24)">
+            <path d="M 94 156 C 128 166, 174 166, 208 155"/>
+            <path d="M 88 196 C 126 208, 176 208, 214 195"/>
+            <path d="M 95 246 C 130 258, 172 258, 207 245"/>
+          </g>
+          <!-- the gold, wet into wet: the bloom it made, then the line that dried in it -->
+          <use href="#vesselJoins" filter="url(#wcWet)" stroke-width="8"
+               style="stroke:var(--u-vglow,#DCC07A);opacity:var(--u-vglow-o,.4)"/>
+          <use href="#vesselJoins" filter="url(#wcC)" stroke-width="2.2"
+               style="stroke:var(--u-vgold,#BE9838);opacity:var(--u-vgold-o,.7)"/>
+        </g>
+        <path d="M 130 63 C 143 69, 159 69, 172 63" fill="none" stroke-width="1.4" filter="url(#wcC)"
+              style="stroke:var(--u-vline,#8E846E);opacity:var(--u-vline-o,.42)"/>
+        <use href="#vesselBody" fill="none" stroke-width="1.4" filter="url(#wcB)"
+             style="stroke:var(--u-vline,#8E846E);opacity:var(--u-vline-o,.42)"/>
+      </g>
+      <g transform="translate(150,206) scale(.74,1.02) translate(-150,-248)">
+        <use href="#bloomDrape" filter="url(#wcC)"/>
       </g>
     </symbol>
   </defs>
@@ -998,22 +1056,26 @@
 </button>
 <audio id="track" loop preload="none" playsinline></audio>
 
-<!-- ════ THE OPENING : whole, broken, gathered, mended, blooming ════ -->
+<!-- ════ THE COVER : the whole screen, edge to edge, and nothing on it but
+     the jar, the line and the prompt ════ -->
 <div id="opening">
-  <div class="inv-stage">
-<div class="inv-sheet" id="sheet">
   <div class="cover-ground" id="coverGround"></div>
-  <div class="plate-art" id="plateArt"></div>
   <p class="narr" id="caption">Broken, Gathered, Made Whole.</p>
   <p id="openingHint">&nbsp;</p>
-
-  <!-- the vessel: the jar the invitation is planted in. The same drawing the
-       page's corners carry, with the pigment let out — the tokens that do it
-       live on .vase-wrap in the stylesheet. -->
+  <!-- the jar the invitation is planted in. The same drawing the page's
+       corners carry, with the pigment let out — the tokens that do it live on
+       .vase-wrap in the stylesheet. -->
   <div class="vase-wrap" id="vaseWrap">
-    <svg viewBox="0 0 300 400" aria-hidden="true"><use href="#urnMark"/></svg>
+    <svg viewBox="0 0 300 400" aria-hidden="true"><use href="#vesselBloom"/></svg>
   </div>
+</div>
 
+<main id="page" class="relative z-10 opacity-0">
+
+<!-- ════ THE INVITATION ════ -->
+<section id="invitation" class="inv-stage" aria-label="Wedding invitation">
+<div class="inv-sheet" id="sheet">
+  <div class="plate-art" id="plateArt"></div>
   <p class="inv-t" style="top:15.7%; font-size:calc(var(--h) * 0.0238)">Raef El-Gamal &amp; Mayada Mounir</p>
   <p class="inv-t caps" style="top:19.9%; font-size:calc(var(--h) * 0.0152)">Together with</p>
   <p class="inv-t" style="top:24.1%; font-size:calc(var(--h) * 0.0238)">Raafat Sedky &amp; Amaney Sabry</p>
@@ -1040,14 +1102,7 @@
   <p class="inv-t caps clay" style="top:89.1%; font-size:calc(var(--h) * 0.0152)">Hour</p>
   <p class="inv-t" style="top:93%; font-size:calc(var(--h) * 0.0238)">1:30 PM</p>
 </div>
-
-  </div>
-</div>
-
-<main id="page" class="relative z-10 opacity-0">
-
-<!-- ════ THE INVITATION ════ -->
-<section id="invitation" class="inv-stage" aria-label="Wedding invitation"></section>
+</section>
 
 <!-- ════ THE THEME ════ -->
 <section id="theme" class="inv-stage">
@@ -1310,11 +1365,9 @@ function finish(){
   document.querySelectorAll('#sheet .inv-t, #sheet .inv-line')
     .forEach(el => { el.style.opacity = 1; });
 
-  // The sheet hands over from the fixed opening layer to its place in the
-  // page. Both are the same centred stage at the same size, so the paper does
-  // not move by a pixel: the story simply becomes the page it was telling.
-  const sheet = $('sheet'), home = $('invitation'), op = $('opening');
-  if (sheet && home && sheet.parentNode !== home) home.appendChild(sheet);
+  // the plate has been on the page all along, under the cover; all that is
+  // left to do is take the cover away
+  const op = $('opening');
   if (op) op.remove();
 
   $('page').style.opacity = '1';
@@ -1439,25 +1492,25 @@ function armOpening(){
   clearTimeout(watchdog);   // armed and waiting for the guest is not a stall
 }
 
-/* One tap, and the cover gives way to the invitation. No story to sit
-   through: the jar, the line and the prompt go together, the painted border
-   comes up underneath them, and the words arrive. A shade over a second. */
+/* One tap, and the cover goes. The invitation is put in place behind it
+   first — the cover is opaque and covers the screen, so nothing is seen being
+   built — and then the whole cover fades off it. Six tenths of a second. */
 function runOpening(){
   if (opening.dataset.done) return;
   opening.dataset.done = '1';
 
   if (!hasGSAP || reduced){ clearTimeout(watchdog); finish(); return; }
 
-  const tl = gsap.timeline({ onComplete:() => { clearTimeout(watchdog); finish(); } });
-  tl.to([caption, hint, '#vaseWrap', '#coverGround'], { opacity:0, duration:.45, ease:'power2.in' }, 0)
-    // the border is brought up while the jar is still half there, so it reads
-    // as one thing giving way to another rather than as a shape wiping in
-    .to({ v:0 }, { v:1, duration:.5, ease:'sine.out',
-                   onUpdate(){ setBloom(this.targets()[0].v); } }, .2)
-    .to(invText(), { opacity:1, duration:.6, ease:'power2.out' }, .5);
+  setBloom(1);
+  gsap.set(invText(), { opacity:1 });
+  $('page').style.opacity = '1';
+  document.body.classList.remove('is-locked');
+
+  gsap.to(opening, { opacity:0, duration:.6, ease:'power2.inOut',
+    onComplete(){ clearTimeout(watchdog); finish(); } });
 
   // a net, not a timer: it can only ever rescue a handover that has stalled
-  watchdog = setTimeout(finish, (tl.duration() + 6) * 1000);
+  watchdog = setTimeout(finish, 6000);
 }
 
 if (document.readyState === 'complete') armOpening();
