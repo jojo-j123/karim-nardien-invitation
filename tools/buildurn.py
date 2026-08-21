@@ -16,9 +16,10 @@ def section(name):
     return m.group(1).rstrip()
 
 
-MASS, STEMS, LDARK, LLIGHT, SKIRT, DLEAF, DBUD, BUDS, HEARTS = (section(n) for n in
-    ('mass', 'stems', 'leavesdark', 'leaveslight', 'skirt',
-     'drapeleaf', 'drapebud', 'buds', 'hearts'))
+MASS, BSTEM, BLEAF, BBUD, FSTEM, FLEAF, FBUD, DSTEM, DLEAF, DBUD = (section(n) for n in
+    ('mass', 'backstem', 'backleaf', 'backbud',
+     'frontstem', 'frontleaf', 'frontbud',
+     'drapestem', 'drapeleaf', 'drapebud'))
 
 # a wide-bellied garden jar: broad mouth, shoulder just under the rim, tapering
 # to a modest foot — the jars the reference photograph is full of
@@ -45,40 +46,41 @@ SYMBOL = f'''    <path id="urnJar" d="{JAR}"/>
     <g id="bloomMass" style="{f('fill', 'mass', '#7C8757')};{f('opacity', 'mass-o', '.1')}">
 {MASS}
     </g>
+    <!-- the far half of the plant: thinner stems, smaller leaves, deeper green -->
     <g id="bloomUnder">
-      <g fill="none" stroke-width="1.7" stroke-linecap="round"
-         style="{f('stroke', 'stem', '#5C6940')};{f('opacity', 'stem-o', '.26')}">
-{STEMS}
+      <g fill="none" stroke-width="1.5" stroke-linecap="round"
+         style="{f('stroke', 'stem', '#5C6940')};{f('opacity', 'stem-o', '.4')}">
+{BSTEM}
       </g>
-      <g style="{f('fill', 'leafd', '#4F5C36')};{f('opacity', 'leafd-o', '.34')}">
-{LDARK}
+      <g style="{f('fill', 'leafd', '#4F5C36')};{f('opacity', 'leafd-o', '.42')}">
+{BLEAF}
       </g>
-      <g style="{f('fill', 'skirt', '#5C6940')};{f('opacity', 'skirt-o', '.34')}">
-{SKIRT}
+      <g style="{f('fill', 'budd', '#C4661B')};{f('opacity', 'budd-o', '.44')}">
+{BBUD}
       </g>
     </g>
+    <!-- and the near half over it -->
     <g id="bloomOver">
-      <g style="{f('fill', 'leafl', '#77855A')};{f('opacity', 'leafl-o', '.38')}">
-{LLIGHT}
+      <g fill="none" stroke-width="2" stroke-linecap="round"
+         style="{f('stroke', 'stem2', '#6B784B')};{f('opacity', 'stem2-o', '.44')}">
+{FSTEM}
       </g>
-      <g style="{f('fill', 'bud', '#DC7C2A')};{f('opacity', 'bud-o', '.52')}">
-{BUDS}
+      <g style="{f('fill', 'leafl', '#77855A')};{f('opacity', 'leafl-o', '.46')}">
+{FLEAF}
       </g>
-      <g style="{f('fill', 'heart', '#AE4C0C')};{f('opacity', 'heart-o', '.4')}">
-{HEARTS}
+      <g style="{f('fill', 'bud', '#DC7C2A')};{f('opacity', 'bud-o', '.6')}">
+{FBUD}
       </g>
     </g>
     <g id="bloomDrape">
-      <g fill="none" stroke-width="2" stroke-linecap="round"
-         style="{f('stroke', 'stem', '#5F6C42')};{f('opacity', 'spill-o', '.38')}">
-        <path d="M 132 244 Q 108 258, 96 282"/><path d="M 172 244 Q 198 256, 210 278"/>
-        <path d="M 150 242 Q 146 262, 134 276"/><path d="M 118 246 Q 100 268, 106 296"/>
-        <path d="M 186 246 Q 208 266, 202 294"/>
+      <g fill="none" stroke-width="1.8" stroke-linecap="round"
+         style="{f('stroke', 'stem', '#5F6C42')};{f('opacity', 'spill-o', '.4')}">
+{DSTEM}
       </g>
-      <g style="{f('fill', 'leafd', '#5F6C42')};{f('opacity', 'spill-o', '.36')}">
+      <g style="{f('fill', 'leafd', '#5F6C42')};{f('opacity', 'spill-o', '.42')}">
 {DLEAF}
       </g>
-      <g style="{f('fill', 'bud', '#D97A2B')};{f('opacity', 'spill-bud-o', '.46')}">
+      <g style="{f('fill', 'bud', '#D97A2B')};{f('opacity', 'spill-bud-o', '.54')}">
 {DBUD}
       </g>
     </g>

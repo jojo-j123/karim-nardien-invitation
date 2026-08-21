@@ -6,9 +6,13 @@ into a rhythm you can see.
 
     python3 buildurn.py > urn.symbol
 
-`genurn.py` samples the leaves, buds and stems against a lumpy boundary — the
-same boundary that draws the underwash, so the wash and what grows in it share
-one silhouette. The seed is fixed, so the drawing comes out the same every run.
+`genurn.py` grows a skeleton and hangs the plant off it: stems leave the mouth,
+divide once or twice, carry their leaves in opposite pairs along their length,
+and put a head of blossom at the tips. Leaves are leaf-shaped — rounded base,
+pointed tip, laid along the stem they grow from — and the blossom is a
+five-lobed rosette in a cluster, not a dot. Two passes, a darker smaller one
+behind and a lighter larger one in front, give the mass a near and a far. The
+seed is fixed, so the drawing comes out the same every run.
 `buildurn.py` wraps that scatter in the watercolour layers and prints two
 symbols: `#urnMark`, the terracotta jar the page's corners carry, and
 `#vesselBloom`, the mended vessel in flower on the cover. The bloom itself is
