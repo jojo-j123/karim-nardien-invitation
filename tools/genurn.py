@@ -1,139 +1,157 @@
-"""Grow the bloom that sits in the jar.
+"""Grow the bloom the vessels carry.
 
-Placed by a seeded sampler rather than by hand: a couple of hundred leaves and
-blossoms need to look scattered, and a person placing them one at a time ends
-up with a rhythm. The seed is fixed, so the drawing is the same every time.
+The first version of this scattered ellipses and circles inside a blob, and it
+read as confetti, because that is what it was. A plant is not a scatter. It has
+a skeleton: stems leave the mouth, divide once or twice, carry their leaves in
+opposite pairs along their length, and put their flowers at the ends. Leaves
+are not ellipses — they have a rounded base and a point — and small blossom is
+not a dot, it is a five-lobed rosette in a cluster of its own kind.
 
-The mass is not an ellipse. Its radius wobbles with the angle, and the same
-wobble draws the underwash and bounds the scatter, so the wash and what grows
-in it share one silhouette.
+So this builds the skeleton first and hangs everything off it. Two passes: a
+darker, smaller one behind, and a lighter, larger one in front, so the mass has
+a near and a far. The seed is fixed, so the drawing is the same every run.
 """
 import math, random
 
 R = random.Random(20260919)
-CX, CY, RX, RY = 148, 166, 94, 92
-
-
-def edge(t):
-    """how far out the mass reaches at this angle: lumpy, never a clean curve"""
-    return 1 + .17 * math.sin(3 * t + 1.1) + .11 * math.sin(5 * t + 2.3) + .06 * math.sin(8 * t - .4)
-
-
-def at(t, r):
-    e = edge(t)
-    return CX + math.cos(t) * RX * r * e, CY + math.sin(t) * RY * r * e
+MOUTH = (150, 250)          # where every stem leaves the vessel
+CX, CY, RX, RY = 148, 166, 94, 92   # the air the plant is allowed to fill
 
 
 def jit(a):
     return R.uniform(-a, a)
 
 
-# the foot of the plant: everything grows from the mouth of the jar
-MOUTH_Y = 250
+def qpoint(p0, p1, p2, t):
+    u = 1 - t
+    return (u*u*p0[0] + 2*u*t*p1[0] + t*t*p2[0],
+            u*u*p0[1] + 2*u*t*p1[1] + t*t*p2[1])
+
+
+def qtangent(p0, p1, p2, t):
+    u = 1 - t
+    dx = 2*u*(p1[0]-p0[0]) + 2*t*(p2[0]-p1[0])
+    dy = 2*u*(p1[1]-p0[1]) + 2*t*(p2[1]-p1[1])
+    return math.degrees(math.atan2(dy, dx))
+
+
+def leaf(x, y, ang, L, W):
+    """a leaf: rounded at the base, pointed at the tip, drawn along its stem.
+    Unit shape runs from (0,0) at the base to (0,-1) at the tip."""
+    return (f'<path d="M0 0C{W:.1f} {-L*.22:.1f} {W*.62:.1f} {-L*.8:.1f} 0 {-L:.0f}'
+            f'C{-W*.62:.1f} {-L*.8:.1f} {-W:.1f} {-L*.22:.1f} 0 0Z" '
+            f'transform="translate({x:.0f} {y:.0f}) rotate({ang:.0f})"/>')
+
+
+def floret(x, y, r, turn=0.0):
+    """five round lobes around a small eye — what a spray of little flowers is.
+    Each petal is a cubic that bulges out and comes back, so the lobe is plump
+    rather than pointed; a pointed five-lobe is an asterisk, not a flower."""
+    inner, out = r * .52, r * 1.16
+    d = ''
+    for k in range(5):
+        a0 = math.radians(k * 72 - 90 + turn)
+        a1 = math.radians((k + 1) * 72 - 90 + turn)
+        m = (a0 + a1) / 2
+        p0 = (x + inner*math.cos(a0), y + inner*math.sin(a0))
+        p1 = (x + inner*math.cos(a1), y + inner*math.sin(a1))
+        c0 = (x + out*math.cos(m - .40), y + out*math.sin(m - .40))
+        c1 = (x + out*math.cos(m + .40), y + out*math.sin(m + .40))
+        if not d:
+            d = f'M{p0[0]:.1f} {p0[1]:.1f}'
+        d += f'C{c0[0]:.1f} {c0[1]:.1f} {c1[0]:.1f} {c1[1]:.1f} {p1[0]:.1f} {p1[1]:.1f}'
+    return f'<path d="{d}Z"/>'
+
+
+def cluster(x, y, n, spread, rmin, rmax, into):
+    """blossom does not arrive one at a time; it arrives in a head"""
+    for _ in range(n):
+        a, rr = R.uniform(0, 6.283), R.uniform(0, 1) ** .6 * spread
+        into.append(floret(x + math.cos(a)*rr, y + math.sin(a)*rr * .82,
+                           R.uniform(rmin, rmax), R.uniform(0, 72)))
+
+
+def limb(p0, p1, p2, stems, leaves, buds, *, leaf_len, depth, tip_head, head=(5, 10)):
+    """draw one stem, hang its leaves along it in opposite pairs, and put a
+       head of blossom at its end"""
+    stems.append(f'<path d="M{p0[0]:.0f} {p0[1]:.0f}Q{p1[0]:.0f} {p1[1]:.0f} {p2[0]:.0f} {p2[1]:.0f}"/>')
+    stations = R.randint(4, 6)
+    for i in range(stations):
+        t = .12 + (.86 - .12) * i / max(1, stations - 1)
+        x, y = qpoint(p0, p1, p2, t)
+        ang = qtangent(p0, p1, p2, t)
+        taper = 1 - .45 * t                       # leaves shrink toward the tip
+        for side in (-1, 1):                       # opposite pairs, as they grow
+            L = leaf_len * taper * R.uniform(.8, 1.2)
+            leaves.append(leaf(x + jit(1.5), y + jit(1.5),
+                               ang + 90 + side * R.uniform(38, 62) + jit(8),
+                               L, L * R.uniform(.30, .40)))
+    if tip_head:
+        cluster(p2[0], p2[1], R.randint(*head), 9 + depth * 3, 2.4, 4.4, buds)
+    return p2
+
+
+def grow(n_trunks, arc, reach, leaf_len, depth, stems, leaves, buds,
+         origin=MOUTH, rise=1.0, head=(5, 10), flowering=1.0):
+    for i in range(n_trunks):
+        a = math.radians(arc[0] + (arc[1] - arc[0]) * (i + R.uniform(.15, .85)) / n_trunks)
+        length = reach * R.uniform(.72, 1.0)
+        tip = (origin[0] + math.cos(a) * length * .82,
+               origin[1] + math.sin(a) * length * rise)
+        # bow the stem so it leaves the mouth upright and opens out
+        mid = ((origin[0] + tip[0]) / 2 + math.cos(a) * length * .18 + jit(6),
+               (origin[1] + tip[1]) / 2 - length * .16 * rise + jit(6))
+        limb(origin, mid, tip, stems, leaves, buds, head=head,
+             leaf_len=leaf_len, depth=depth, tip_head=R.random() < flowering)
+        for _ in range(R.randint(1, 3)):           # where it divides
+            t = R.uniform(.42, .82)
+            bx, by = qpoint(origin, mid, tip, t)
+            ba = a + math.radians(R.uniform(-42, 42))
+            blen = length * R.uniform(.3, .52)
+            btip = (bx + math.cos(ba) * blen, by + math.sin(ba) * blen * rise)
+            bmid = ((bx + btip[0]) / 2 + jit(5), (by + btip[1]) / 2 - blen * .2 * rise + jit(5))
+            limb((bx, by), bmid, btip, stems, leaves, buds, head=head,
+                 leaf_len=leaf_len * .82, depth=depth, tip_head=R.random() < flowering)
+
+
 out = []
 
-# ── the mass itself, as one closed shape for the wash to fill ────────────
+# ── the wash the whole plant sits in, lumpy so it is never a clean curve ──
+def edge(t):
+    return 1 + .17*math.sin(3*t + 1.1) + .11*math.sin(5*t + 2.3) + .06*math.sin(8*t - .4)
+
 pts = []
 for i in range(48):
     t = -math.pi * 2 * i / 48
-    x, y = at(t, 1.0)
-    pts.append((x, min(y, 272)))
+    e = edge(t)
+    pts.append((CX + math.cos(t)*RX*e, min(CY + math.sin(t)*RY*e, 272)))
 d = f'M {pts[0][0]:.0f} {pts[0][1]:.0f}'
 for i in range(1, len(pts), 2):
-    cx_, cy_ = pts[i]
-    ex, ey = pts[(i + 1) % len(pts)]
-    d += f' Q {cx_:.0f} {cy_:.0f} {ex:.0f} {ey:.0f}'
-d += ' Z'
-out.append(('mass', [f'<path d="{d}"/>']))
+    d += f' Q {pts[i][0]:.0f} {pts[i][1]:.0f} {pts[(i+1) % len(pts)][0]:.0f} {pts[(i+1) % len(pts)][1]:.0f}'
+out.append(('mass', []))
 
-# ── stems: mostly buried, a few reaching past the leaves ────────────────
-stems = []
-for i in range(16):
-    t = math.radians(R.uniform(-188, 8))
-    r = R.uniform(.30, .60)
-    ex, ey = at(t, r)
-    sx, sy = 150 + jit(13), MOUTH_Y + jit(5)
-    mx = (sx + ex) / 2 + math.cos(t) * 24 + jit(9)
-    my = (sy + ey) / 2 + jit(13)
-    stems.append(f'<path d="M {sx:.0f} {sy:.0f} Q {mx:.0f} {my:.0f} {ex:.0f} {ey:.0f}"/>')
-out.append(('stems', stems))
+# ── the far half of the plant, then the near half over it ────────────────
+for name, n, arc, reach, ln, depth in (('back',  8, (-166, -14), 128, 15, 0),
+                                       ('front', 7, (-152, -28), 108, 18, 1)):
+    stems, leaves, buds = [], [], []
+    grow(n, arc, reach, ln, depth, stems, leaves, buds)
+    out.append((name + 'stem', stems))
+    out.append((name + 'leaf', leaves))
+    out.append((name + 'bud', buds))
 
-# ── leaves: two passes, a darker one under a lighter one, so the mass has
-#    depth rather than being one flat green ────────────────────────────────
-def leaf_pass(n, lo, hi, smin, smax):
-    got = []
-    for _ in range(n):
-        t = math.radians(R.uniform(-200, 20))
-        r = math.sqrt(R.uniform(lo, hi))
-        x, y = at(t, r)
-        x += jit(4); y += jit(4)
-        if y > 272:
-            continue
-        ang = math.degrees(t) + jit(44)
-        rx = R.uniform(smin, smax)
-        ry = rx * R.uniform(.30, .48)
-        got.append(f'<ellipse cx="{x:.0f}" cy="{y:.0f}" rx="{rx:.1f}" ry="{ry:.1f}" '
-                   f'transform="rotate({ang:.0f} {x:.0f} {y:.0f})"/>')
-    return got
-
-out.append(('leavesdark', leaf_pass(140, .02, .86, 4.2, 9.0)))
-out.append(('leaveslight', leaf_pass(125, .16, 1.04, 3.4, 7.6)))
-
-# a skirt of leaves gathered where the plant leaves the mouth of the jar, so
-# there is no bare stalk between the two
-skirt = []
-for _ in range(64):
-    a = math.radians(R.uniform(-172, -8))
-    rr = R.uniform(.18, .95)
-    x = 150 + math.cos(a) * 74 * rr + jit(6)
-    y = 236 - math.sin(a) * 44 * rr + jit(7)
-    if y > 268 or y < 176:
-        continue
-    ang = R.uniform(-70, 70)
-    rx = R.uniform(4.0, 8.0)
-    skirt.append(f'<ellipse cx="{x:.0f}" cy="{y:.0f}" rx="{rx:.1f}" ry="{rx * R.uniform(.30, .46):.1f}" '
-                 f'transform="rotate({ang:.0f} {x:.0f} {y:.0f})"/>')
-out.append(('skirt', skirt))
-
-# ── the drape: what falls over the front of the jar, painted after it ────
-drape_l, drape_b = [], []
-for _ in range(52):
-    a = math.radians(R.uniform(-168, -12))
-    rr = R.uniform(.62, 1.06)
-    x = 150 + math.cos(a) * 80 * rr + jit(7)
-    y = 248 + (1 - math.sin(a)) * 30 * rr + jit(8)
-    if y < 236 or y > 302:
-        continue
-    ang = R.uniform(-80, 80)
-    rx = R.uniform(3.8, 7.6)
-    drape_l.append(f'<ellipse cx="{x:.0f}" cy="{y:.0f}" rx="{rx:.1f}" ry="{rx * R.uniform(.30, .46):.1f}" '
-                   f'transform="rotate({ang:.0f} {x:.0f} {y:.0f})"/>')
-    if R.random() < .5:
-        drape_b.append(f'<circle cx="{x + jit(5):.0f}" cy="{y + jit(6):.0f}" r="{R.uniform(2.2, 4.4):.1f}"/>')
-out.append(('drapeleaf', drape_l))
-out.append(('drapebud', drape_b))
-
-# ── blossom: through the whole mass, gathering toward the outside ────────
-buds, hearts = [], []
-for _ in range(180):
-    t = math.radians(R.uniform(-204, 24))
-    r = R.uniform(.20, 1.04) ** .55
-    x, y = at(t, r)
-    x += jit(3.5); y += jit(3.5)
-    if y > 274:
-        continue
-    rad = R.uniform(1.9, 4.6)
-    buds.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{rad:.1f}"/>')
-    if rad > 3.4 and R.random() < .55:
-        hearts.append(f'<circle cx="{x + jit(1.1):.0f}" cy="{y + jit(1.1):.0f}" r="{rad * .45:.1f}"/>')
-out.append(('buds', buds))
-out.append(('hearts', hearts))
+# ── and what hangs over the front of the vessel ──────────────────────────
+stems, leaves, buds = [], [], []
+grow(3, (34, 146), 66, 12, 1, stems, leaves, buds, origin=(150, 242), rise=1.0,
+     head=(2, 5), flowering=.45)
+out.append(('drapestem', stems))
+out.append(('drapeleaf', leaves))
+out.append(('drapebud', buds))
 
 for name, items in out:
     print(f'<!-- {name}: {len(items)} -->')
     line = '        '
     for it in items:
-        if len(line) + len(it) > 112:
+        if len(line) + len(it) > 116:
             print(line); line = '        '
         line += it
     if line.strip():
