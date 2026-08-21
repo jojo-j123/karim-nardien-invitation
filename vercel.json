@@ -18,7 +18,7 @@
       ]
     },
     {
-      "source": "/(.*)\\.(png|mp3)",
+      "source": "/(.*)\\.(png|webp|mp3)",
       "headers": [
         {
           "key": "Cache-Control",

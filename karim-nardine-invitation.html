@@ -21,6 +21,7 @@
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F3EDE2'/%3E%3Cg fill='none' stroke='%23B98F44' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M12 5h8l-1.5 4h-5z'/%3E%3Cpath d='M13.5 9h5C23 11.5 25 16 23 21c-1.6 4-11.4 4-13 0-2-5 0-9.5 3.5-12z'/%3E%3Cpath d='M13 26h6l1 2h-8z'/%3E%3C/g%3E%3C/svg%3E" />
 
+<link rel="preload" as="image" href="cover.webp" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="invitation-plate.webp">
@@ -154,7 +155,23 @@
     display:flex; align-items:center; justify-content:center;
     padding:var(--pad); position:relative;
   }
-  #opening{ position:fixed; inset:0; z-index:60; background:var(--paper-warm); }
+  /* The cover is one finished painting, shown whole. Its own proportion is
+     853x1844, which is all but exactly a modern phone, so on a phone it fills
+     the screen edge to edge; on anything a different shape it is contained
+     rather than cropped, because cropping it would cut the words off it. The
+     surround is sampled from the painting's own edge so the join does not
+     show. */
+  #opening{
+    position:fixed; inset:0; z-index:60;
+    /* The painting is shown whole rather than cropped — cropping it would cut
+       the words off it — so on a screen that is not its shape there is a
+       margin. The margin is its own edge tone, sampled down its height, so the
+       join does not show at any height a screen might be. */
+    background:
+      url("cover.webp") no-repeat center / contain,
+      linear-gradient(180deg, #FBF2E5 0%, #FBF3E7 15%, #FAF1E3 45%,
+                              #F8EEE0 60%, #F8EBDB 90%, #F7E9D8 100%);
+  }
 
   .inv-sheet, .thm-sheet{
     position:relative; width:auto; max-width:100%;
@@ -182,30 +199,6 @@
     background-size:7px 7px;
   }
 
-  /* The cover is a place, not a blank card: a warm wall with the light coming
-     in from the left the way it does in the painting, a floor the jar stands
-     on, and the two shadows it throws — the one it sits in, and the one that
-     runs away from the light. It goes when the invitation arrives. */
-  .cover-ground{
-    position:absolute; inset:0; pointer-events:none; overflow:hidden;
-    background:
-      radial-gradient(ellipse 68% 52% at 20% 26%, rgba(255,250,240,.9), rgba(255,250,240,0) 72%),
-      linear-gradient(180deg, rgba(196,163,128,0) 0 69%,
-                              rgba(196,163,128,.1) 74%,
-                              rgba(178,142,106,.24) 100%),
-      linear-gradient(168deg, #F8F3EA 0%, #F2EADC 48%, #EADFCC 100%);
-  }
-  .cover-ground::before{          /* the shadow the jar sits in */
-    content:''; position:absolute; left:24%; right:24%; bottom:3.4%; height:8%;
-    background:radial-gradient(ellipse at 50% 50%, rgba(122,86,52,.34), rgba(122,86,52,0) 66%);
-    filter:blur(3px);
-  }
-  .cover-ground::after{           /* and the one it throws away from the light */
-    content:''; position:absolute; left:47%; right:3%; bottom:4.4%; height:5.4%;
-    background:linear-gradient(90deg, rgba(122,86,52,.3), rgba(122,86,52,0) 76%);
-    filter:blur(6px);
-  }
-
   /* the painted plate sits on its own layer so it can be revealed without
      taking the paper underneath with it */
   .plate-art{
@@ -222,46 +215,6 @@
     background-image:radial-gradient(rgba(74,67,53,.5) .5px, transparent .6px);
     background-size:7px 7px;
   }
-
-  .vase-wrap{
-    position:absolute; left:0; right:0; bottom:4.6svh;
-    display:flex; justify-content:center; pointer-events:none;
-    /* the corner marks take the symbol's quiet defaults; the cover overrides
-       them, so one drawing serves as both watermark and hero */
-    --u-mass:#6E7C4A;  --u-mass-o:.1;
-    --u-stem:#4A5730;  --u-stem-o:.03; --u-spill-o:.7; --u-spill-bud-o:.9;
-    --u-leafd:#3C4926; --u-leafd-o:.8;
-    --u-skirt:#46542F; --u-skirt-o:.76;
-    --u-leafl:#68784A; --u-leafl-o:.76;
-    --u-bud:#DC7523;   --u-bud-o:.8;
-    --u-budd:#B8571A; --u-budd-o:.6;
-    --u-stem2:#5E6C3E; --u-stem2-o:.5;
-    --u-heart:#A8480C; --u-heart-o:.6;
-    --u-clay1:#D9A063; --u-clay1-o:.9;
-    --u-clay2:#BE8340; --u-clay2-o:.42;
-    --u-shade:#96601F; --u-shade-o:.4;
-    --u-foot:#7E4A18;  --u-foot-o:.32;
-    --u-lite:#F3DFC2;  --u-lite-o:.5;
-    --u-back:#EBD2B0;  --u-back-o:.38;
-    --u-pool:#8A5320;  --u-pool-o:.5;
-    --u-grain-o:.3;
-    --u-ring:#7A481F;  --u-ring-o:.36;
-    --u-line:#71441A;  --u-line-o:.5;
-    /* and the mended vessel's own clay, and its gold */
-    --u-vclay1:#EFE6D6; --u-vclay1-o:.92;
-    --u-vclay2:#DFD0B6; --u-vclay2-o:.5;
-    --u-vshade:#BCA684; --u-vshade-o:.42;
-    --u-vlite:#FDFAF3;  --u-vlite-o:.5;
-    --u-vback:#F8F1E3;  --u-vback-o:.38;
-    --u-vpool:#A2916F;  --u-vpool-o:.5;
-    --u-vgrain-o:.26;
-    --u-vring:#A2957B;  --u-vring-o:.34;
-    --u-vglow:#E6CC86;  --u-vglow-o:.55;
-    --u-vgold:#B98F2E;  --u-vgold-o:.92;
-    --u-vline:#7A705C;  --u-vline-o:.6;
-  }
-  /* 40..390 of the 400-unit box is plant, so 57.1svh of box is 50svh of jar */
-  .vase-wrap svg{ display:block; height:57.1svh; width:auto; overflow:visible; }
 
   .inv-t{
     position:absolute; left:50%; translate:-50% -50%;
@@ -285,28 +238,6 @@
   @supports not (translate:1px){
     .inv-t{ transform:translate(-50%,-50%); }
     .inv-line{ transform:translateX(-50%); }
-  }
-
-  /* the narration: part of the page it is telling, not a caption stuck to the
-     bottom of the screen. Sized from the sheet so it scales with the paper. */
-  .narr{
-    position:absolute; left:0; right:0; top:22svh; translate:0 -50%;
-    margin:0 auto; width:88%; text-align:center; opacity:0;
-    font-family:"Cormorant Garamond","Times New Roman",Times,serif;
-    font-style:italic; font-weight:400; letter-spacing:.02em;
-    color:rgba(74,67,53,.62); line-height:1.3;
-    font-size:min(5.6vw, 4.1svh);
-  }
-  @supports not (translate:1px){ .narr{ transform:translate(-50%,-50%); } }
-
-  /* The prompt was 8px of faint tracked caps pinned to the very bottom edge,
-     where a phone's own browser chrome sits — guests were not seeing it. It now
-     reads at a normal size and sits under the vessel, where the eye already is. */
-  #openingHint{
-    position:absolute; left:0; right:0; top:30svh;
-    text-align:center; font-family:Jost,system-ui,sans-serif; font-weight:400;
-    font-size:min(3.8vw, 2.8svh); letter-spacing:.22em;
-    text-transform:uppercase; color:rgba(74,67,53,.62); pointer-events:none;
   }
 
   /* ── music toggle ── */
@@ -352,14 +283,13 @@
   /* Without scripting the sheet never moves into the page, so the opening
      layer must stop being an overlay and simply become the first screen. */
   .no-js #opening{ display:none !important; }
-  .no-js #music, .no-js .vase-wrap, .no-js #caption,
-  .no-js #openingHint, .no-js .cover-ground{ display:none !important; }
+  .no-js #music{ display:none !important; }
   .no-js #page{ opacity:1 !important; }
   .no-js .plate-art{ -webkit-mask-image:none !important; mask-image:none !important; }
   body.no-js{ overflow:auto !important; position:static !important; }
 
   @media print{
-    #opening, #music, .wash, .grain, .vase-wrap{ display:none !important; }
+    #opening, #music, .wash, .grain{ display:none !important; }
     #page{ opacity:1 !important; }
     .plate-art{ -webkit-mask-image:none !important; mask-image:none !important; }
     body{ background:#fff; }
@@ -1492,53 +1422,6 @@
       <use href="#bloomDrape" filter="url(#wcC)"/>
     </symbol>
 
-    <!-- ══ the mended vessel with the bloom in it, for the cover ══
-         The same flowers, lifted to a taller and narrower mouth, and the
-         drape squeezed in to hang from a rim a third of the jar's width. -->
-    <symbol id="vesselBloom" viewBox="0 0 300 400">
-      <g transform="translate(0,-62)">
-        <use href="#bloomMass"  filter="url(#wcWet)"/>
-        <use href="#bloomUnder" filter="url(#wcC)"/>
-        <use href="#bloomOver"  filter="url(#wcB)"/>
-      </g>
-      <g transform="translate(33,146) scale(.78)">
-        <use href="#vesselBody" filter="url(#wcA)"
-             style="fill:var(--u-vclay1,#EADFCA);opacity:var(--u-vclay1-o,.46)"/>
-        <use href="#vesselBody" filter="url(#wcB)" transform="translate(2.5,-2)"
-             style="fill:var(--u-vclay2,#DCC9AC);opacity:var(--u-vclay2-o,.26)"/>
-        <g clip-path="url(#vesselGeoClip)">
-          <ellipse cx="198" cy="230" rx="36" ry="94" filter="url(#wcB)"
-                   style="fill:var(--u-vshade,#C3AE8F);opacity:var(--u-vshade-o,.2)"/>
-          <ellipse cx="120" cy="186" rx="21" ry="42" filter="url(#wcB)"
-                   style="fill:var(--u-vlite,#FCF8F1);opacity:var(--u-vlite-o,.36)"/>
-          <path d="M 100 196 C 124 186, 158 202, 186 192 C 194 218, 178 248, 148 252 C 116 256, 96 228, 100 196 Z"
-                filter="url(#wcB)"
-                style="fill:var(--u-vback,#FBF6EC);opacity:var(--u-vback-o,.28)"/>
-          <use href="#vesselBody" fill="none" stroke-width="6" filter="url(#wcPool)"
-               style="stroke:var(--u-vpool,#B3A183);opacity:var(--u-vpool-o,.4)"/>
-          <rect x="70" y="45" width="170" height="290" filter="url(#wcGrain)"
-                style="opacity:var(--u-vgrain-o,.13)"/>
-          <g fill="none" stroke-width="2" filter="url(#wcC)"
-             style="stroke:var(--u-vring,#AEA187);opacity:var(--u-vring-o,.24)">
-            <path d="M 94 156 C 128 166, 174 166, 208 155"/>
-            <path d="M 88 196 C 126 208, 176 208, 214 195"/>
-            <path d="M 95 246 C 130 258, 172 258, 207 245"/>
-          </g>
-          <!-- the gold, wet into wet: the bloom it made, then the line that dried in it -->
-          <use href="#vesselJoins" filter="url(#wcWet)" stroke-width="8"
-               style="stroke:var(--u-vglow,#DCC07A);opacity:var(--u-vglow-o,.4)"/>
-          <use href="#vesselJoins" filter="url(#wcC)" stroke-width="2.2"
-               style="stroke:var(--u-vgold,#BE9838);opacity:var(--u-vgold-o,.7)"/>
-        </g>
-        <path d="M 130 63 C 143 69, 159 69, 172 63" fill="none" stroke-width="1.4" filter="url(#wcC)"
-              style="stroke:var(--u-vline,#8E846E);opacity:var(--u-vline-o,.42)"/>
-        <use href="#vesselBody" fill="none" stroke-width="1.4" filter="url(#wcB)"
-             style="stroke:var(--u-vline,#8E846E);opacity:var(--u-vline-o,.42)"/>
-      </g>
-      <g transform="translate(150,206) scale(.74,1.02) translate(-150,-248)">
-        <use href="#bloomDrape" filter="url(#wcC)"/>
-      </g>
-    </symbol>
   </defs>
 </svg>
 
@@ -1560,16 +1443,8 @@
 
 <!-- ════ THE COVER : the whole screen, edge to edge, and nothing on it but
      the jar, the line and the prompt ════ -->
-<div id="opening">
-  <div class="cover-ground" id="coverGround"></div>
-  <p class="narr" id="caption">Broken, Gathered, Made Whole.</p>
-  <p id="openingHint">&nbsp;</p>
-  <!-- the jar the invitation is planted in. The same drawing the page's
-       corners carry, with the pigment let out — the tokens that do it live on
-       .vase-wrap in the stylesheet. -->
-  <div class="vase-wrap" id="vaseWrap">
-    <svg viewBox="0 0 300 400" aria-hidden="true"><use href="#vesselBloom"/></svg>
-  </div>
+<div id="opening" role="img"
+     aria-label="Broken, Gathered, Made Whole. Tap to open.">
 </div>
 
 <main id="page" class="relative z-10 opacity-0">
@@ -1856,14 +1731,6 @@ function finish(){
   // whatever brought us here, the vessel has had its turn, and so has the
   // narration: the invitation is never shown over either of them. Any tween
   // still in flight is stopped first, or it would paint them back in.
-  if (hasGSAP){
-    gsap.killTweensOf(['#vaseWrap', '#caption', '#coverGround', '#openingHint']);
-    gsap.set(['#vaseWrap', '#caption', '#coverGround', '#openingHint'], { opacity:0 });
-  } else {
-    ['vaseWrap', 'caption', 'coverGround', 'openingHint'].forEach(id => {
-      const el = $(id); if (el) el.style.opacity = '0';
-    });
-  }
   document.querySelectorAll('#sheet .inv-t, #sheet .inv-line')
     .forEach(el => { el.style.opacity = 1; });
 
@@ -1952,41 +1819,22 @@ musicBtn.addEventListener('click', async () => {
    whole → broken → gathered → mended → blooming → invitation
    ══════════════════════════════════════════════════════════════════════ */
 const opening   = $('opening');
-const caption   = $('caption');
-const hint      = $('openingHint');
 const invText   = () => gsap.utils.toArray('#sheet .inv-t, #sheet .inv-line');
 
 if (hasGSAP){
   setBloom(0);
-  gsap.set('#caption', { opacity:0 });
   gsap.set('#sheet .inv-t, #sheet .inv-line', { opacity:0 });
-  gsap.set('#vaseWrap', { opacity:0 });
 }
 
-/* the jar is set out on the paper with its line, and waits: nothing moves
-   until the guest asks it to. */
+/* the painting is up, and waits: nothing happens until the guest asks it to */
 function armOpening(){
   if (!hasGSAP){ clearTimeout(watchdog); finish(); return; }
-  hint.textContent = 'Tap to open';
-
-  if (reduced){
-    gsap.set(['#vaseWrap', caption], { opacity:1 });
-    gsap.to(hint, { opacity:1, duration:.4 });
-  } else {
-    gsap.to(['#vaseWrap', caption], { opacity:1, duration:1.4, ease:'power2.out' });
-    gsap.from('#vaseWrap', { y:12, duration:1.8, ease:'power2.out' });
-    // it breathes, so an eye that has not found it is drawn to it
-    gsap.fromTo(hint, { opacity:0 },
-      { opacity:1, duration:1.1, delay:.6, ease:'power2.out',
-        onComplete(){ gsap.to(hint, { opacity:.45, duration:1.4, repeat:-1, yoyo:true, ease:'sine.inOut' }); } });
-  }
 
   const begin = e => {
     if (e && e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') return;
     if (e && e.type === 'keydown') e.preventDefault();
     opening.removeEventListener('click', begin);
     removeEventListener('keydown', begin);
-    gsap.killTweensOf(hint);
     runOpening();
   };
   opening.addEventListener('click', begin);
