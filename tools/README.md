@@ -29,3 +29,18 @@ them with stronger paint. Custom properties inherit into the shadow tree a
 To change the planting, edit `genurn.py`, run the command above, and paste the
 result over the existing `urnJar` … `</symbol>` block in
 `karim-nardine-invitation.html`.
+
+## Cache stamps
+
+`vercel.json` serves images and audio as `immutable`, which is only honest if a
+changed file means a changed URL. `tools/stamp.py` makes that true: it hashes
+each served asset and rewrites its reference to `name.ext?v=<hash>`.
+
+**Run it after touching any image or the audio, before committing** — otherwise
+a guest who has already opened the invitation keeps the old file for a year and
+reloading will not shift it.
+
+    python3 tools/stamp.py
+
+It leaves the Supabase-hosted copies of the track alone; those are not served by
+this deployment and are not ours to stamp.

@@ -13,7 +13,7 @@
 <meta property="og:description" content="Heliopolis Evangelical Church, Cairo. Saturday 19 September 2026, 1:30 PM." />
 <!-- absolute, because link scrapers do not resolve relative paths.
      Update the host here if the invitation moves to its own domain. -->
-<meta property="og:image" content="https://nardien-karim-wedding.vercel.app/invitation-plate.png" />
+<meta property="og:image" content="https://nardien-karim-wedding.vercel.app/invitation-plate.png?v=8abdefe782" />
 <meta property="og:locale" content="en_GB" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Karim &amp; Nardien | 19 September 2026" />
@@ -21,10 +21,10 @@
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F3EDE2'/%3E%3Cg fill='none' stroke='%23B98F44' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath d='M12 5h8l-1.5 4h-5z'/%3E%3Cpath d='M13.5 9h5C23 11.5 25 16 23 21c-1.6 4-11.4 4-13 0-2-5 0-9.5 3.5-12z'/%3E%3Cpath d='M13 26h6l1 2h-8z'/%3E%3C/g%3E%3C/svg%3E" />
 
-<link rel="preload" as="image" href="cover.webp" />
+<link rel="preload" as="image" href="cover.webp?v=c6646f48a6" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="invitation-plate.webp">
+<link rel="preload" as="image" href="invitation-plate.webp?v=9838b20edc">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Pinyon+Script&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -80,10 +80,10 @@
      and nothing is letterboxed. They are also kept wholly inside their section:
      the sections clip their overflow, and a feathered cut that runs past the
      edge gets a hard straight edge cut back into it. */
-  .bot.stems-l { background-image:url("botanicals/bot-stems-left.webp");  aspect-ratio:267/705; }
-  .bot.blush-l { background-image:url("botanicals/bot-blush-left.webp");  aspect-ratio:294/395; }
-  .bot.stems-r { background-image:url("botanicals/bot-stems-right.webp"); aspect-ratio:268/700; }
-  .bot.leaves-r{ background-image:url("botanicals/bot-leaves-right.webp");aspect-ratio:280/430; }
+  .bot.stems-l { background-image:url("botanicals/bot-stems-left.webp?v=abd96ad380");  aspect-ratio:267/705; }
+  .bot.blush-l { background-image:url("botanicals/bot-blush-left.webp?v=86e0d8f144");  aspect-ratio:294/395; }
+  .bot.stems-r { background-image:url("botanicals/bot-stems-right.webp?v=0659cc704e"); aspect-ratio:268/700; }
+  .bot.leaves-r{ background-image:url("botanicals/bot-leaves-right.webp?v=0badc9f62a");aspect-ratio:280/430; }
   .bot.flip{ transform:scaleX(-1); }
 
   /* One vessel to a page, large and barely there — a watermark the words sit
@@ -174,7 +174,7 @@
        margin. The margin is the sheet's own edge tone, sampled down its height,
        so the join does not show at any height a screen might be. */
     background:
-      url("cover.webp") no-repeat center / contain,
+      url("cover.webp?v=c6646f48a6") no-repeat center / contain,
       linear-gradient(180deg, #F7EDDE 0%, #F8EFE2 17%, #FAF0E4 33%, #F8EEE1 50%,
                               #F7ECDF 67%, #F6EBDD 83%, #F4E6D7 100%);
   }
@@ -194,7 +194,7 @@
   }
   .thm-art{
     position:absolute; inset:0; pointer-events:none;
-    background-image:url("invitation-plate.webp");
+    background-image:url("invitation-plate.webp?v=9838b20edc");
     background-size:100% 100%; background-position:center; background-repeat:no-repeat;
     transform:scaleX(-1);   /* the same frame, turned over: a suite, not a copy */
     opacity:.5;
@@ -209,7 +209,7 @@
      taking the paper underneath with it */
   .plate-art{
     position:absolute; inset:0; pointer-events:none;
-    background-image:url("invitation-plate.webp");
+    background-image:url("invitation-plate.webp?v=9838b20edc");
     background-size:100% 100%; background-position:center; background-repeat:no-repeat;
     --r1:0%; --r2:0%;   /* closed until the story opens it */
     -webkit-mask-image:radial-gradient(ellipse 76% 98% at 50% 93%, #000 var(--r1), transparent var(--r2));
@@ -1702,7 +1702,7 @@ const SUPABASE_KEY = "sb_publishable_XZMhkrrrEF2XUhkfWKSySQ_ZZO3RE8W";
 const MUSIC_PATHS = [
   SUPABASE_URL + "/storage/v1/object/public/music/Untitled%20folder/music.mp3",
   SUPABASE_URL + "/storage/v1/object/public/music/music.mp3",
-  "music.mp3"
+  "music.mp3?v=e12eae856e"
 ];
 
 const $ = id => document.getElementById(id);
