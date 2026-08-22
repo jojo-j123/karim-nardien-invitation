@@ -89,11 +89,16 @@
   /* One vessel to a page, large and barely there — a watermark the words sit
      on rather than an ornament beside them. It is the same drawing the corners
      used to carry in miniature, but the blossom is white and the clay is pale
-     stone, so it belongs to the cover the invitation now opens on. It runs off
-     the bottom edge: a big mark that stops short reads as a sticker. */
+     stone, so it belongs to the cover the invitation now opens on.
+
+     It enters from the side of the screen and is cut off by it, alternating
+     left and right down the page. The offset is a share of the vessel's own
+     width rather than of the section's, so the same fraction of it stays off
+     the edge whatever the screen is doing. */
   .ghost{
-    position:absolute; bottom:-7%; right:-4%; z-index:0; pointer-events:none;
-    aspect-ratio:300/400; width:clamp(240px, 52vw, 460px); opacity:.16;
+    position:absolute; top:50%; right:0; z-index:0; pointer-events:none;
+    transform:translate(38%, -50%);
+    aspect-ratio:300/400; width:clamp(280px, 60vw, 520px); opacity:.16;
     --u-bud:#FFFFFF;   --u-bud-o:.92;   --u-budd:#F3EEE4; --u-budd-o:.7;
     --u-spill-bud-o:.8;
     --u-clay1:#EFE7D8; --u-clay1-o:.5;  --u-clay2:#E2D6C0; --u-clay2-o:.3;
@@ -104,32 +109,15 @@
     --u-leafd:#6E7A52; --u-leafl:#8A9569;
   }
   .ghost svg{ width:100%; height:100%; display:block; }
-  @media (max-width:640px){ .ghost{ opacity:.13; width:clamp(210px, 62vw, 340px); } }
+  .ghost.from-left{ right:auto; left:0; transform:translate(-38%, -50%); }
+  @media (max-width:640px){
+    .ghost{ opacity:.13; width:clamp(250px, 72vw, 400px); }
+  }
   @media (max-width:640px){ .bot{ opacity:.88; } }
 
   .rule-line{ height:1px; background:linear-gradient(90deg,transparent,var(--rule),transparent); }
   .hair{ border:1px solid rgba(74,67,53,.13); }
   .track{ letter-spacing:.3em; } .track-sm{ letter-spacing:.2em; }
-
-  .field{
-    width:100%; background:transparent; border:0; border-bottom:1px solid rgba(74,67,53,.2);
-    padding:.9rem .2rem; color:var(--ink); font-family:Jost,system-ui,sans-serif; font-weight:300;
-    font-size:16px; letter-spacing:.03em; outline:none; border-radius:0;
-    -webkit-appearance:none; appearance:none;
-    transition:border-color .35s ease, background .35s ease;
-  }
-  .field:focus{ border-color:var(--clay); background:rgba(176,138,110,.06); }
-  .field::placeholder{ color:rgba(74,67,53,.3); }
-
-  .chip{
-    border:1px solid rgba(74,67,53,.18); padding:1.05rem .9rem; cursor:pointer; background:transparent;
-    font-family:Jost,system-ui,sans-serif; font-weight:300; font-size:.78rem; letter-spacing:.14em;
-    text-transform:uppercase; color:rgba(74,67,53,.7); text-align:center;
-    border-radius:1px 14px 1px 14px; min-height:56px;
-    transition:all .35s cubic-bezier(.22,1,.36,1); -webkit-tap-highlight-color:transparent;
-  }
-  .chip:active{ transform:scale(.97); }
-  .chip[aria-pressed="true"]{ background:rgba(206,167,147,.16); border-color:var(--clay); color:#7A5540; }
 
   .btn{
     position:relative; z-index:0; overflow:hidden; border:1px solid rgba(74,67,53,.3);
@@ -145,7 +133,6 @@
   @media (hover:hover){
     .btn:hover{ color:var(--paper); border-color:var(--clay); }
     .btn:hover::after{ transform:scaleX(1); transform-origin:left; }
-    .chip:hover{ color:var(--ink); border-color:rgba(176,138,110,.7); }
   }
   .btn:active{ transform:scale(.98); }
   .btn:disabled{ opacity:.4; }
@@ -247,10 +234,14 @@
   }
 
   /* ── music toggle ── */
+  /* Top right. It sat bottom right, which on a phone is where the browser
+     keeps its own toolbar and where the invitation's own corner is, so it
+     landed on both. Up here it is the first thing on the page that is not
+     the painting, and it is over the margin rather than over the words. */
   #music{
     position:fixed; z-index:70;
-    right:calc(14px + env(safe-area-inset-right));
-    bottom:calc(16px + env(safe-area-inset-bottom));
+    right:calc(12px + env(safe-area-inset-right));
+    top:calc(12px + env(safe-area-inset-top));
     display:none; align-items:center; gap:.5rem;
     padding:.55rem .95rem .55rem .8rem;
     border:1px solid rgba(176,138,110,.35);
@@ -1527,7 +1518,7 @@
 </section>
 <!-- ════ PROGRAM ════ -->
 <section class="botanicals relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
-  <div class="ghost" aria-hidden="true"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
+  <div class="ghost from-left" aria-hidden="true"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
 
 
   <div class="bot stems-r" style="top:0; right:1%; width:18%"></div>
@@ -1619,56 +1610,6 @@
              class="inline-block track text-[.53rem] uppercase text-clay pb-1"
              style="border-bottom:1px solid rgba(176,138,110,.45)">Open in maps</a>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════ RSVP ════ -->
-<section id="rsvp" class="botanicals relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
-  <div class="ghost" aria-hidden="true"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
-
-
-  <div class="bot stems-r flip" style="top:0; right:1%; width:19%"></div>
-  <div class="bot blush-l" style="bottom:0; left:0; width:34%"></div>
-  <div class="max-w-lg mx-auto relative">
-    <div class="text-center">
-      <p class="track text-[.54rem] uppercase text-clay reveal">Kindly reply</p>
-      <h2 class="font-script text-4xl sm:text-6xl mt-4 text-ink reveal">Take Your Place</h2>
-      <p class="text-sm font-light text-ink/50 mt-4 reveal">By 10 September 2026</p>
-      <div class="rule-line w-24 mx-auto mt-6 reveal"></div>
-    </div>
-
-    <div class="card hair mt-9 p-6 sm:p-10 reveal" style="background:#EDE6DB">
-      <form id="rsvpForm" novalidate>
-        <label class="block track-sm text-[.56rem] uppercase text-ink/45 mb-1" for="name">Full name</label>
-        <input class="field" id="name" name="name" type="text"
-               autocomplete="name" enterkeyhint="done" aria-describedby="errName" />
-        <p id="errName" class="text-[.75rem] text-terra mt-2 hidden font-light" role="alert">Please enter your full name.</p>
-
-        <p class="track-sm text-[.56rem] uppercase text-ink/45 mb-3 mt-9">Will you be there?</p>
-        <div class="grid grid-cols-2 gap-3" id="attendGroup" role="group" aria-label="Will you be there?" aria-describedby="errAttend">
-          <button type="button" class="chip" data-val="yes" aria-pressed="false">Joyfully yes</button>
-          <button type="button" class="chip" data-val="no" aria-pressed="false">Sadly can't</button>
-        </div>
-        <p id="errAttend" class="text-[.75rem] text-terra mt-3 hidden font-light" role="alert">Please choose one.</p>
-
-        <div class="mt-9">
-          <button type="submit" class="btn w-full" id="submitBtn">Send reply</button>
-        </div>
-        <p id="errSend" class="text-[.78rem] text-terra mt-4 hidden font-light text-center" role="alert"></p>
-      </form>
-
-      <div id="success" class="hidden text-center py-6" tabindex="-1">
-        <svg width="52" height="70" viewBox="0 0 300 400" class="mx-auto" fill="none" aria-hidden="true">
-          <path d="M 130 63 C 133 72, 135 80, 134 89 C 116 106, 94 132, 87 170 C 80 208, 86 252, 104 284 C 110 296, 114 306, 117 315 C 140 320, 162 320, 185 315 C 188 306, 192 296, 198 284 C 216 252, 222 208, 215 170 C 208 132, 186 106, 168 89 C 167 80, 169 72, 172 63 C 158 57, 144 57, 130 63 Z"
-                fill="#F6F1E9" stroke="#9A8E79" stroke-width="4" stroke-linejoin="round"/>
-          <path d="M 130 63 C 143 69, 159 69, 172 63" fill="none" stroke="#9A8E79" stroke-width="3" opacity=".6"/>
-        </svg>
-        <h3 class="font-script text-3xl sm:text-4xl text-ink mt-6" id="successTitle">Your place is set</h3>
-        <p class="text-sm font-light text-ink/55 mt-4 leading-relaxed" id="successBody">We have your reply. We will see you at the church.</p>
-        <div class="rule-line w-20 mx-auto my-7"></div>
-        <p class="track text-[.5rem] uppercase text-clay">19 September 2026 &middot; Heliopolis</p>
       </div>
     </div>
   </div>
@@ -1923,61 +1864,6 @@ if (hasST && !reduced){
   gsap.fromTo('#theme .inv-t, #theme .inv-line', { opacity:0 },
     { opacity:1, duration:1.3, stagger:.1, ease:'power2.out',
       scrollTrigger:{ trigger:'#theme', start:'top 62%', once:true } });
-}
-
-/* ─── RSVP ─── */
-const form = $('rsvpForm');
-let attending = '';
-document.querySelectorAll('#attendGroup .chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('#attendGroup .chip').forEach(c => c.setAttribute('aria-pressed','false'));
-    chip.setAttribute('aria-pressed','true');
-    attending = chip.dataset.val;
-    showErr('errAttend', false);
-  });
-});
-function showErr(id, show){ $(id).classList.toggle('hidden', !show); }
-function validate(){
-  const nameEl = $('name');
-  const nOk = nameEl.value.trim().length > 1;
-  const aOk = !!attending;
-  showErr('errName', !nOk); showErr('errAttend', !aOk);
-  nameEl.setAttribute('aria-invalid', String(!nOk));
-  if (!nOk) nameEl.focus(); else if (!aOk) document.querySelector('#attendGroup .chip').focus();
-  return nOk && aOk;
-}
-form.addEventListener('submit', e => { e.preventDefault(); if (validate()) submit(); });
-
-async function submit(){
-  const btn = $('submitBtn');
-  btn.disabled = true; btn.textContent = 'Sending...';
-  showErr('errSend', false);
-  try {
-    const res = await fetch(SUPABASE_URL + '/rest/v1/rsvps', {
-      method:'POST',
-      headers:{ 'apikey':SUPABASE_KEY, 'Authorization':'Bearer ' + SUPABASE_KEY,
-                'Content-Type':'application/json', 'Prefer':'return=minimal' },
-      body: JSON.stringify({ name: $('name').value.trim(), attending })
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    showSuccess(attending === 'yes');
-  } catch(err){
-    btn.disabled = false; btn.textContent = 'Send reply';
-    $('errSend').textContent = "That didn't send. Please check your connection and try again.";
-    showErr('errSend', true);
-  }
-}
-function showSuccess(coming){
-  form.classList.add('hidden');
-  const box = $('success');
-  if (!coming){
-    $('successTitle').textContent = "You will be missed";
-    $('successBody').textContent  = "Thank you for telling us. We will be praying you are with us in spirit.";
-  }
-  box.classList.remove('hidden');
-  if (hasGSAP && !reduced) gsap.from(box, { y:18, opacity:0, duration:.8, ease:'power3.out' });
-  box.focus({ preventScroll:true });
-  refreshTriggers();
 }
 
 </script>
