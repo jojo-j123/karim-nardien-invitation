@@ -86,19 +86,25 @@
   .bot.leaves-r{ background-image:url("botanicals/bot-leaves-right.webp");aspect-ratio:280/430; }
   .bot.flip{ transform:scaleX(-1); }
 
-  /* the vessels themselves, set small and quiet through the page: the same
-     thrown pot the story is told with, each one already mended */
-  .pot{ position:absolute; pointer-events:none; z-index:0; opacity:.38; aspect-ratio:300/400; }
-  .pot svg{ width:100%; height:100%; display:block; }
-  @media (max-width:640px){ .pot{ opacity:.34; } }
-  /* the filled urn, standing in the lower corner of every page */
-  .urn{ position:absolute; pointer-events:none; z-index:0; opacity:.42;
-        aspect-ratio:300/400; width:clamp(56px, 14.5vw, 124px); }
-  .urn svg{ width:100%; height:100%; display:block; }
-  @media (max-width:640px){ .urn{ opacity:.38; } }
-  @media (max-width:1199px){
-    .has-urn{ padding-bottom:calc(clamp(56px, 14.5vw, 124px) * 1.334 + 1.25rem) !important; }
+  /* One vessel to a page, large and barely there — a watermark the words sit
+     on rather than an ornament beside them. It is the same drawing the corners
+     used to carry in miniature, but the blossom is white and the clay is pale
+     stone, so it belongs to the cover the invitation now opens on. It runs off
+     the bottom edge: a big mark that stops short reads as a sticker. */
+  .ghost{
+    position:absolute; bottom:-7%; right:-4%; z-index:0; pointer-events:none;
+    aspect-ratio:300/400; width:clamp(240px, 52vw, 460px); opacity:.16;
+    --u-bud:#FFFFFF;   --u-bud-o:.92;   --u-budd:#F3EEE4; --u-budd-o:.7;
+    --u-spill-bud-o:.8;
+    --u-clay1:#EFE7D8; --u-clay1-o:.5;  --u-clay2:#E2D6C0; --u-clay2-o:.3;
+    --u-shade:#C9B698; --u-shade-o:.22; --u-foot:#B9A483;  --u-foot-o:.18;
+    --u-lite:#FFFDF8;  --u-back:#FBF6EC;
+    --u-pool:#BCAA8C;  --u-line:#9A8B70; --u-ring:#B3A288;
+    --u-stem:#7A8560;  --u-stem2:#8B9670;
+    --u-leafd:#6E7A52; --u-leafl:#8A9569;
   }
+  .ghost svg{ width:100%; height:100%; display:block; }
+  @media (max-width:640px){ .ghost{ opacity:.13; width:clamp(210px, 62vw, 340px); } }
   @media (max-width:640px){ .bot{ opacity:.88; } }
 
   .rule-line{ height:1px; background:linear-gradient(90deg,transparent,var(--rule),transparent); }
@@ -1461,9 +1467,9 @@
     Request the honour of your presence at the marriage of
   </p>
 
-  <p class="inv-t script" style="top:39.6%; font-size:calc(var(--h) * 0.05)">Karim Raef</p>
+  <p class="inv-t script" style="top:39.6%; font-size:calc(var(--h) * 0.05)">Karim</p>
   <p class="inv-t amp" style="top:45.2%; font-size:calc(var(--h) * 0.0245)">&amp;</p>
-  <p class="inv-t script" style="top:50.8%; font-size:calc(var(--h) * 0.05)">Nardien Raafat</p>
+  <p class="inv-t script" style="top:50.8%; font-size:calc(var(--h) * 0.05)">Nardien</p>
 
   <span class="inv-line" style="top:58%; width:18%"></span>
 
@@ -1476,7 +1482,7 @@
 
   <span class="inv-line" style="top:85.6%; width:14%"></span>
 
-  <p class="inv-t caps clay" style="top:89.1%; font-size:calc(var(--h) * 0.0152)">Hour</p>
+  <p class="inv-t caps clay" style="top:89.1%; font-size:calc(var(--h) * 0.0152)">Time</p>
   <p class="inv-t" style="top:93%; font-size:calc(var(--h) * 0.0238)">1:30 PM</p>
 </div>
 </section>
@@ -1500,10 +1506,10 @@
 </section>
 
 <!-- ════ A QUIET PAGE : the verse, and the days between ════ -->
-<section class="botanicals has-urn relative overflow-hidden py-24 sm:py-32 px-6 text-center">
+<section class="botanicals relative overflow-hidden py-24 sm:py-32 px-6 text-center">
+  <div class="ghost" aria-hidden="true"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
   
   <div class="bot leaves-r" style="top:0; right:0; width:34%"></div>
-  <div class="urn" style="bottom:0; right:4%"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
   <div class="bot blush-l" style="bottom:0; left:0; width:36%"></div>
   <div class="max-w-xl mx-auto">
     <p class="reveal font-serif italic text-lg sm:text-2xl text-ink/70 leading-relaxed">
@@ -1520,13 +1526,12 @@
   </div>
 </section>
 <!-- ════ PROGRAM ════ -->
-<section class="botanicals has-urn relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
+<section class="botanicals relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
+  <div class="ghost" aria-hidden="true"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
 
 
   <div class="bot stems-r" style="top:0; right:1%; width:18%"></div>
-  <div class="pot" style="top:1%; left:4%; width:17%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
   <div class="bot blush-l" style="bottom:0; left:0; width:32%"></div>
-  <div class="urn" style="bottom:0; right:4%"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">The day</p>
@@ -1567,12 +1572,11 @@
 </section>
 
 <!-- ════ VENUE ════ -->
-<section class="botanicals has-urn relative overflow-hidden py-16 sm:py-28 px-5 sm:px-6">
+<section class="botanicals relative overflow-hidden py-16 sm:py-28 px-5 sm:px-6">
+  <div class="ghost" aria-hidden="true"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
 
   <div class="bot stems-l" style="top:0; left:1%; width:18%"></div>
-  <div class="pot" style="bottom:2%; left:6%; width:20%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
   <div class="bot leaves-r" style="top:0; right:0; width:30%"></div>
-  <div class="urn" style="bottom:0; right:4%"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
   <div class="max-w-3xl mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">Where</p>
@@ -1621,13 +1625,12 @@
 </section>
 
 <!-- ════ RSVP ════ -->
-<section id="rsvp" class="botanicals has-urn relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
+<section id="rsvp" class="botanicals relative overflow-hidden py-20 sm:py-32 px-5 sm:px-6">
+  <div class="ghost" aria-hidden="true"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
 
 
   <div class="bot stems-r flip" style="top:0; right:1%; width:19%"></div>
-  <div class="pot" style="top:1%; left:5%; width:18%"><svg viewBox="0 0 300 400"><use href="#vesselMark"/></svg></div>
   <div class="bot blush-l" style="bottom:0; left:0; width:34%"></div>
-  <div class="urn" style="bottom:0; right:4%"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
   <div class="max-w-lg mx-auto relative">
     <div class="text-center">
       <p class="track text-[.54rem] uppercase text-clay reveal">Kindly reply</p>
@@ -1671,11 +1674,10 @@
   </div>
 </section>
 
-<footer class="botanicals has-urn relative overflow-hidden py-14 text-center px-6">
+<footer class="botanicals relative overflow-hidden py-14 text-center px-6">
 
   <div class="bot stems-l" style="bottom:0; left:2%; width:17%"></div>
   <div class="bot stems-r flip" style="top:0; right:2%; width:16%"></div>
-  <div class="urn" style="bottom:0; right:5%"><svg viewBox="0 0 300 400"><use href="#urnMark"/></svg></div>
   <div class="rule-line w-32 mx-auto mb-8 relative"></div>
   <p class="font-serif italic text-lg text-ink/70">He makes all things new.</p>
   <p class="track text-[.48rem] uppercase text-ink/30 mt-4 leading-loose">Karim &amp; Nardien &middot; Nineteen September &middot; Twenty Twenty Six</p>
