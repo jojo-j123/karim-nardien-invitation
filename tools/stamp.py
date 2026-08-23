@@ -17,7 +17,7 @@ import hashlib, pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PAGES = ['karim-nardine-invitation.html']
-ASSETS = ['cover.webp', 'invitation-plate.webp', 'invitation-plate.png', 'music.mp3',
+ASSETS = ['cover.webp', 'invitation-plate.webp', 'og-card.jpg', 'music.mp3',
           'botanicals/bot-stems-left.webp', 'botanicals/bot-blush-left.webp',
           'botanicals/bot-stems-right.webp', 'botanicals/bot-leaves-right.webp']
 

@@ -9,7 +9,7 @@
   ],
   "headers": [
     {
-      "source": "/(.*)\\.(png|webp|mp3)",
+      "source": "/(.*)\\.(png|webp|jpg|mp3)",
       "headers": [
         {
           "key": "Cache-Control",
