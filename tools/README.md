@@ -44,3 +44,16 @@ reloading will not shift it.
 
 It leaves the Supabase-hosted copies of the track alone; those are not served by
 this deployment and are not ours to stamp.
+
+## The link-preview card
+
+`og-card.jpg` is what WhatsApp and the rest show when the invitation is
+shared. It is **not** `invitation-plate.png`: that file is only the painted
+border, because the plate's words are HTML laid over the artwork, so sharing it
+showed an empty card.
+
+`tools/ogcard.py` composes the card at 1200x630 from `cover.png` alone — the
+title lettering and the vessel, lifted as pixels, so nothing depends on a font
+loading. Rerun it after changing the cover, then rerun `stamp.py`:
+
+    python3 tools/ogcard.py && python3 tools/stamp.py
